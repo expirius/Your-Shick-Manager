@@ -1,34 +1,31 @@
-﻿
+﻿namespace MFASeeker;
 
-namespace MFASeeker;
-
-public class Geolocator 
+public class Geolocator
 {
     public static IGeolocator Default = new GeolocatorImplementation();
-}
-/*
-public async Task StartUpdateLocationAsync()
-{
-    _cancelTokenSource = new CancellationTokenSource();
+    CancellationTokenSource _cancelTokenSource = new CancellationTokenSource();
+    Location Location = new();
 
-    try
+    public async Task StartUpdateLocationAsync()
     {
-            Location = await Geolocation.GetLocationAsync(
+        try
+        {
+            Location? lc = await Geolocation.GetLocationAsync(
                    new GeolocationRequest
                    {
                        DesiredAccuracy = GeolocationAccuracy.Medium,
                        Timeout = TimeSpan.FromSeconds(10),
                        RequestFullAccuracy = true,
                    });
-            if (Location != null) 
-                OnLocationUpdated(new GeolocationLocationChangedEventArgs(Location));
+            if (lc != null)
+                OnLocationUpdated(new GeolocationLocationChangedEventArgs(lc));
+        }
+        catch (TaskCanceledException ex)
+        {
+            Console.WriteLine(ex.ToString());
+        }
     }
-    catch (TaskCanceledException ex)
-    {
-        Console.WriteLine(ex.ToString());
-    }
-}
-public void StopUpdatingLocation()
+    public void StopUpdatingLocation()
     {
         _cancelTokenSource?.Cancel();
     }
@@ -36,6 +33,6 @@ public void StopUpdatingLocation()
     // del eve
     protected virtual void OnLocationUpdated(GeolocationLocationChangedEventArgs e)
     {
-        LocationUpdated?.Invoke(this, e);
+        Location = e.Location;
     }
-*/
+}

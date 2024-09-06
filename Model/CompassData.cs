@@ -9,5 +9,6 @@ namespace MFASeeker.Model
     public class CompassData
     {
         public double HeadingMagneticNorth { get; set; }
+        
     }
 }

@@ -49,7 +49,7 @@ namespace MFASeeker.Model
 
 
 
-/*        public async Task EnableSpectateModeAsync(CancellationToken cancellationToken, bool isEnabledToggle)
+        public async Task EnableSpectateModeAsync(CancellationToken cancellationToken, bool isEnabledToggle)
         {
             if (!isEnabledToggle)
             {
@@ -66,8 +66,8 @@ namespace MFASeeker.Model
 
             // Включение компаса
 
-            CompassVM compassVM = new CompassVM();
-            await compassVM.ToggleCompass(cancellationToken);
+            //CompassVM compassVM = new CompassVM();
+            //await compassVM.ToggleCompass(cancellationToken);
 
             // Мониторинг компаса и текущего местоположения
             var progress = new Progress<Location>(location =>
@@ -76,13 +76,13 @@ namespace MFASeeker.Model
                 currentLocation = SphericalMercator.FromLonLat(currentLocation.X, currentLocation.Y).ToMPoint(); ;
                 _myLocationLayer.UpdateMyLocation(currentLocation, true);
 
-                var currentDirection = compassVM.Heading;
-                _myLocationLayer.UpdateMyViewDirection(currentDirection, Map.Navigator.Viewport.Rotation, true);
+                //var currentDirection = compassVM.Heading;
+                //_myLocationLayer.UpdateMyViewDirection(currentDirection, Map.Navigator.Viewport.Rotation, true);
 
             });
             //await Geolocator.Default.StartListening(progress, cancellationToken);
         }
-*/
+
 
         // Виджеты
         private static ZoomInOutWidget CreateZoomInOutWidget(Orientation orientation,
