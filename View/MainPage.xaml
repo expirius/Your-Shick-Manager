@@ -1,0 +1,163 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodel="clr-namespace:MFASeeker.ViewModel"
+             x:DataType="viewmodel:MainViewModel"
+             x:Class="MFASeeker.View.MainPage">
+
+    <ScrollView VerticalScrollBarVisibility="Never">
+        <VerticalStackLayout
+            Spacing="25">
+            <Image
+                Source="toilet_bot.png"
+                HeightRequest="185"
+                Aspect="AspectFit">
+                <Image.Shadow>
+                    <Shadow Radius="5" Brush="Black" Offset="20, 20" Opacity="0.8"/>
+                </Image.Shadow>
+            </Image>
+            <!--#region -->
+            <Label
+                HorizontalOptions="Center"
+                Text="АнтиКонфуз"
+                Style="{StaticResource Headline}"
+                FontSize="31"
+                SemanticProperties.HeadingLevel="Level1" />
+            <VerticalStackLayout>
+                <Label
+                FontSize="20"
+                Text="Туалетный поисковик, который"
+                Style="{StaticResource SubHeadline}"
+                SemanticProperties.HeadingLevel="Level2"
+                SemanticProperties.Description="Welcome to dot net Multi platform App U I" />
+                <Label 
+                FontSize="20"
+                    LineBreakMode="WordWrap"
+                Text="позволит не обосраться на улице"
+                Style="{StaticResource SubHeadline}"
+                SemanticProperties.HeadingLevel="Level3"/>
+            </VerticalStackLayout>
+            <!--КНОПКИ НИЗ-->
+            <ScrollView  Orientation="Horizontal" HorizontalScrollBarVisibility="Never">
+                <StackLayout Orientation="Horizontal">
+                    <Button
+                        Margin="5"
+                        Padding="0"
+                        WidthRequest="100"
+                        HeightRequest="100"
+                        LineBreakMode="HeadTruncation"
+                        TextColor="White"
+                        Text="Новая точка"
+                        Background = "DarkCyan" 
+                        >
+                        <Button.Shadow>
+                            <Shadow Radius="35" Brush="Black" Offset="10,10" Opacity="1" />
+                        </Button.Shadow>
+                    </Button>
+                    <Button 
+                Margin="5"
+                Padding="0"
+                WidthRequest="100"
+                HeightRequest="100"
+                TextColor="White"
+                BackgroundColor="#0A7474"
+    Text="Избранные">
+                        <Button.Shadow>
+                            <Shadow Radius="35" Brush="Black" Offset="10,10" Opacity="1" />
+                        </Button.Shadow>
+                    </Button>
+                    <Button 
+                Margin="5"
+                Padding="0"
+WidthRequest="100"
+HeightRequest="100"
+TextColor="White"
+BackgroundColor="DarkCyan"
+    Text="Я в конфузе*"
+    LineBreakMode="WordWrap">
+                        <Button.Shadow>
+                            <Shadow Radius="35" Brush="Black" Offset="10,10" Opacity="1" />
+                        </Button.Shadow>
+                    </Button>
+                    <Button 
+                Margin="5"
+                Padding="0"
+WidthRequest="100"
+HeightRequest="100"
+TextColor="White"
+BackgroundColor="#0A7474"
+    Text="Разработчик">
+                        <Button.Shadow>
+                            <Shadow Radius="35" Brush="Black" Offset="10,10" Opacity="1" />
+                        </Button.Shadow>
+                    </Button>
+                </StackLayout>
+            </ScrollView>
+
+            
+            <ScrollView Orientation="Horizontal" HorizontalScrollBarVisibility="Never">
+                <HorizontalStackLayout>
+                    <Border
+                        Margin="0,0,10,10"
+                        Stroke="Transparent"
+                        Background="#232323"
+                        HeightRequest="300" WidthRequest="300">
+                        <Border.Shadow>
+                            <Shadow Brush="Black" Offset="10,10" Opacity="0.4" />
+                        </Border.Shadow>
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="20"/>
+                        </Border.StrokeShape>
+                        <Grid Margin="20">
+                            <Label Text="Среднячок" FontSize="20" VerticalTextAlignment="Start" HorizontalTextAlignment="Center"/>
+                            <Image Margin="-20,0,0,0" HeightRequest="160" Source="medium_toilet.png" VerticalOptions="Center" HorizontalOptions="Center"/>
+                            <Button BackgroundColor="Purple" WidthRequest="120" CornerRadius="15" Text="Купить" VerticalOptions="End" HorizontalOptions="Center" TextColor="White" />
+                        </Grid>
+                    </Border>
+
+                    <Border
+     Margin="0,0,10,10"
+     Stroke="Transparent"
+     Background="#232323"
+     HeightRequest="300" WidthRequest="300">
+                        <Border.Shadow>
+                            <Shadow Brush="Black" Offset="10,10" Opacity="0.4" />
+                        </Border.Shadow>
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="20"/>
+                        </Border.StrokeShape>
+                        <Grid Margin="20">
+                            <HorizontalStackLayout  VerticalOptions="Start" HorizontalOptions="Center">
+                                <Label Text="Царь" FontSize="20"/>
+                                <Label Text="★" TextColor="Gold" FontSize="20" Margin="0,0,0,5" />
+                            </HorizontalStackLayout>
+                            <Image Scale="1.2" Margin="-20,0,0,0" HeightRequest="160" Source="golden_toilet.png" VerticalOptions="Center" HorizontalOptions="Center"/>
+                            <Button BackgroundColor="Purple" WidthRequest="120" CornerRadius="15" Text="Купить" VerticalOptions="End" HorizontalOptions="Center" TextColor="White" />
+                        </Grid>
+                    </Border>
+
+                    <Border
+     Margin="0,0,10,10"
+     Stroke="Transparent"
+     Background="#232323"
+     HeightRequest="300" WidthRequest="300">
+                        <Border.Shadow>
+                            <Shadow Brush="Black" Offset="10,10" Opacity="0.4" />
+                        </Border.Shadow>
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="20"/>
+                        </Border.StrokeShape>
+                        <Grid Margin="20">
+                            <Label Text="Бичуган" FontSize="20" VerticalTextAlignment="Start" HorizontalTextAlignment="Center"/>
+                            <Image Scale="1.4" Margin="-20,0,0,0" HeightRequest="160" Source="bad_toilet.png" VerticalOptions="Center" HorizontalOptions="Center"/>
+                            <Button BackgroundColor="Purple" WidthRequest="120" CornerRadius="15" Text="Купить" VerticalOptions="End" HorizontalOptions="Center" TextColor="White" />
+                        </Grid>
+                    </Border>
+
+                </HorizontalStackLayout>
+                
+            </ScrollView>
+            <Label Margin="0,0,0,20" HorizontalOptions="Center" Text="© Все права защищены «Экспириус КОРП» 2024"/>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

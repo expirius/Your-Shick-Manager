@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell
+    x:Class="MFASeeker.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:MFASeeker.View"
+    FlyoutBehavior="Disabled"
+    Title="Your Shick">
+    <!--FlyoutBehavior="Flyout"-->
+    <!-- -->
+    <FlyoutItem CurrentItem="{x:Reference MainFlyout}">
+        <ShellContent
+        Title="Поиск"
+        Icon="search_icon.png"
+        ContentTemplate="{DataTemplate local:SearchPage}"
+        Route="Поиск"/>
+
+        <ShellContent
+            
+            Icon="toilet_bot.png"
+            x:Name="MainFlyout"
+            Title="Главная"
+    ContentTemplate="{DataTemplate local:MainPage}"
+    Route="Главная"/>
+
+        <ShellContent
+Title="Карта"
+        Icon="map_marker_ico.png"
+Route="Карта"/>
+    </FlyoutItem>
+</Shell>
