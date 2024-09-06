@@ -17,14 +17,13 @@ namespace MFASeeker.ViewModel;
 
 public partial class SearchViewModel : ObservableObject
 {
-    private readonly MapManager? mapManager;
+    private readonly MapManager mapManager;
     public SearchViewModel()
     {
         MapControl = new();
         mapManager = new();
 
         MapControl.Map = mapManager.Map;
-        mapManager.Map.Info += (s, e) => MapControl.Map = mapManager.Map;
     }
 
     [ObservableProperty]
@@ -38,10 +37,7 @@ public partial class SearchViewModel : ObservableObject
     [RelayCommand(IncludeCancelCommand = true, AllowConcurrentExecutions = false)]
     private async Task EnableSpectateMode(CancellationToken cancellationToken)
     {
-        if (IsEnabledSpectateMode)
-            IsEnabledSpectateMode = false;
-        else
-            IsEnabledSpectateMode = true;
-        
+        if (mapManager != null)
+            await mapManager.EnableSpectateModeAsync(cancellationToken);
     }
 }

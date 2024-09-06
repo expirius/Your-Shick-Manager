@@ -32,7 +32,7 @@ namespace MFASeeker.ViewModel
             IsTrackingEnabled = !IsTrackingEnabled;
             if (IsTrackingEnabled)
             {
-                //await StartTrackingAsync();
+                await StartTrackingAsync();
             }
             else
             {
@@ -40,26 +40,19 @@ namespace MFASeeker.ViewModel
             }
         }
 
-        /*
+        
         private async Task StartTrackingAsync()
         {
             if (await CheckAndRequestPermissionsAsync())
             {
                 // Начать отслеживание местоположения
-                await Geolocation.StartListeningForegroundAsync(TimeSpan.FromSeconds(1), 10, true);
-
-                // Начать отслеживание направления
-                if (!Compass.IsMonitoring)
-                {
-                    Compass.Start(SensorSpeed.UI);
-                }
+                //await Geolocator .StartListeningForegroundAsync();
             }
             else
             {
                 IsTrackingEnabled = false;
             }
         }
-        */
 
         private void StopTracking()
         {
