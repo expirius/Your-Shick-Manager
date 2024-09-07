@@ -20,6 +20,7 @@ using Microsoft.Maui.ApplicationModel;
 using static Microsoft.Maui.ApplicationModel.Permissions;
 using System.Threading;
 using MFASeeker.ViewModel;
+using System.ComponentModel;
 
 namespace MFASeeker.Model
 {
@@ -60,13 +61,16 @@ namespace MFASeeker.Model
 
             // Мониторинг компаса
             Geolocator compass = new();
-            await compass.StartUpdateCompassAsync();
+            compass.OnCompassChangedAction += (newReading) =>
+            {
+                _myLocationLayer.UpdateMyViewDirection(newReading, Map.Navigator.Viewport.Rotation, true);
+            };
+            await compass.StartUpdateCompassAsync(cancellationToken);
+
 
             // Мониторинг текущего местоположения
             var progress = new Progress<Location>(location =>
             {
-                _myLocationLayer.UpdateMyViewDirection(compass.Reading, Map.Navigator.Viewport.Rotation, true);
-
                 var currentLocation = ConvertToMPoint(location);
                 // конвертируется МПоинт в сферические координаты
                 currentLocation = SphericalMercator.FromLonLat(currentLocation.X, currentLocation.Y).ToMPoint(); ;
