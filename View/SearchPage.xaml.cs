@@ -12,16 +12,16 @@ namespace MFASeeker.View;
 
 public partial class SearchPage : ContentPage
 {
-
+    private SearchViewModel _searchViewModel;
     public SearchPage(SearchViewModel searchViewModel)
 	{
         BindingContext = searchViewModel;
+        _searchViewModel = searchViewModel;
         InitializeComponent();
-        /*
-        MapControl mapControl = new();
-        mapControl.Map = MapService.CreateSearchMapAsync().Result;
+    }
 
-        mapView.Content = mapControl.Content; //new MapControl
-        */
+    private void OnLocationSwitchCheckBox_Clicked(object sender, CheckedChangedEventArgs e)
+    {
+        _searchViewModel.ChangeState();
     }
 }

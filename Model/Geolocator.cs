@@ -9,7 +9,7 @@ public partial class Geolocator : ObservableObject
 {
     public static IGeolocator Default = new GeolocatorImplementation();
     CancellationTokenSource _cancelTokenSource = new CancellationTokenSource();
-    public Geolocator(double reading = 100, double rotationAngle = 0)
+    public Geolocator(double reading = 0, double rotationAngle = 0)
     {
         Reading = reading ; 
         RotationAngle = rotationAngle;
@@ -22,14 +22,7 @@ public partial class Geolocator : ObservableObject
 
     public Action<double>? OnCompassChangedAction { get; set; }
 
-    private void OnCompassReadingChanged(object sender, CompassChangedEventArgs e)
-    {
-        Reading = e.Reading.HeadingMagneticNorth;
-        //RotationAngle = 360 - e.Reading.HeadingMagneticNorth;
-        OnCompassChangedAction?.Invoke(Reading);
-    }
-
-    public async Task StartUpdateCompassAsync(CancellationToken cancellationToken)
+    public async Task StartUpdateCompassAsync()
     {
         try
         {
@@ -49,9 +42,15 @@ public partial class Geolocator : ObservableObject
         }
         catch (TaskCanceledException ex) { Console.WriteLine(ex.ToString()); }
     }
-    public void StopUpdatingLocation()
+    public void StopUpdatingCompass()
     {
-        _cancelTokenSource?.Cancel();
+        //_cancelTokenSource?.Cancel();
+        Compass.Stop();
     }
-
+    private void OnCompassReadingChanged(object sender, CompassChangedEventArgs e)
+    {
+        Reading = e.Reading.HeadingMagneticNorth;
+        //RotationAngle = 360 - e.Reading.HeadingMagneticNorth;
+        OnCompassChangedAction?.Invoke(Reading);
+    }
 }

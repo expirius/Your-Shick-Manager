@@ -17,7 +17,12 @@
             HorizontalOptions="Fill"
             Margin="10, -10, 15, 0"/>
         <ContentView Grid.Row="1" Grid.RowSpan="2"  x:Name="mapView" Content="{Binding MapControl}"/>
-        <Button 
+        <CheckBox x:Name ="LocationSwitchCheckBox"
+                  
+                  IsChecked="{Binding LocationCheckBoxIsChecked}"
+                  CheckedChanged="OnLocationSwitchCheckBox_Clicked"/>
+        <Label x:Name="TESTlabel" Text="{Binding CurrentStateText}"/>
+            <Button 
             Rotation="-45"
             Padding="10,0,0,5"
             Text="➤" FontSize="40"
@@ -25,11 +30,10 @@
             Background="#99000000"
             Margin="0,0,30,40"
             CornerRadius="30"
-            Command="{Binding EnableSpectateModeCommand}"
             Grid.Row="1" Grid.RowSpan="2" 
             VerticalOptions="End" HorizontalOptions="End"
             HeightRequest="65" WidthRequest="65" >
-            
+            <!-- Command="{Binding EnableSpectateModeCommand}" -->
 
         </Button>
     </Grid>
