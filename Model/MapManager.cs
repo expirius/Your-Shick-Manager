@@ -46,9 +46,6 @@ namespace MFASeeker.Model
             var sphericalMercatorCoordinate = SphericalMercator.FromLonLat(MOSCOWLOCATION.X, MOSCOWLOCATION.Y).ToMPoint();
             Map.Home = n => n.CenterOnAndZoomTo(sphericalMercatorCoordinate, n.Resolutions[19]);
         }
-
-
-
         public async Task EnableSpectateModeAsync(CancellationToken cancellationToken)
         {
             if (Map == null)
@@ -82,8 +79,6 @@ namespace MFASeeker.Model
 
 
         }
-
-
 
         // Виджеты
         private static ZoomInOutWidget CreateZoomInOutWidget(Orientation orientation,
