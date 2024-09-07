@@ -33,7 +33,7 @@
                 <Label 
                 FontSize="20"
                     LineBreakMode="WordWrap"
-                Text="позволит не обосраться на улице"
+                Text="позволит не обо***ться на улице"
                 Style="{StaticResource SubHeadline}"
                 SemanticProperties.HeadingLevel="Level3"/>
             </VerticalStackLayout>
