@@ -57,21 +57,26 @@ namespace MFASeeker.Model
             Map.Layers.Add(OpenStreetMap.CreateTileLayer());
             Map.Layers.Add(_myLocationLayer);
 
-            // Включение компаса
-            //CompassVM compassVM = new CompassVM();
-            //await compassVM.ToggleCompass(cancellationToken);
+
+            // Мониторинг компаса
+            Geolocator compass = new();
+            await compass.StartUpdateCompassAsync();
 
             // Мониторинг текущего местоположения
             var progress = new Progress<Location>(location =>
             {
+                _myLocationLayer.UpdateMyViewDirection(compass.Reading, Map.Navigator.Viewport.Rotation, true);
+
                 var currentLocation = ConvertToMPoint(location);
                 // конвертируется МПоинт в сферические координаты
                 currentLocation = SphericalMercator.FromLonLat(currentLocation.X, currentLocation.Y).ToMPoint(); ;
                 _myLocationLayer.UpdateMyLocation(currentLocation, true);
-
             });
             // При изменении локции прогресс прогоняется заново
-            await Geolocator.Default.StartListening(progress, cancellationToken); 
+            await Geolocator.Default.StartListening(progress, cancellationToken);
+
+
+
 
         }
 
