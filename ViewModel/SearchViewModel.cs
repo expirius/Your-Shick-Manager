@@ -31,8 +31,8 @@ public partial class SearchViewModel : ObservableObject
     public enum TriState
     {
         Unchecked,
-        Position,
-        Compass
+        Follow,
+        UnFollow
     }
 
     [ObservableProperty]
@@ -44,52 +44,50 @@ public partial class SearchViewModel : ObservableObject
 
     // Свойство для отображения текущего состояния текста
     [ObservableProperty]
-    private string currentStateText;
+    private string? currentStateText;
     // Стандартное состояние для чекбокса
     private TriState _currentState = TriState.Unchecked;
-
-    // Обновление метки пользователя
-
-    //private async Task EnableSpectateMode(CancellationToken cancellationToken)
-    //{
-    //    if (mapManager != null)
-    //        await mapManager.EnableSpectateModeAsync(cancellationToken);
-    //}
 
     // Метод для переключения состояний
     public void ChangeState()
     {
         _currentState = _currentState switch
         {
-            TriState.Unchecked => TriState.Position,
-            TriState.Position => TriState.Compass,
-            TriState.Compass => TriState.Unchecked,
+            TriState.Unchecked => TriState.Follow,
+            TriState.Follow => TriState.UnFollow,
+            TriState.UnFollow => TriState.Follow,
+            //TriState.Compass => TriState.Unchecked,
             _ => TriState.Unchecked
         };
         UpdateCheckBox();
     }
     // Метод для обновления состояния CheckBox
-    private async void UpdateCheckBox()
+    private async Task UpdateCheckBox()
     {
         CancellationTokenSource cts = new();
         switch (_currentState)
         {
-            case TriState.Unchecked:
-                LocationCheckBoxIsChecked = false;
-                CurrentStateText = "Unchecked";
-                mapManager.StopSpectateMode();
-                break;
-            case TriState.Position:
+            /*case TriState.Unchecked:
+            //    LocationCheckBoxIsChecked = false;
+            //    CurrentStateText = "Unchecked";
+            //    mapManager.StopSpectateMode();
+            //    break;
+            */
+
+            // Переписать для типов слежки (follow / unfollow)
+            case TriState.Follow:
                 LocationCheckBoxIsChecked = true;
-                CurrentStateText = "Position";
-                await mapManager.EnableSpectateModeAsync(cts.Token);
-
-                break;
-            case TriState.Compass:
-                LocationCheckBoxIsChecked = false;
-                CurrentStateText = "Compass";
-
+                CurrentStateText = "Follow";
                 await mapManager.EnableCompassModeAsync();
+                await mapManager.EnableSpectateModeAsync(cts.Token);
+                break;
+            case TriState.UnFollow:
+                LocationCheckBoxIыsChecked = false;
+                CurrentStateText = "Unfollow";
+                await mapManager.EnableCompassModeAsync();
+                /*
+                 * ЛОГИКА для отвязки камеры
+                 */
                 break;
         }
     }

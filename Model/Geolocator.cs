@@ -42,11 +42,6 @@ public partial class Geolocator : ObservableObject
         }
         catch (TaskCanceledException ex) { Console.WriteLine(ex.ToString()); }
     }
-    public void StopUpdatingCompass()
-    {
-        //_cancelTokenSource?.Cancel();
-        Compass.Stop();
-    }
     private void OnCompassReadingChanged(object sender, CompassChangedEventArgs e)
     {
         Reading = e.Reading.HeadingMagneticNorth;
