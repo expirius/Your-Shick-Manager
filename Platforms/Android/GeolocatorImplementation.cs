@@ -51,7 +51,7 @@ internal class GeolocationContinuousListener : Java.Lang.Object, ILocationListen
     {
         locationManager = (LocationManager?)Android.App.Application.Context.GetSystemService(Android.Content.Context.LocationService);
         // Requests location updates each second and notify if location changes more then 100 meters
-        locationManager?.RequestLocationUpdates(LocationManager.NetworkProvider, 100, 1, this); // локация только через нетворк
+        locationManager?.RequestLocationUpdates(LocationManager.GpsProvider, 100, 1, this); // 
     }
 
     public void OnLocationChanged(Location location)
