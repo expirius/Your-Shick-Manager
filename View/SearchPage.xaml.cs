@@ -7,6 +7,7 @@ using Microsoft.Maui.ApplicationModel;
 using Mapsui.Widgets.Zoom;
 using MFASeeker.Services;
 using MFASeeker.ViewModel;
+ using CommunityToolkit.Mvvm.Input;
 
 namespace MFASeeker.View;
 
@@ -20,7 +21,9 @@ public partial class SearchPage : ContentPage
         InitializeComponent();
     }
 
-    private void OnLocationSwitchCheckBox_Clicked(object sender, CheckedChangedEventArgs e)
+
+    // Удалить как будет разработан ChangeStatCheckboxCommand
+    private void LocationSwitchCheckBox_CheckedChanged(object sender, CheckedChangedEventArgs e)
     {
         _searchViewModel.ChangeState();
     }

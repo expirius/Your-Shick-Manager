@@ -4,6 +4,7 @@
              x:Class="MFASeeker.View.SearchPage"
              xmlns:vm ="clr-namespace:MFASeeker.ViewModel"
              x:DataType="vm:SearchViewModel"
+             xmlns:cbuttons="clr-namespace:MFASeeker.View.Controls.Buttons"
              Title="Карта">
     <Grid HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
         <Grid.RowDefinitions>
@@ -17,24 +18,34 @@
             HorizontalOptions="Fill"
             Margin="10, -10, 15, 0"/>
         <ContentView Grid.Row="1" Grid.RowSpan="2"  x:Name="mapView" Content="{Binding MapControl}"/>
-        <CheckBox x:Name ="LocationSwitchCheckBox"
-                  
-                  IsChecked="{Binding LocationCheckBoxIsChecked}"
-                  CheckedChanged="OnLocationSwitchCheckBox_Clicked"/>
-        <Label x:Name="TESTlabel" Text="{Binding CurrentStateText}"/>
-            <Button 
-            Rotation="-45"
-            Padding="10,0,0,5"
-            Text="➤" FontSize="40"
-            TextColor="White"
-            Background="#99000000"
-            Margin="0,0,30,40"
-            CornerRadius="30"
-            Grid.Row="1" Grid.RowSpan="2" 
-            VerticalOptions="End" HorizontalOptions="End"
-            HeightRequest="65" WidthRequest="65" >
-            <!-- Command="{Binding EnableSpectateModeCommand}" -->
 
-        </Button>
+        <cbuttons:CustomCheckBox
+                        Margin="0, 0, 30,40"
+            Grid.Row="1" Grid.RowSpan="2"
+            VerticalOptions="End" HorizontalOptions="End"
+            HeightRequest="85" WidthRequest="85"
+            
+            ImageActive="arrow.png"
+            ImageInactive="bad_toilet.png"
+            IsChecked="{Binding LocationCheckBoxIsChecked}"
+
+            IsCheckedChanged="LocationSwitchCheckBox_CheckedChanged"/>
+        <!-- Временное решение пока кастомный чекбокс в разработке 
+            <CheckBox x:Name ="LocationSwitchCheckBox"
+                  HeightRequest="65"
+                  WidthRequest="65"
+                  Background="Black"
+                  Margin="0, 0, 30,40"
+                  Grid.Row="1" Grid.RowSpan="2"
+                  VerticalOptions="End" HorizontalOptions="End"
+                  IsChecked="{Binding LocationCheckBoxIsChecked}"
+                  CheckedChanged="LocationSwitchCheckBox_CheckedChanged"/> -->
+        
+        <!-- TEST LABELS -->
+        <Label x:Name="TESTlabel" Text="{Binding CurrentStateText, StringFormat='Checkbox is - {0}'}"
+               FontSize="15"
+               Grid.Row="1" Grid.RowSpan="2"
+               VerticalOptions="End"
+               />
     </Grid>
 </ContentPage>
