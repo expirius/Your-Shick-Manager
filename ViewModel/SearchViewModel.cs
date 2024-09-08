@@ -82,7 +82,7 @@ public partial class SearchViewModel : ObservableObject
                 await mapManager.EnableSpectateModeAsync(cts.Token);
                 break;
             case TriState.UnFollow:
-                LocationCheckBoxIыsChecked = false;
+                LocationCheckBoxIsChecked = false;
                 CurrentStateText = "Unfollow";
                 await mapManager.EnableCompassModeAsync();
                 /*
