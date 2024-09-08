@@ -19,6 +19,8 @@ public partial class Geolocator : ObservableObject
     private double reading;
     [ObservableProperty]
     private double rotationAngle;
+    [ObservableProperty]
+    private bool isActive;
 
     public Action<double>? OnCompassChangedAction { get; set; }
 
@@ -38,6 +40,7 @@ public partial class Geolocator : ObservableObject
                     Compass.Default.Stop();
                     Compass.Default.ReadingChanged -= OnCompassReadingChanged;
                 }
+                IsActive = Compass.Default.IsMonitoring;
             }
         }
         catch (TaskCanceledException ex) { Console.WriteLine(ex.ToString()); }

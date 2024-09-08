@@ -58,9 +58,13 @@ namespace MFASeeker.Model
                     return;
                 if (_myLocationLayer == null)
                     return;
-                _myLocationLayer.UpdateMyViewDirection(newReading, Map.Navigator.Viewport.Rotation, true);
+                if (compass.IsActive)
+                    _myLocationLayer.UpdateMyViewDirection(newReading, Map.Navigator.Viewport.Rotation, true);
             };
             await compass.StartUpdateCompassAsync();
+
+            if (!compass.IsActive)
+                _myLocationLayer.UpdateMyViewDirection(-1, 0, false);
         }
         public async Task EnableSpectateModeAsync(CancellationToken token)
         {
