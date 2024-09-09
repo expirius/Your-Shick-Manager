@@ -19,17 +19,23 @@
             Margin="10, -10, 15, 0"/>
         <ContentView Grid.Row="1" Grid.RowSpan="2"  x:Name="mapView" Content="{Binding MapControl}"/>
 
-        <cbuttons:CustomCheckBox
-                        Margin="0, 0, 30,40"
+        <Frame
+            HeightRequest="95"
+            WidthRequest="95"
+            Background="#B2000000"
+            CornerRadius="50"
+            Margin="0, 0, 30,40"
             Grid.Row="1" Grid.RowSpan="2"
-            VerticalOptions="End" HorizontalOptions="End"
-            HeightRequest="85" WidthRequest="85"
-            
-            ImageActive="arrow.png"
-            ImageInactive="bad_toilet.png"
-            IsChecked="{Binding LocationCheckBoxIsChecked}"
-
-            IsCheckedChanged="LocationSwitchCheckBox_CheckedChanged"/>
+            VerticalOptions="End" HorizontalOptions="End">
+            <cbuttons:ImageCheckBox 
+                Background="Transparent"
+                x:Name="LocationSwitchCheckBox"
+                ImageActive="arrow_active.png"
+                ImageInactive="arrow.png"
+                IsChecked="{Binding LocationCheckBoxIsChecked, Mode=TwoWay}"
+                IsCheckedChanged="LocationSwitchCheckBox_CheckedChanged"
+            />
+        </Frame>
         <!-- Временное решение пока кастомный чекбокс в разработке 
             <CheckBox x:Name ="LocationSwitchCheckBox"
                   HeightRequest="65"

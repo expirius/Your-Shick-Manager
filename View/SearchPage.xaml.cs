@@ -16,9 +16,9 @@ public partial class SearchPage : ContentPage
     private SearchViewModel _searchViewModel;
     public SearchPage(SearchViewModel searchViewModel)
 	{
+        InitializeComponent();
         BindingContext = searchViewModel;
         _searchViewModel = searchViewModel;
-        InitializeComponent();
     }
 
 

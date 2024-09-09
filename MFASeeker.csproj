@@ -69,6 +69,7 @@
 
 	<ItemGroup>
 	  <None Remove="Resources\Images\arrow.png" />
+	  <None Remove="Resources\Images\arrow_active.png" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -80,6 +81,15 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Compile Update="View\Controls\Buttons\ImageCheckBox.xaml.cs">
+	    <DependentUpon>ImageCheckBox.xaml</DependentUpon>
+	  </Compile>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <MauiXaml Update="View\Controls\Buttons\ImageCheckBox.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="View\Controls\Tabs\BottomTab.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>

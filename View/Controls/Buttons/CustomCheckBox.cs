@@ -11,7 +11,7 @@ namespace MFASeeker.View.Controls.Buttons
         private readonly Image _image; // Элемент для отображения изображения
         private readonly CheckBox _checkBox; // Сам чекбокс
 
-        public event EventHandler<CheckedChangedEventArgs> IsCheckedChanged;
+        public event EventHandler<CheckedChangedEventArgs> IsCheckedChanged = delegate { };
 
         // Свойство IsChecked с поддержкой привязки
         public static readonly BindableProperty IsCheckedProperty =
@@ -55,8 +55,6 @@ namespace MFASeeker.View.Controls.Buttons
             UpdateImage();
         }
 
-
-
         // Свойства для изображения активного состояния
         public ImageSource ImageActive
         {
@@ -81,7 +79,7 @@ namespace MFASeeker.View.Controls.Buttons
             _image.Source = _checkBox.IsChecked ? ImageActive : ImageInactive;
         }
 
-        private void OnCheckedChanged(object sender, CheckedChangedEventArgs e)
+        private void OnCheckedChanged(object? sender, CheckedChangedEventArgs e)
         {
             // Обновляем изображение при изменении состояния чекбокса
             UpdateImage();
