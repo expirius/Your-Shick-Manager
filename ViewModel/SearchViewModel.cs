@@ -26,8 +26,6 @@ public partial class SearchViewModel : ObservableObject
         mapManager = new();
 
         MapControl.Map = mapManager.Map;
-    }
-
     public enum TriState
     {
         Unchecked,
@@ -46,7 +44,7 @@ public partial class SearchViewModel : ObservableObject
     [ObservableProperty]
     private string? currentStateText;
     // Стандартное состояние для чекбокса
-    private TriState _currentState = TriState.Unchecked;
+    private TriState _currentState;
 
     // Метод для переключения состояний
     public void ChangeState()
@@ -73,8 +71,6 @@ public partial class SearchViewModel : ObservableObject
             //    mapManager.StopSpectateMode();
             //    break;
             */
-
-            // Переписать для типов слежки (follow / unfollow)
             case TriState.Follow:
                 LocationCheckBoxIsChecked = true;
                 CurrentStateText = "Follow";
