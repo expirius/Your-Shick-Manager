@@ -8,7 +8,6 @@ namespace MFASeeker;
 public partial class Geolocator : ObservableObject
 {
     public static IGeolocator Default = new GeolocatorImplementation();
-    CancellationTokenSource _cancelTokenSource = new CancellationTokenSource();
     public Geolocator(double reading = 0, double rotationAngle = 0)
     {
         Reading = reading ; 
@@ -24,7 +23,7 @@ public partial class Geolocator : ObservableObject
 
     public Action<double>? OnCompassChangedAction { get; set; }
 
-    public async Task StartUpdateCompassAsync()
+    public void StartUpdateCompass()
     {
         try
         {
@@ -45,7 +44,7 @@ public partial class Geolocator : ObservableObject
         }
         catch (TaskCanceledException ex) { Console.WriteLine(ex.ToString()); }
     }
-    private void OnCompassReadingChanged(object sender, CompassChangedEventArgs e)
+    private void OnCompassReadingChanged(object? sender, CompassChangedEventArgs e)
     {
         Reading = e.Reading.HeadingMagneticNorth;
         //RotationAngle = 360 - e.Reading.HeadingMagneticNorth;

@@ -27,17 +27,17 @@ namespace MFASeeker.Model
 {
     public class MapManager
     {
-        public MapManager() 
-        {
-            CreateMap();
-        }
-        private readonly MPoint MOSCOWLOCATION = new(37.6156, 55.7522);
+        public MapManager() => CreateMap();
+
         public Map? Map;
+
+        private readonly MPoint MOSCOWLOCATION = new(37.6156, 55.7522);
+        private readonly Geolocator compass = new();
         private MyLocationLayer? _myLocationLayer;
-        private Geolocator compass = new();
         private CancellationToken cancellationToken;
+
         // Работа с картой
-        private void CreateMap()
+        private protected void CreateMap()
         {
             Map = new() { CRS = "EPSG:3857" };
 
@@ -49,7 +49,7 @@ namespace MFASeeker.Model
             var sphericalMercatorCoordinate = SphericalMercator.FromLonLat(MOSCOWLOCATION.X, MOSCOWLOCATION.Y).ToMPoint();
             Map.Home = n => n.CenterOnAndZoomTo(sphericalMercatorCoordinate, n.Resolutions[19]);
         }
-        public async Task EnableCompassModeAsync()
+        public void EnableCompassMode()
         {
             // Мониторинг компаса
             compass.OnCompassChangedAction += (newReading) =>
@@ -61,9 +61,9 @@ namespace MFASeeker.Model
                 if (compass.IsActive)
                     _myLocationLayer.UpdateMyViewDirection(newReading, Map.Navigator.Viewport.Rotation, true);
             };
-            await compass.StartUpdateCompassAsync();
+            compass.StartUpdateCompass();
 
-            if (!compass.IsActive)
+            if (!compass.IsActive && _myLocationLayer != null)
                 _myLocationLayer.UpdateMyViewDirection(-1, 0, false);
         }
         public async Task EnableSpectateModeAsync(CancellationToken token)
@@ -83,26 +83,17 @@ namespace MFASeeker.Model
             {
                 var currentLocation = ConvertToMPoint(location);
                 // конвертируется МПоинт в сферические координаты
-                currentLocation = SphericalMercator.FromLonLat(currentLocation.X, currentLocation.Y).ToMPoint();
-                if(!cancellationToken.IsCancellationRequested)
-                    _myLocationLayer.UpdateMyLocation(currentLocation, true);
+                if (currentLocation != null)
+                {
+                    currentLocation = SphericalMercator.FromLonLat(currentLocation.X, currentLocation.Y).ToMPoint();
+                    if (!cancellationToken.IsCancellationRequested)
+                        _myLocationLayer.UpdateMyLocation(currentLocation, true);
+                }
             });
             // При изменении локции прогресс прогоняется заново
             await Geolocator.Default.StartListening(progress, cancellationToken);
         }
-        /*
-        public void StopSpectateMode()
-        {
-            if (Map == null)
-                return;
-            if (Map.Layers.Count == 0)
-                return;
-            CancellationTokenSource cts = new();
-            cts.Cancel();
-            cancellationToken = cts.Token;
 
-        }
-        */
         // Виджеты
         private static ZoomInOutWidget CreateZoomInOutWidget(Orientation orientation,
         Mapsui.Widgets.VerticalAlignment verticalAlignment, Mapsui.Widgets.HorizontalAlignment horizontalAlignment)
@@ -117,7 +108,7 @@ namespace MFASeeker.Model
             };
         }
         // Переобразование точки в MPoint для MAPSUI
-        private MPoint? ConvertToMPoint(Location? locationTask)
+        private static MPoint? ConvertToMPoint(Location? locationTask)
         {
             Location? location = locationTask;
             if (location == null)

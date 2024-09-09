@@ -19,15 +19,15 @@ namespace MFASeeker.ViewModel;
 
 public partial class SearchViewModel : ObservableObject
 {
-    private readonly MapManager mapManager;
+    private MapManager mapManager;
     public SearchViewModel()
     {
         MapControl = new();
         mapManager = new();
 
-        MapControl.Map = mapManager.Map;
+        if(mapManager.Map != null)
+            MapControl.Map = mapManager.Map;
     }
-
     public enum TriState
     {
         Unchecked,
@@ -46,7 +46,7 @@ public partial class SearchViewModel : ObservableObject
     [ObservableProperty]
     private string? currentStateText;
     // Стандартное состояние для чекбокса
-    private TriState _currentState = TriState.Unchecked;
+    private TriState _currentState;
 
     // Метод для переключения состояний
     public void ChangeState()
@@ -59,10 +59,10 @@ public partial class SearchViewModel : ObservableObject
             //TriState.Compass => TriState.Unchecked,
             _ => TriState.Unchecked
         };
-        UpdateCheckBox();
+         UpdateCheckBox();
     }
     // Метод для обновления состояния CheckBox
-    private async Task UpdateCheckBox()
+    private async void UpdateCheckBox()
     {
         CancellationTokenSource cts = new();
         switch (_currentState)
@@ -73,18 +73,16 @@ public partial class SearchViewModel : ObservableObject
             //    mapManager.StopSpectateMode();
             //    break;
             */
-
-            // Переписать для типов слежки (follow / unfollow)
             case TriState.Follow:
                 LocationCheckBoxIsChecked = true;
                 CurrentStateText = "Follow";
-                await mapManager.EnableCompassModeAsync();
+                mapManager.EnableCompassMode();
                 await mapManager.EnableSpectateModeAsync(cts.Token);
                 break;
             case TriState.UnFollow:
                 LocationCheckBoxIsChecked = false;
                 CurrentStateText = "Unfollow";
-                await mapManager.EnableCompassModeAsync();
+                mapManager.EnableCompassMode();
                 /*
                  * ЛОГИКА для отвязки камеры
                  */
