@@ -1,32 +1,25 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using Mapsui;
-using Mapsui.Layers;
-using Mapsui.UI;
 using Mapsui.UI.Maui;
 using MFASeeker.Model;
-using MFASeeker.View;
-using Microsoft.VisualBasic;
-using RTools_NTS.Util;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace MFASeeker.ViewModel;
 
 public partial class SearchViewModel : ObservableObject
 {
     private MapManager mapManager;
+    private PinManager pinManager;
     public SearchViewModel()
     {
         MapControl = new();
         mapManager = new();
+        pinManager = new PinManager();
 
-        if(mapManager.Map != null)
+        if (mapManager.Map != null)
+        {
             MapControl.Map = mapManager.Map;
+            //MapControl.Map.Info += MapOnInfo;
+            MapControl.Map.Layers.Add(pinManager.CreatePointLayer());
+        }
     }
     public enum TriState
     {

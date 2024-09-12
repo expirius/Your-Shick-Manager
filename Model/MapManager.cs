@@ -2,26 +2,9 @@
 using Mapsui.Extensions;
 using Mapsui.Projections;
 using Mapsui.Tiling;
-using Mapsui.UI.Objects;
-using Mapsui.Widgets;
-using Mapsui.Widgets.ButtonWidget;
 using Mapsui.Widgets.Zoom;
-using Svg;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using Mapsui.Layers;
 using Map = Mapsui.Map;
 using MyLocationLayer = Mapsui.Layers.MyLocationLayer;
-using Mapsui.UI.Maui;
-using Microsoft.Maui.ApplicationModel;
-using static Microsoft.Maui.ApplicationModel.Permissions;
-using System.Threading;
-using MFASeeker.ViewModel;
-using System.ComponentModel;
-using BruTile.Tms;
 
 namespace MFASeeker.Model
 {
