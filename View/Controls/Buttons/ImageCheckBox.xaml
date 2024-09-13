@@ -4,9 +4,11 @@
              x:Class="MFASeeker.View.Controls.Buttons.ImageCheckBox"
              x:Name="ImageCheckBoxName">
     <Grid>
-
-        <Image x:Name="Image"/>
-
+        <!--Изменить отступы через свойства imagecheckboxname-->
+        <Image
+            Margin="15,5,5,15"
+            Rotation="45"
+            x:Name="Image"/>
         <CheckBox
             x:Name="SCheckBox"
             IsChecked="{Binding IsChecked,Source={x:Reference ImageCheckBoxName}}"
