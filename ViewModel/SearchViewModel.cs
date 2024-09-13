@@ -11,6 +11,12 @@ namespace MFASeeker.ViewModel;
 
 public partial class SearchViewModel : ObservableObject
 {
+    private enum TriState
+    {
+        Unchecked,
+        Follow,
+        UnFollow
+    }
     private MapManager mapManager;
     private PinManager pinManager;
     private static MemoryLayer? pointLayer;
@@ -31,12 +37,6 @@ public partial class SearchViewModel : ObservableObject
             MapControl.SingleTap += OnMapTaped;
             MapControl.Map.Info += MapOnInfo; // Привязка на событие клика
         }
-    }
-    public enum TriState
-    {
-        Unchecked,
-        Follow,
-        UnFollow
     }
 
     [ObservableProperty]
@@ -97,16 +97,16 @@ public partial class SearchViewModel : ObservableObject
     {
         if (e.NumOfTaps > 0)
         {
-            var styles = pointLayer?.Features?.SelectMany(feature => feature.Styles);
+            var styles = pointLayer?.Features?.Select(feature => feature.Styles.Where(s => s is CalloutStyle).Cast<CalloutStyle>().FirstOrDefault());
             if (styles == null) return;
             foreach (var style in styles) style.Enabled = false;
             pointLayer?.DataHasChanged();
         }
     }
-
     private static void MapOnInfo(object? sender, MapInfoEventArgs e)
     {
-        var calloutStyle = e.MapInfo?.Feature?.Styles.Where(s => s is CalloutStyle).Cast<CalloutStyle>().FirstOrDefault();
+        var calloutStyle = e.MapInfo?.Feature?.Styles.Where(s => s is CalloutStyle)
+            .Cast<CalloutStyle>().FirstOrDefault();
 
         if (calloutStyle != null)
         {
@@ -115,11 +115,11 @@ public partial class SearchViewModel : ObservableObject
                 // Деактивируем предыдущую активную метку
                 _activeCalloutStyle.Enabled = false;
             }
-
             // Активируем новую метку
             calloutStyle.Enabled = !calloutStyle.Enabled;
             _activeCalloutStyle = calloutStyle.Enabled ? calloutStyle : null;
-            
+
+            e.MapInfo?.Layer?.DataHasChanged(); // Обновляем слой для перерисовки графики
         }
     }
 }
