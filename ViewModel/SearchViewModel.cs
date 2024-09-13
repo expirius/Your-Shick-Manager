@@ -120,7 +120,6 @@ public partial class SearchViewModel : ObservableObject
             calloutStyle.Enabled = !calloutStyle.Enabled;
             _activeCalloutStyle = calloutStyle.Enabled ? calloutStyle : null;
             
-            e.MapInfo?.Layer?.DataHasChanged(); // Обновляем слой для перерисовки графики
         }
     }
 }
