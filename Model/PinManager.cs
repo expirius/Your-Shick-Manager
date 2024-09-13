@@ -5,6 +5,8 @@ using Mapsui.Projections;
 using Mapsui.Providers;
 using Mapsui.Styles;
 using Color = Mapsui.Styles.Color;
+using Mapsui.Utilities;
+using Exception = System.Exception;
 
 namespace MFASeeker.Model
 {
@@ -12,16 +14,17 @@ namespace MFASeeker.Model
     {
         private static readonly string? _apiService;
 
-        public MemoryLayer CreatePointLayer()
-        {
-            return new MemoryLayer
+            public MemoryLayer CreatePointLayer()
             {
-                Name = "AllToilets",
-                IsMapInfoLayer = true,
-                Features = new MemoryProvider(GetFeaturesLocal()).Features,
-                Style = SymbolStyles.CreatePinStyle(symbolScale: 0.7),
-            };
-        }
+                return new MemoryLayer
+                {
+                    Name = "AllToilets",
+                    IsMapInfoLayer = true,
+                    
+                    Features = new MemoryProvider(GetFeaturesLocal()).Features,
+                    //Style = CreateSvgStyle(@"Resources.Icons.toilet_marker_dark.svg", 0.06)
+                };
+            }
 
         public PinManager()
         {
@@ -30,6 +33,8 @@ namespace MFASeeker.Model
 
         private IEnumerable<IFeature> GetFeaturesLocal()
         {
+            //Сделать в будущем в зависимости от типа (Id) соответствующую иконку
+            //var pinId = typeof(PinManager).LoadSvgId("toileticon1.svg"); // пример
             var toilets = GetLocalToiletsTest();
             return toilets.Select(t =>
             {
@@ -39,20 +44,47 @@ namespace MFASeeker.Model
                 feature[nameof(t.Location.Longitude)] = t.Location.Longitude;
                 feature[nameof(t.Location.Latitude)] = t.Location.Latitude;
                 feature[nameof(t.Description)] = t.Description;
+                feature[nameof(t.Raiting)] = t.Raiting;
+                // styles
+                switch (t.Raiting)
+                {
+                    case 5:
+                        feature.Styles.Add(CreateSvgStyle(@"Resources.Icons.rank5_toilet.svg", 0.1));
+                        break;
+                    case 4:
+                        feature.Styles.Add(CreateSvgStyle(@"Resources.Icons.rank4_toilet.svg", 0.1));
+                        break;
+                    case 3:
+                        feature.Styles.Add(CreateSvgStyle(@"Resources.Icons.rank3_toilet.svg", 0.1));
+                        break;
+                    case 2:
+                        feature.Styles.Add(CreateSvgStyle(@"Resources.Icons.rank2_toilet.svg", 0.1));
+                        break;
+                    case 1:
+                        feature.Styles.Add(CreateSvgStyle(@"Resources.Icons.rank1_toilet.svg", 0.1));
+                        break;
+                    default:
+                        feature.Styles.Add(CreateSvgStyle(@"Resources.Icons.defaultrank_toilet.svg", 0.1));
+                        break;
+                }   
                 feature.Styles.Add(CreateCalloutStyle(feature.ToStringOfKeyValuePairs()));
                 return feature;
             });
         }
+        // Временный метод для заполнения и тестирования
         private IEnumerable<Toilet> GetLocalToiletsTest()
         {
-            return new List<Toilet>
-            {
-                new Toilet { Id = 0, Name = "Кофейня", Description = "ТЕКТСКРЫШЛАВЫШ фывфы", Location = new Location(53.256586, 34.373289)},
-                new Toilet { Id = 1, Name = "Гостиница, ресторан", Description = "фыы asdasf фывфы", Location = new Location(53.254117, 34.377019)},
-                new Toilet { Id = 2, Name = "Озон", Description = "Попросись у кассиршы, иногда #%#@ пускает0.", Location = new Location(53.253010, 34.375285)},
-
-            };
+            return
+            [
+                new() { Id = 0, Raiting = 0, Name = "Кофейня", Description = "ОПИСАНИЕ БОЛЬШОЕ ОЧЕНЬ ОПИСАНИЕ БОЛЬШОЕ ОЧЕНЬ ОПИСАНИЕ БОЛЬШОЕ ОЧЕНЬ", Location = new Location(53.256586, 34.373289)},
+                new() { Id = 1, Raiting = 5, Name = "Гостиница, ресторан", Description = "фыы asdasf фывфы", Location = new Location(53.254117, 34.377019)},
+                new() { Id = 2, Raiting = 3, Name = "Озон", Description = "Попросись у кассиршы, иногда пускает0#%#@ ффф.", Location = new Location(53.253010, 34.375285)},
+                new() { Id = 3, Raiting = 2, Name = "Пивнушка", Description = "", Location = new Location(53.254977, 34.373497)},
+                new() { Id = 4, Raiting = 1, Name = "A school", Location = new Location(53.254519, 34.375026)},
+                new() { Id = 5, Raiting = 4, Name = "Сарай", Location = new Location(53.256070, 34.374074)},
+            ];
         }
+        // Стиль карточки пина
         private static CalloutStyle CreateCalloutStyle(string content)
         {
             return new CalloutStyle
@@ -64,8 +96,21 @@ namespace MFASeeker.Model
                 RectRadius = 10,
                 ShadowWidth = 4,
                 Enabled = false,
-                SymbolOffset = new Offset(0, SymbolStyle.DefaultHeight * 1f)
             };
+        }
+        // Создание svg для пина
+        private static SymbolStyle CreateSvgStyle(string imagePath, double scale)
+        {
+            try
+            {
+                var pinId = typeof(PinManager).LoadSvgId(imagePath);
+                return new SymbolStyle
+                {
+                    BitmapId = pinId,
+                    SymbolScale = scale
+                };
+            }
+            catch (Exception ex) {throw;}
         }
     }
 }
