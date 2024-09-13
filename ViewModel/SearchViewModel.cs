@@ -1,10 +1,11 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using Mapsui.Styles;
 using Mapsui;
+using Mapsui.Layers;
+using Mapsui.Styles;
+using Mapsui.UI;
 using Mapsui.UI.Maui;
 using MFASeeker.Model;
 using Microsoft.Maui.ApplicationModel;
-using System.Linq;
 
 namespace MFASeeker.ViewModel;
 
@@ -12,6 +13,8 @@ public partial class SearchViewModel : ObservableObject
 {
     private MapManager mapManager;
     private PinManager pinManager;
+    private static MemoryLayer? pointLayer;
+    private static CalloutStyle? _activeCalloutStyle;
     public SearchViewModel()
     {
         MapControl = new();
@@ -22,10 +25,11 @@ public partial class SearchViewModel : ObservableObject
         {
             MapControl.Map = mapManager.Map;
 
-            var pointLayer = pinManager.CreatePointLayer();
-            mapManager.Map.Layers.Add(pointLayer);
+            pointLayer = pinManager.CreatePointLayer();
+            MapControl.Map.Layers.Add(pointLayer);
 
-            MapControl.Info += MapOnInfo; // Привязка на событие клика
+            MapControl.SingleTap += OnMapTaped;
+            MapControl.Map.Info += MapOnInfo; // Привязка на событие клика
         }
     }
     public enum TriState
@@ -58,7 +62,7 @@ public partial class SearchViewModel : ObservableObject
             //TriState.Compass => TriState.Unchecked,
             _ => TriState.Unchecked
         };
-         UpdateCheckBox();
+        UpdateCheckBox();
     }
     // Метод для обновления состояния CheckBox
     private async void UpdateCheckBox()
@@ -89,14 +93,34 @@ public partial class SearchViewModel : ObservableObject
         }
     }
 
-    private static void MapOnInfo(object? sender, MapInfoEventArgs e)
+    private static void OnMapTaped(object? sender, Mapsui.UI.TappedEventArgs e)
     {
-        var calloutStyle = e.MapInfo?.Feature?.Styles.Where(s => s is CalloutStyle).Cast<CalloutStyle>().FirstOrDefault();
-        if (calloutStyle != null)
+        if (e.NumOfTaps > 0)
         {
-            calloutStyle.Enabled = !calloutStyle.Enabled;
-            e.MapInfo?.Layer?.DataHasChanged(); //Обновление слоя для перерисовки графики
+            var styles = pointLayer?.Features?.SelectMany(feature => feature.Styles);
+            if (styles == null) return;
+            foreach (var style in styles) style.Enabled = false;
+            pointLayer?.DataHasChanged();
         }
     }
 
+    private static void MapOnInfo(object? sender, MapInfoEventArgs e)
+    {
+        var calloutStyle = e.MapInfo?.Feature?.Styles.Where(s => s is CalloutStyle).Cast<CalloutStyle>().FirstOrDefault();
+
+        if (calloutStyle != null)
+        {
+            if (_activeCalloutStyle != null && _activeCalloutStyle != calloutStyle)
+            {
+                // Деактивируем предыдущую активную метку
+                _activeCalloutStyle.Enabled = false;
+            }
+
+            // Активируем новую метку
+            calloutStyle.Enabled = !calloutStyle.Enabled;
+            _activeCalloutStyle = calloutStyle.Enabled ? calloutStyle : null;
+            
+            e.MapInfo?.Layer?.DataHasChanged(); // Обновляем слой для перерисовки графики
+        }
+    }
 }
