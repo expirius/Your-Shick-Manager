@@ -4,8 +4,6 @@ using Mapsui.Layers;
 using Mapsui.Projections;
 using Mapsui.Providers;
 using Mapsui.Styles;
-using Mapsui.UI.Maui;
-using System.Collections.ObjectModel;
 using Color = Mapsui.Styles.Color;
 
 namespace MFASeeker.Model
@@ -18,7 +16,7 @@ namespace MFASeeker.Model
         {
             return new MemoryLayer
             {
-                Name = "All toilets layer",
+                Name = "AllToilets",
                 IsMapInfoLayer = true,
                 Features = new MemoryProvider(GetFeaturesLocal()).Features,
                 Style = SymbolStyles.CreatePinStyle(symbolScale: 0.7),
@@ -45,7 +43,6 @@ namespace MFASeeker.Model
                 return feature;
             });
         }
-
         private IEnumerable<Toilet> GetLocalToiletsTest()
         {
             return new List<Toilet>

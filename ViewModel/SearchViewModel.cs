@@ -1,6 +1,10 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using Mapsui.Styles;
+using Mapsui;
 using Mapsui.UI.Maui;
 using MFASeeker.Model;
+using Microsoft.Maui.ApplicationModel;
+using System.Linq;
 
 namespace MFASeeker.ViewModel;
 
@@ -17,8 +21,11 @@ public partial class SearchViewModel : ObservableObject
         if (mapManager.Map != null)
         {
             MapControl.Map = mapManager.Map;
-            //MapControl.Map.Info += MapOnInfo;
-            MapControl.Map.Layers.Add(pinManager.CreatePointLayer());
+
+            var pointLayer = pinManager.CreatePointLayer();
+            mapManager.Map.Layers.Add(pointLayer);
+
+            MapControl.Info += MapOnInfo; // Привязка на событие клика
         }
     }
     public enum TriState
@@ -40,7 +47,6 @@ public partial class SearchViewModel : ObservableObject
     private string? currentStateText;
     // Стандартное состояние для чекбокса
     private TriState _currentState;
-
     // Метод для переключения состояний
     public void ChangeState()
     {
@@ -80,6 +86,16 @@ public partial class SearchViewModel : ObservableObject
                  * ЛОГИКА для отвязки камеры
                  */
                 break;
+        }
+    }
+
+    private static void MapOnInfo(object? sender, MapInfoEventArgs e)
+    {
+        var calloutStyle = e.MapInfo?.Feature?.Styles.Where(s => s is CalloutStyle).Cast<CalloutStyle>().FirstOrDefault();
+        if (calloutStyle != null)
+        {
+            calloutStyle.Enabled = !calloutStyle.Enabled;
+            e.MapInfo?.Layer?.DataHasChanged(); //Обновление слоя для перерисовки графики
         }
     }
 

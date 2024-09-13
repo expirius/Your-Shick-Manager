@@ -10,7 +10,15 @@ namespace MFASeeker.Model
 {
     public class MapManager
     {
-        public MapManager() => CreateMap();
+        public MapManager()
+        {
+            CreateMap();
+            if (Map != null)
+            {
+                _myLocationLayer = new MyLocationLayer(Map);
+                Map.Layers.Add(_myLocationLayer);
+            }
+        }
 
         public Map? Map;
 
@@ -26,7 +34,7 @@ namespace MFASeeker.Model
 
             Map.Layers.Add(OpenStreetMap.CreateTileLayer());
             // Добавление виджета масштабирование + и -
-            Map.Widgets.Add(CreateZoomInOutWidget(Orientation.Vertical, Mapsui.Widgets.VerticalAlignment.Top, Mapsui.Widgets.HorizontalAlignment.Right));
+            Map.Widgets.Add(CreateZoomInOutWidget(Orientation.Vertical, Mapsui.Widgets.VerticalAlignment.Bottom, Mapsui.Widgets.HorizontalAlignment.Right));
 
             // Переобразование под сферический тип координат для OSM
             var sphericalMercatorCoordinate = SphericalMercator.FromLonLat(MOSCOWLOCATION.X, MOSCOWLOCATION.Y).ToMPoint();
@@ -54,12 +62,11 @@ namespace MFASeeker.Model
             cancellationToken = token;
             if (Map == null)
                 return;
-            if (_myLocationLayer != null)
-                return;
-            _myLocationLayer?.Dispose();
-            _myLocationLayer = new MyLocationLayer(Map);
-            Map.Layers.Add(OpenStreetMap.CreateTileLayer());
-            Map.Layers.Add(_myLocationLayer);
+            //if (_myLocationLayer == null)
+            //{
+            //    _myLocationLayer = new MyLocationLayer(Map);
+            //    Map.Layers.Add(_myLocationLayer);
+            //}    
 
             // Мониторинг текущего местоположения
             var progress = new Progress<Location>(location =>
@@ -86,8 +93,10 @@ namespace MFASeeker.Model
                 Orientation = orientation,
                 VerticalAlignment = verticalAlignment,
                 HorizontalAlignment = horizontalAlignment,
-                MarginX = 20,
-                MarginY = 20,
+                MarginX = 25,
+                MarginY = 150,
+                BackColor = new Mapsui.Styles.Color(0, 0, 0, 240),
+                Size = 45f
             };
         }
         // Переобразование точки в MPoint для MAPSUI
