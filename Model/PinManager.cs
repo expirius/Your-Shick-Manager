@@ -7,6 +7,7 @@ using Mapsui.Styles;
 using Color = Mapsui.Styles.Color;
 using Mapsui.Utilities;
 using Exception = System.Exception;
+using System.Text;
 
 namespace MFASeeker.Model
 {
@@ -14,13 +15,12 @@ namespace MFASeeker.Model
     {
         private static readonly string? _apiService;
 
-            public MemoryLayer CreatePointLayer()
+        public MemoryLayer CreatePointLayer()
             {
                 return new MemoryLayer
                 {
                     Name = "AllToilets",
                     IsMapInfoLayer = true,
-                    
                     Features = new MemoryProvider(GetFeaturesLocal()).Features,
                     //Style = CreateSvgStyle(@"Resources.Icons.toilet_marker_dark.svg", 0.06)
                 };
@@ -66,8 +66,9 @@ namespace MFASeeker.Model
                     default:
                         feature.Styles.Add(CreateSvgStyle(@"Resources.Icons.defaultrank_toilet.svg", 0.1));
                         break;
-                }   
-                feature.Styles.Add(CreateCalloutStyle(feature.ToStringOfKeyValuePairs()));
+                }
+                //feature.Styles.Add(CreateCalloutStyle(feature.ToStringOfKeyValuePairs()));
+                feature.Styles.Add(CreateCalloutStyleByToilet(t));
                 return feature;
             });
         }
@@ -83,6 +84,25 @@ namespace MFASeeker.Model
                 new() { Id = 4, Raiting = 1, Name = "A school", Location = new Location(53.254519, 34.375026)},
                 new() { Id = 5, Raiting = 4, Name = "Сарай", Location = new Location(53.256070, 34.374074)},
             ];
+        }
+        //
+        private static CalloutStyle CreateCalloutStyleByToilet(Toilet t)
+        {
+            // Формируем строку с нужной информацией
+            var keyValuePairs = new StringBuilder();
+            keyValuePairs.AppendLine($"Точка: {t.Name}");
+            keyValuePairs.AppendLine($"Описание: {t.Description}");
+            keyValuePairs.AppendLine($"Рейтинг: {t.Raiting}");
+            return new CalloutStyle
+            {
+                    Title = keyValuePairs.ToString(),
+                    TitleFont = { FontFamily = null, Size = 12, Italic = false, Bold = true },
+                    TitleFontColor = Color.Gray,
+                    MaxWidth = 120,
+                    RectRadius = 10,
+                    ShadowWidth = 4,
+                    Enabled = false,
+            };
         }
         // Стиль карточки пина
         private static CalloutStyle CreateCalloutStyle(string content)
