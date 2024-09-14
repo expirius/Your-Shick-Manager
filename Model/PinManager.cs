@@ -51,16 +51,16 @@ namespace MFASeeker.Model
                     case 5:
                         feature.Styles.Add(CreateSvgStyle(@"Resources.Icons.rank5_toilet.svg", 0.1));
                         break;
-                    case 4:
+                    case >=4:
                         feature.Styles.Add(CreateSvgStyle(@"Resources.Icons.rank4_toilet.svg", 0.1));
                         break;
-                    case 3:
+                    case >=3:
                         feature.Styles.Add(CreateSvgStyle(@"Resources.Icons.rank3_toilet.svg", 0.1));
                         break;
-                    case 2:
+                    case >=2:
                         feature.Styles.Add(CreateSvgStyle(@"Resources.Icons.rank2_toilet.svg", 0.1));
                         break;
-                    case 1:
+                    case >=1:
                         feature.Styles.Add(CreateSvgStyle(@"Resources.Icons.rank1_toilet.svg", 0.1));
                         break;
                     default:
@@ -79,9 +79,9 @@ namespace MFASeeker.Model
             [
                 new() { Id = 0, Raiting = 0, Name = "Кофейня", Description = "ОПИСАНИЕ БОЛЬШОЕ ОЧЕНЬ ОПИСАНИЕ БОЛЬШОЕ ОЧЕНЬ ОПИСАНИЕ БОЛЬШОЕ ОЧЕНЬ", Location = new Location(53.256586, 34.373289)},
                 new() { Id = 1, Raiting = 5, Name = "Гостиница, ресторан", Description = "фыы asdasf фывфы", Location = new Location(53.254117, 34.377019)},
-                new() { Id = 2, Raiting = 3, Name = "Озон", Description = "Попросись у кассиршы, иногда пускает0#%#@ ффф.", Location = new Location(53.253010, 34.375285)},
-                new() { Id = 3, Raiting = 2, Name = "Пивнушка", Description = "", Location = new Location(53.254977, 34.373497)},
-                new() { Id = 4, Raiting = 1, Name = "A school", Location = new Location(53.254519, 34.375026)},
+                new() { Id = 2, Raiting = 3.44, Name = "Озон", Description = "Попросись у кассиршы, иногда пускает0#%#@ ффф.", Location = new Location(53.253010, 34.375285)},
+                new() { Id = 3, Raiting = 2.2, Name = "Пивнушка", Description = "", Location = new Location(53.254977, 34.373497)},
+                new() { Id = 4, Raiting = 1.9690, Name = "A school", Location = new Location(53.254519, 34.375026)},
                 new() { Id = 5, Raiting = 4, Name = "Сарай", Location = new Location(53.256070, 34.374074)},
             ];
         }
