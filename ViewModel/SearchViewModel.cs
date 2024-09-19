@@ -17,10 +17,22 @@ public partial class SearchViewModel : ObservableObject
         Follow,
         UnFollow
     }
-    private MapManager mapManager;
-    private static MemoryLayer? pointLayer;
-    private static GenericCollectionLayer<List<IFeature>> pointFeatures;
+    private readonly MapManager mapManager;
+    private static GenericCollectionLayer<List<IFeature>>? pointFeatures;
     private static CalloutStyle? _activeCalloutStyle;
+
+    [ObservableProperty]
+    private bool locationCheckBoxIsChecked;
+    [ObservableProperty]
+    private MapControl mapControl;
+    [ObservableProperty]
+    private bool isEnabledSpectateMode;
+
+    // Свойство для отображения текущего состояния текста
+    [ObservableProperty]
+    private string? currentStateText;
+    // Стандартное состояние для чекбокса
+    private TriState _currentState;
     public SearchViewModel()
     {
         MapControl = new();
@@ -44,19 +56,6 @@ public partial class SearchViewModel : ObservableObject
             
         }
     }
-
-    [ObservableProperty]
-    private bool locationCheckBoxIsChecked;
-    [ObservableProperty]
-    private MapControl mapControl;
-    [ObservableProperty]
-    private bool isEnabledSpectateMode;
-
-    // Свойство для отображения текущего состояния текста
-    [ObservableProperty]
-    private string? currentStateText;
-    // Стандартное состояние для чекбокса
-    private TriState _currentState;
     // Метод для переключения состояний
     public void ChangeState()
     {
@@ -99,39 +98,36 @@ public partial class SearchViewModel : ObservableObject
         }
     }
 
-    private static void OnMapLongTaped(object sender, Mapsui.UI.TappedEventArgs e) 
+    private static void OnMapLongTaped(object sender, Mapsui.UI.TappedEventArgs? e)
     {
-        if (e.ScreenPosition != null)
+        if (e.ScreenPosition != null && pointFeatures != null)
         {
-            if (pointFeatures != null)
+            if (sender is not MapControl mapControl)
+                return;
+            // Конвертация координат из экрана в географические
+            var worldPosition = mapControl.Map.Navigator.Viewport.ScreenToWorld(e.ScreenPosition);
+
+            Location location = new()
             {
-                var map = sender as MapControl;
-                if (map == null)
-                    return;
-               // Mapsui.Extensions.ViewportExtensions.ScreenToWorld(sender), e.ScreenPosition);
-                // Конвертация координат из экрана в географические
-                var worldPosition = map.Map.Navigator.Viewport.ScreenToWorld(e.ScreenPosition);
+                Longitude = SphericalMercator.ToLonLat(worldPosition).X,
+                Latitude = SphericalMercator.ToLonLat(worldPosition).Y
+            };
+            var newFeature = PinManager.AddNewMarkOnLayer(location);
+            pointFeatures.Features.Add(newFeature);
 
-                Location location = new()
-                {
-                    Longitude = SphericalMercator.ToLonLat(worldPosition).X,
-                    Latitude = SphericalMercator.ToLonLat(worldPosition).Y
-                };
-                var newFeature = PinManager.AddNewMarkOnLayer(location);
-                pointFeatures.Features.Add(newFeature);
-
-                pointFeatures.DataHasChanged();
-            }
+            pointFeatures.DataHasChanged();
         }
     }
     private static void OnMapTaped(object? sender, Mapsui.UI.TappedEventArgs e)
     {
-        if (e.NumOfTaps > 0)
+        if (e.NumOfTaps > 0 && _activeCalloutStyle != null)
         {
-            var styles = pointLayer?.Features?.Select(feature => feature.Styles.Where(s => s is CalloutStyle).Cast<CalloutStyle>().FirstOrDefault());
-            if (styles == null) return;
-            foreach (var style in styles) style.Enabled = false;
-            pointLayer?.DataHasChanged();
+            
+            if (sender is not MapControl mapControl)
+                return;
+            _activeCalloutStyle.Enabled = false;
+            pointFeatures.DataHasChanged();
+            //mapControl.Map.
         }
     }
     private static void MapOnInfo(object? sender, MapInfoEventArgs e)
