@@ -77,13 +77,13 @@ public partial class SearchViewModel : ObservableObject
             case TriState.Follow:
                 LocationCheckBoxIsChecked = true;
                 CurrentStateText = "Follow";
-                MapManager.EnableCompassMode();
+                MapManager.ToggleCompassMode();
                 await MapManager.EnableSpectateModeAsync(cts.Token);
                 break;
             case TriState.UnFollow:
                 LocationCheckBoxIsChecked = false;
                 CurrentStateText = "Unfollow";
-                MapManager.EnableCompassMode();
+                MapManager.ToggleCompassMode();
                 /*
                  * ЛОГИКА для отвязки камеры
                  */
