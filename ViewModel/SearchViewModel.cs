@@ -17,7 +17,6 @@ public partial class SearchViewModel : ObservableObject
         Follow,
         UnFollow
     }
-    private readonly MapManager mapManager;
     private static GenericCollectionLayer<List<IFeature>>? pointFeatures;
     private static CalloutStyle? _activeCalloutStyle;
 
@@ -35,26 +34,20 @@ public partial class SearchViewModel : ObservableObject
     private TriState _currentState;
     public SearchViewModel()
     {
-        MapControl = new();
-        mapManager = new();
-        if (mapManager.Map != null)
+        MapControl = new() { Map = MapManager.CreateMap() };
+
+        pointFeatures = new()
         {
-            MapControl.Map = mapManager.Map;
+            Features = PinManager.CreatePointLayer(),
+            IsMapInfoLayer = true,
+            Name = "AllToiletsLayer"
+        };
 
-            pointFeatures = new()
-            {
-                Features = PinManager.CreatePointLayer(),
-                IsMapInfoLayer = true,
-                Name = "AllToiletsLayer"
-            };
+        MapControl.Map.Layers.Add(pointFeatures);
 
-            MapControl.Map.Layers.Add(pointFeatures);
-
-            MapControl.SingleTap += OnMapTaped; // Тап по карте
-            MapControl.LongTap += OnMapLongTaped;
-            MapControl.Map.Info += MapOnInfo; // Тап по пину
-            
-        }
+        MapControl.SingleTap += OnMapTaped; // Тап по карте
+        MapControl.LongTap += OnMapLongTaped;
+        MapControl.Map.Info += MapOnInfo; // Тап по пину
     }
     // Метод для переключения состояний
     public void ChangeState()
@@ -84,13 +77,13 @@ public partial class SearchViewModel : ObservableObject
             case TriState.Follow:
                 LocationCheckBoxIsChecked = true;
                 CurrentStateText = "Follow";
-                mapManager.EnableCompassMode();
-                await mapManager.EnableSpectateModeAsync(cts.Token);
+                MapManager.EnableCompassMode();
+                await MapManager.EnableSpectateModeAsync(cts.Token);
                 break;
             case TriState.UnFollow:
                 LocationCheckBoxIsChecked = false;
                 CurrentStateText = "Unfollow";
-                mapManager.EnableCompassMode();
+                MapManager.EnableCompassMode();
                 /*
                  * ЛОГИКА для отвязки камеры
                  */
@@ -98,7 +91,7 @@ public partial class SearchViewModel : ObservableObject
         }
     }
 
-    private static void OnMapLongTaped(object sender, Mapsui.UI.TappedEventArgs? e)
+    private static void OnMapLongTaped(object? sender, Mapsui.UI.TappedEventArgs e)
     {
         if (e.ScreenPosition != null && pointFeatures != null)
         {
@@ -120,7 +113,7 @@ public partial class SearchViewModel : ObservableObject
     }
     private static void OnMapTaped(object? sender, Mapsui.UI.TappedEventArgs e)
     {
-        if (e.NumOfTaps > 0 && _activeCalloutStyle != null)
+        if (e.NumOfTaps > 0 && _activeCalloutStyle != null && pointFeatures != null)
         {
             
             if (sender is not MapControl mapControl)
