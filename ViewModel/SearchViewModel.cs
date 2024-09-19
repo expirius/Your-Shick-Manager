@@ -1,11 +1,11 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using Mapsui;
+using Mapsui.Extensions;
 using Mapsui.Layers;
+using Mapsui.Projections;
 using Mapsui.Styles;
-using Mapsui.UI;
 using Mapsui.UI.Maui;
 using MFASeeker.Model;
-using Microsoft.Maui.ApplicationModel;
 
 namespace MFASeeker.ViewModel;
 
@@ -17,27 +17,8 @@ public partial class SearchViewModel : ObservableObject
         Follow,
         UnFollow
     }
-    private MapManager mapManager;
-    private PinManager pinManager;
-    private static MemoryLayer? pointLayer;
+    private static GenericCollectionLayer<List<IFeature>>? pointFeatures;
     private static CalloutStyle? _activeCalloutStyle;
-    public SearchViewModel()
-    {
-        MapControl = new();
-        mapManager = new();
-        pinManager = new PinManager();
-
-        if (mapManager.Map != null)
-        {
-            MapControl.Map = mapManager.Map;
-
-            pointLayer = pinManager.CreatePointLayer();
-            MapControl.Map.Layers.Add(pointLayer);
-
-            MapControl.SingleTap += OnMapTaped;
-            MapControl.Map.Info += MapOnInfo; // Привязка на событие клика
-        }
-    }
 
     [ObservableProperty]
     private bool locationCheckBoxIsChecked;
@@ -51,6 +32,23 @@ public partial class SearchViewModel : ObservableObject
     private string? currentStateText;
     // Стандартное состояние для чекбокса
     private TriState _currentState;
+    public SearchViewModel()
+    {
+        MapControl = new() { Map = MapManager.CreateMap() };
+
+        pointFeatures = new()
+        {
+            Features = PinManager.CreatePointLayer(),
+            IsMapInfoLayer = true,
+            Name = "AllToiletsLayer"
+        };
+
+        MapControl.Map.Layers.Add(pointFeatures);
+
+        MapControl.SingleTap += OnMapTaped; // Тап по карте
+        MapControl.LongTap += OnMapLongTaped;
+        MapControl.Map.Info += MapOnInfo; // Тап по пину
+    }
     // Метод для переключения состояний
     public void ChangeState()
     {
@@ -79,13 +77,13 @@ public partial class SearchViewModel : ObservableObject
             case TriState.Follow:
                 LocationCheckBoxIsChecked = true;
                 CurrentStateText = "Follow";
-                mapManager.EnableCompassMode();
-                await mapManager.EnableSpectateModeAsync(cts.Token);
+                MapManager.EnableCompassMode();
+                await MapManager.EnableSpectateModeAsync(cts.Token);
                 break;
             case TriState.UnFollow:
                 LocationCheckBoxIsChecked = false;
                 CurrentStateText = "Unfollow";
-                mapManager.EnableCompassMode();
+                MapManager.EnableCompassMode();
                 /*
                  * ЛОГИКА для отвязки камеры
                  */
@@ -93,14 +91,36 @@ public partial class SearchViewModel : ObservableObject
         }
     }
 
+    private static void OnMapLongTaped(object? sender, Mapsui.UI.TappedEventArgs e)
+    {
+        if (e.ScreenPosition != null && pointFeatures != null)
+        {
+            if (sender is not MapControl mapControl)
+                return;
+            // Конвертация координат из экрана в географические
+            var worldPosition = mapControl.Map.Navigator.Viewport.ScreenToWorld(e.ScreenPosition);
+
+            Location location = new()
+            {
+                Longitude = SphericalMercator.ToLonLat(worldPosition).X,
+                Latitude = SphericalMercator.ToLonLat(worldPosition).Y
+            };
+            var newFeature = PinManager.AddNewMarkOnLayer(location);
+            pointFeatures.Features.Add(newFeature);
+
+            pointFeatures.DataHasChanged();
+        }
+    }
     private static void OnMapTaped(object? sender, Mapsui.UI.TappedEventArgs e)
     {
-        if (e.NumOfTaps > 0)
+        if (e.NumOfTaps > 0 && _activeCalloutStyle != null && pointFeatures != null)
         {
-            var styles = pointLayer?.Features?.Select(feature => feature.Styles.Where(s => s is CalloutStyle).Cast<CalloutStyle>().FirstOrDefault());
-            if (styles == null) return;
-            foreach (var style in styles) style.Enabled = false;
-            pointLayer?.DataHasChanged();
+            
+            if (sender is not MapControl mapControl)
+                return;
+            _activeCalloutStyle.Enabled = false;
+            pointFeatures.DataHasChanged();
+            //mapControl.Map.
         }
     }
     private static void MapOnInfo(object? sender, MapInfoEventArgs e)

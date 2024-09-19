@@ -6,7 +6,7 @@
         public string? Name;
         public Location? Location;
         public string? Description;
-        public short Raiting;
+        public double Rating;
 
         public bool IsValid()
         {

@@ -5,25 +5,16 @@ using System.Threading.Tasks;
 
 namespace MFASeeker;
 
-public partial class Geolocator : ObservableObject
+public static class Geolocator
 {
     public static IGeolocator Default = new GeolocatorImplementation();
-    public Geolocator(double reading = 0, double rotationAngle = 0)
-    {
-        Reading = reading ; 
-        RotationAngle = rotationAngle;
-    }
 
-    [ObservableProperty]
-    private double reading;
-    [ObservableProperty]
-    private double rotationAngle;
-    [ObservableProperty]
-    private bool isActive;
+    private static double reading;
 
-    public Action<double>? OnCompassChangedAction { get; set; }
+    public static Action<double>? OnCompassChangedAction { get; set; }
 
-    public void StartUpdateCompass()
+
+    public static void ToggleCompass()
     {
         try
         {
@@ -38,16 +29,19 @@ public partial class Geolocator : ObservableObject
                 {
                     Compass.Default.Stop();
                     Compass.Default.ReadingChanged -= OnCompassReadingChanged;
+
+                    OnCompassReadingChanged(null, null);
                 }
-                IsActive = Compass.Default.IsMonitoring;
             }
         }
         catch (TaskCanceledException ex) { Console.WriteLine(ex.ToString()); }
     }
-    private void OnCompassReadingChanged(object? sender, CompassChangedEventArgs e)
+    private static void OnCompassReadingChanged(object? sender, CompassChangedEventArgs? e)
     {
-        Reading = e.Reading.HeadingMagneticNorth;
-        //RotationAngle = 360 - e.Reading.HeadingMagneticNorth;
-        OnCompassChangedAction?.Invoke(Reading);
+        if (e == null)
+            reading = -1;
+        else
+            reading = e.Reading.HeadingMagneticNorth;
+        OnCompassChangedAction?.Invoke(reading);
     }
 }
