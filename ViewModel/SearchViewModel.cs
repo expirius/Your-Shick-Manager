@@ -1,11 +1,11 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using Mapsui;
+using Mapsui.Extensions;
 using Mapsui.Layers;
+using Mapsui.Projections;
 using Mapsui.Styles;
-using Mapsui.UI;
 using Mapsui.UI.Maui;
 using MFASeeker.Model;
-using Microsoft.Maui.ApplicationModel;
 
 namespace MFASeeker.ViewModel;
 
@@ -18,24 +18,30 @@ public partial class SearchViewModel : ObservableObject
         UnFollow
     }
     private MapManager mapManager;
-    private PinManager pinManager;
     private static MemoryLayer? pointLayer;
+    private static GenericCollectionLayer<List<IFeature>> pointFeatures;
     private static CalloutStyle? _activeCalloutStyle;
     public SearchViewModel()
     {
         MapControl = new();
         mapManager = new();
-        pinManager = new PinManager();
-
         if (mapManager.Map != null)
         {
             MapControl.Map = mapManager.Map;
 
-            pointLayer = pinManager.CreatePointLayer();
-            MapControl.Map.Layers.Add(pointLayer);
+            pointFeatures = new()
+            {
+                Features = PinManager.CreatePointLayer(),
+                IsMapInfoLayer = true,
+                Name = "AllToiletsLayer"
+            };
 
-            MapControl.SingleTap += OnMapTaped;
-            MapControl.Map.Info += MapOnInfo; // Привязка на событие клика
+            MapControl.Map.Layers.Add(pointFeatures);
+
+            MapControl.SingleTap += OnMapTaped; // Тап по карте
+            MapControl.LongTap += OnMapLongTaped;
+            MapControl.Map.Info += MapOnInfo; // Тап по пину
+            
         }
     }
 
@@ -93,6 +99,31 @@ public partial class SearchViewModel : ObservableObject
         }
     }
 
+    private static void OnMapLongTaped(object sender, Mapsui.UI.TappedEventArgs e) 
+    {
+        if (e.ScreenPosition != null)
+        {
+            if (pointFeatures != null)
+            {
+                var map = sender as MapControl;
+                if (map == null)
+                    return;
+               // Mapsui.Extensions.ViewportExtensions.ScreenToWorld(sender), e.ScreenPosition);
+                // Конвертация координат из экрана в географические
+                var worldPosition = map.Map.Navigator.Viewport.ScreenToWorld(e.ScreenPosition);
+
+                Location location = new()
+                {
+                    Longitude = SphericalMercator.ToLonLat(worldPosition).X,
+                    Latitude = SphericalMercator.ToLonLat(worldPosition).Y
+                };
+                var newFeature = PinManager.AddNewMarkOnLayer(location);
+                pointFeatures.Features.Add(newFeature);
+
+                pointFeatures.DataHasChanged();
+            }
+        }
+    }
     private static void OnMapTaped(object? sender, Mapsui.UI.TappedEventArgs e)
     {
         if (e.NumOfTaps > 0)
