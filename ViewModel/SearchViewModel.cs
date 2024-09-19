@@ -115,12 +115,10 @@ public partial class SearchViewModel : ObservableObject
     {
         if (e.NumOfTaps > 0 && _activeCalloutStyle != null && pointFeatures != null)
         {
-            
-            if (sender is not MapControl mapControl)
-                return;
+            //if (sender is not Mapsui.UI.Maui.MapControl)
+            //    return;
             _activeCalloutStyle.Enabled = false;
             pointFeatures.DataHasChanged();
-            //mapControl.Map.
         }
     }
     private static void MapOnInfo(object? sender, MapInfoEventArgs e)
