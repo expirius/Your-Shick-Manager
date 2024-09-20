@@ -26,8 +26,6 @@ public partial class SearchViewModel : ObservableObject
     private MapControl mapControl;
     [ObservableProperty]
     private bool isEnabledSpectateMode;
-
-    // Свойство для отображения текущего состояния текста
     [ObservableProperty]
     private string? currentStateText;
     // Стандартное состояние для чекбокса
@@ -90,7 +88,7 @@ public partial class SearchViewModel : ObservableObject
                 break;
         }
     }
-
+    // events
     private static void OnMapLongTaped(object? sender, Mapsui.UI.TappedEventArgs e)
     {
         if (e.ScreenPosition != null && pointFeatures != null)
