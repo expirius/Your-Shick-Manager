@@ -8,30 +8,23 @@ using Color = Mapsui.Styles.Color;
 using Mapsui.Utilities;
 using Exception = System.Exception;
 using System.Text;
-using System.Runtime.CompilerServices;
 
 namespace MFASeeker.Model
 {
     public static class PinManager
     {
-        private static MemoryLayer _userToiletsLayer;
-        //private static readonly string? _apiService;
-
         public static List<IFeature> CreatePointLayer()
         {
             return GetFeaturesLocal().ToList();
-                //new MemoryLayer
+                /*new MemoryLayer
                 //Name = "AllToilets",
                 //IsMapInfoLayer = true,
-                //new MemoryProvider(GetFeaturesLocal()).Features;
+                //new MemoryProvider(GetFeaturesLocal()).Features;*/
         }
-
-
         public static IFeature AddNewMarkOnLayer(Location location)
         {
             // Добавляем новый Feature в MemoryProvider
             var newToilet = CreateMark("test1", location);
-
             return GetFeature(newToilet);
         }
         /// <summary>
@@ -95,27 +88,16 @@ namespace MFASeeker.Model
                 feature[nameof(t.Description)] = t.Description;
                 feature[nameof(t.Rating)] = t.Rating;
                 // styles
-                switch (t.Rating)
+                string svgIconPath = t.Rating switch
                 {
-                    case 5:
-                        feature.Styles.Add(CreateSvgStyle(@"Resources.Icons.rank5_toilet.svg", 0.1));
-                        break;
-                    case >=4:
-                        feature.Styles.Add(CreateSvgStyle(@"Resources.Icons.rank4_toilet.svg", 0.1));
-                        break;
-                    case >=3:
-                        feature.Styles.Add(CreateSvgStyle(@"Resources.Icons.rank3_toilet.svg", 0.1));
-                        break;
-                    case >=2:
-                        feature.Styles.Add(CreateSvgStyle(@"Resources.Icons.rank2_toilet.svg", 0.1));
-                        break;
-                    case >=1:
-                        feature.Styles.Add(CreateSvgStyle(@"Resources.Icons.rank1_toilet.svg", 0.1));
-                        break;
-                    default:
-                        feature.Styles.Add(CreateSvgStyle(@"Resources.Icons.defaultrank_toilet.svg", 0.1));
-                        break;
-                }
+                    5 => @"Resources.Icons.rank5_toilet.svg",
+                    >= 4 => @"Resources.Icons.rank4_toilet.svg",
+                    >= 3 => @"Resources.Icons.rank3_toilet.svg",
+                    >= 2 => @"Resources.Icons.rank2_toilet.svg",
+                    >= 1 => @"Resources.Icons.rank1_toilet.svg",
+                    _ => @"Resources.Icons.defaultrank_toilet.svg"
+                };
+                feature.Styles.Add(CreateSvgStyle(svgIconPath, 0.06));
                 //feature.Styles.Add(CreateCalloutStyle(feature.ToStringOfKeyValuePairs()));
                 feature.Styles.Add(CreateCalloutStyleByToilet(t));
                 return feature;
@@ -167,7 +149,7 @@ namespace MFASeeker.Model
                     SymbolScale = scale
                 };
             }
-            catch (Exception ex) {throw;}
+            catch (Exception) { throw;}
         }
 
         // Временный метод для заполнения и тестирования
