@@ -88,18 +88,15 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <AndroidResource Remove="Новая папка\**" />
-	  <Compile Remove="Новая папка\**" />
-	  <EmbeddedResource Remove="Новая папка\**" />
-	  <MauiCss Remove="Новая папка\**" />
-	  <MauiXaml Remove="Новая папка\**" />
-	  <None Remove="Новая папка\**" />
-	</ItemGroup>
-
-	<ItemGroup>
 	  <None Remove="Resources\AppIcon\green_icon.svg" />
 	  <None Remove="Resources\Images\arrow.png" />
 	  <None Remove="Resources\Images\arrow_active.png" />
+	  <None Remove="Resources\Images\gold_startoilet.png" />
+	  <None Remove="Resources\Images\gold_startoilet2.png" />
+	  <None Remove="Resources\Images\star_with_toilet.png" />
+	  <None Remove="Resources\Images\toilet_icon_simillar.png" />
+	  <None Remove="Resources\Images\white_startoilet.png" />
+	  <None Remove="Resources\Images\white_starttoilet2.png" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -114,10 +111,19 @@
 	  <Compile Update="View\Controls\Buttons\ImageCheckBox.xaml.cs">
 	    <DependentUpon>ImageCheckBox.xaml</DependentUpon>
 	  </Compile>
+	  <Compile Update="View\Controls\Buttons\StarSelector.xaml.cs">
+	    <DependentUpon>StarSelector.xaml</DependentUpon>
+	  </Compile>
 	</ItemGroup>
 
 	<ItemGroup>
 	  <MauiXaml Update="View\Controls\Buttons\ImageCheckBox.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="View\Controls\Buttons\StarSelector.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="View\Controls\NewPinPopup.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="View\Controls\Tabs\BottomTab.xaml">

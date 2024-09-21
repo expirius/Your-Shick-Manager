@@ -5,12 +5,16 @@
              xmlns:vm ="clr-namespace:MFASeeker.ViewModel"
              x:DataType="vm:SearchViewModel"
              xmlns:cbuttons="clr-namespace:MFASeeker.View.Controls.Buttons"
+             xmlns:controls="clr-namespace:MFASeeker.View.Controls"
              Title="Карта">
     <Grid HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
+        <cbuttons:StarSelector SelectedStar="4"  />
+        <controls:NewPinPopup IsVisible="False"/>
+
         <Entry
             Placeholder ="Введите ваше местоположение"
             Grid.Row="0"
