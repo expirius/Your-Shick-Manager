@@ -21,10 +21,10 @@ namespace MFASeeker.Model
                 //IsMapInfoLayer = true,
                 //new MemoryProvider(GetFeaturesLocal()).Features;*/
         }
-        public static IFeature AddNewMarkOnLayer(Location location)
+        public static IFeature AddNewMarkOnLayer(Toilet toilet)
         {
             // Добавляем новый Feature в MemoryProvider
-            var newToilet = CreateMark("test1", location);
+            var newToilet = CreateMark(toilet);
             return GetFeature(newToilet);
         }
         /// <summary>
@@ -34,14 +34,13 @@ namespace MFASeeker.Model
         /// <param name="location">Локация метки</param>
         /// <param name="rating">Установленный рейтинг</param>
         /// <param name="description">Описание</param>
-        private static UserToiletMarker CreateMark(string nameMark, Location location, 
-                                        double rating = 0, string description ="")
+        private static UserToiletMarker CreateMark(Toilet toilet)
         {
-            return new(){
-                Name = nameMark,
-                Location = location,
-                Rating = rating,
-                Description = description,
+            return new() {
+                Name = toilet.Name ?? "",
+                Location = toilet.Location,
+                Rating = toilet.Rating,
+                Description = toilet.Description ?? "",
                 CreatedDate = DateTime.Now,
                 UserName = DeviceInfo.Current.Name,
             };

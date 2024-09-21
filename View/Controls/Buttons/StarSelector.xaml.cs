@@ -1,5 +1,8 @@
 namespace MFASeeker.View.Controls.Buttons;
 
+/*
+ * Необходимо в будущем сделать стили звездочек для разных целей
+ */
 public partial class StarSelector : ContentView
 {
     private const string GoldStarImage = "gold_startoilet";
@@ -11,13 +14,13 @@ public partial class StarSelector : ContentView
         UpdateStarImages();
     }
 
+    // Привязываемые свойства, как у label.Text 
     public int SelectedStar
     {
         get => (int)GetValue(SelectedStarProperty);
         set => SetValue(SelectedStarProperty, value);
     }
-
-    private static readonly BindableProperty SelectedStarProperty =
+    public static readonly BindableProperty SelectedStarProperty =
         BindableProperty.Create(
             nameof(SelectedStar),
             typeof(int),
@@ -33,7 +36,6 @@ public partial class StarSelector : ContentView
             control.UpdateStarImages();
         }
     }
-
     private void UpdateStarImages()
     {
         for (int i = 1; i <= 5; i++)
@@ -42,13 +44,11 @@ public partial class StarSelector : ContentView
             SetStarImage(i, starImage);
         }
     }
-
     private void SetStarImage(int starIndex, string imageSource)
     {
         var imageButton = (ImageButton)StarSelectorLayout.Children[starIndex - 1];
         imageButton.Source = imageSource;
     }
-
     private void OnStarClicked(object sender, EventArgs e)
     {
         if (sender is ImageButton button &&

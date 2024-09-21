@@ -22,7 +22,7 @@ public partial class SearchViewModel : ObservableObject
     private static CalloutStyle? _activeCalloutStyle;
 
     [ObservableProperty]
-    private int selectedStar;
+    private Toilet? newToilet; 
 
     [ObservableProperty]
     private bool locationCheckBoxIsChecked;
@@ -44,8 +44,8 @@ public partial class SearchViewModel : ObservableObject
             IsMapInfoLayer = true,
             Name = "AllToiletsLayer"
         };
-
         MapControl.Map.Layers.Add(pointFeatures);
+        NewToilet = new();
 
         MapControl.SingleTap += OnMapTaped; // Тап по карте
         MapControl.LongTap += OnMapLongTaped;
@@ -93,21 +93,26 @@ public partial class SearchViewModel : ObservableObject
         }
     }
     // events
-    private static void OnMapLongTaped(object? sender, Mapsui.UI.TappedEventArgs e)
+    public event EventHandler<Toilet>? ToiletEventArgs;
+
+    private void OnMapLongTaped(object? sender, Mapsui.UI.TappedEventArgs e)
     {
         if (e.ScreenPosition != null && pointFeatures != null)
         {
-            if (sender is not MapControl mapControl)
-                return;
+            if (sender is not MapControl mapControl) return;
+            if (NewToilet == null) return;
+            
             // Конвертация координат из экрана в географические
             var worldPosition = mapControl.Map.Navigator.Viewport.ScreenToWorld(e.ScreenPosition);
 
-            Location location = new()
+            NewToilet.Location = new()
             {
                 Longitude = SphericalMercator.ToLonLat(worldPosition).X,
                 Latitude = SphericalMercator.ToLonLat(worldPosition).Y
             };
-            var newFeature = PinManager.AddNewMarkOnLayer(location);
+
+            // Добавляем фичу на карту
+            var newFeature = PinManager.AddNewMarkOnLayer(NewToilet);
             pointFeatures.Features.Add(newFeature);
 
             pointFeatures.DataHasChanged();
