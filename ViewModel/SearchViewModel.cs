@@ -6,6 +6,7 @@ using Mapsui.Projections;
 using Mapsui.Styles;
 using Mapsui.UI.Maui;
 using MFASeeker.Model;
+using System.Diagnostics;
 
 namespace MFASeeker.ViewModel;
 
@@ -19,6 +20,9 @@ public partial class SearchViewModel : ObservableObject
     }
     private static GenericCollectionLayer<List<IFeature>>? pointFeatures;
     private static CalloutStyle? _activeCalloutStyle;
+
+    [ObservableProperty]
+    private int selectedStar;
 
     [ObservableProperty]
     private bool locationCheckBoxIsChecked;

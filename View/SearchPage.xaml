@@ -4,7 +4,7 @@
              x:Class="MFASeeker.View.SearchPage"
              xmlns:vm ="clr-namespace:MFASeeker.ViewModel"
              x:DataType="vm:SearchViewModel"
-             xmlns:cbuttons="clr-namespace:MFASeeker.View.Controls.Buttons"
+             xmlns:cbuttons="clr-namespace:MFASeeker.View.Controls.Buttons;assembly=MFASeeker"
              xmlns:controls="clr-namespace:MFASeeker.View.Controls"
              Title="Карта">
     <Grid HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
@@ -12,7 +12,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <cbuttons:StarSelector SelectedStar="4"  />
+        <cbuttons:StarSelector SelectedStar="{Binding SelectedStar}"/>
         <controls:NewPinPopup IsVisible="False"/>
 
         <Entry
