@@ -6,6 +6,7 @@ using Mapsui.Projections;
 using Mapsui.Styles;
 using Mapsui.UI.Maui;
 using MFASeeker.Model;
+using System.Diagnostics;
 
 namespace MFASeeker.ViewModel;
 
@@ -21,13 +22,14 @@ public partial class SearchViewModel : ObservableObject
     private static CalloutStyle? _activeCalloutStyle;
 
     [ObservableProperty]
+    private Toilet? newToilet; 
+
+    [ObservableProperty]
     private bool locationCheckBoxIsChecked;
     [ObservableProperty]
     private MapControl mapControl;
     [ObservableProperty]
     private bool isEnabledSpectateMode;
-
-    // Свойство для отображения текущего состояния текста
     [ObservableProperty]
     private string? currentStateText;
     // Стандартное состояние для чекбокса
@@ -42,8 +44,8 @@ public partial class SearchViewModel : ObservableObject
             IsMapInfoLayer = true,
             Name = "AllToiletsLayer"
         };
-
         MapControl.Map.Layers.Add(pointFeatures);
+        NewToilet = new();
 
         MapControl.SingleTap += OnMapTaped; // Тап по карте
         MapControl.LongTap += OnMapLongTaped;
@@ -77,35 +79,40 @@ public partial class SearchViewModel : ObservableObject
             case TriState.Follow:
                 LocationCheckBoxIsChecked = true;
                 CurrentStateText = "Follow";
-                MapManager.EnableCompassMode();
+                MapManager.ToggleCompassMode();
                 await MapManager.EnableSpectateModeAsync(cts.Token);
                 break;
             case TriState.UnFollow:
                 LocationCheckBoxIsChecked = false;
                 CurrentStateText = "Unfollow";
-                MapManager.EnableCompassMode();
+                MapManager.ToggleCompassMode();
                 /*
                  * ЛОГИКА для отвязки камеры
                  */
                 break;
         }
     }
+    // events
+    public event EventHandler<Toilet>? ToiletEventArgs;
 
-    private static void OnMapLongTaped(object? sender, Mapsui.UI.TappedEventArgs e)
+    private void OnMapLongTaped(object? sender, Mapsui.UI.TappedEventArgs e)
     {
         if (e.ScreenPosition != null && pointFeatures != null)
         {
-            if (sender is not MapControl mapControl)
-                return;
+            if (sender is not MapControl mapControl) return;
+            if (NewToilet == null) return;
+            
             // Конвертация координат из экрана в географические
             var worldPosition = mapControl.Map.Navigator.Viewport.ScreenToWorld(e.ScreenPosition);
 
-            Location location = new()
+            NewToilet.Location = new()
             {
                 Longitude = SphericalMercator.ToLonLat(worldPosition).X,
                 Latitude = SphericalMercator.ToLonLat(worldPosition).Y
             };
-            var newFeature = PinManager.AddNewMarkOnLayer(location);
+
+            // Добавляем фичу на карту
+            var newFeature = PinManager.AddNewMarkOnLayer(NewToilet);
             pointFeatures.Features.Add(newFeature);
 
             pointFeatures.DataHasChanged();
@@ -115,12 +122,10 @@ public partial class SearchViewModel : ObservableObject
     {
         if (e.NumOfTaps > 0 && _activeCalloutStyle != null && pointFeatures != null)
         {
-            
-            if (sender is not MapControl mapControl)
-                return;
+            //if (sender is not Mapsui.UI.Maui.MapControl)
+            //    return;
             _activeCalloutStyle.Enabled = false;
             pointFeatures.DataHasChanged();
-            //mapControl.Map.
         }
     }
     private static void MapOnInfo(object? sender, MapInfoEventArgs e)

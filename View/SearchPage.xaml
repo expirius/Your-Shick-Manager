@@ -4,14 +4,19 @@
              x:Class="MFASeeker.View.SearchPage"
              xmlns:vm ="clr-namespace:MFASeeker.ViewModel"
              x:DataType="vm:SearchViewModel"
-             xmlns:cbuttons="clr-namespace:MFASeeker.View.Controls.Buttons"
+             xmlns:cbuttons="clr-namespace:MFASeeker.View.Controls.Buttons;assembly=MFASeeker"
+             xmlns:controls="clr-namespace:MFASeeker.View.Controls"
              Title="Карта">
     <Grid HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
+        <cbuttons:StarSelector SelectedStar="{Binding NewToilet.Rating}"/>
+        <controls:NewPinPopup IsVisible="False"/>
+
         <Entry
+            IsVisible="False"
             Placeholder ="Введите ваше местоположение"
             Grid.Row="0"
             VerticalOptions="Start" 
@@ -50,10 +55,12 @@
                   CheckedChanged="LocationSwitchCheckBox_CheckedChanged"/> -->
         
         <!-- TEST LABELS -->
-        <Label x:Name="TESTlabel" Text="{Binding CurrentStateText, StringFormat='Checkbox is - {0}'}"
-               FontSize="15"
-               Grid.Row="1" Grid.RowSpan="2"
-               VerticalOptions="End"
-               />
+        <VerticalStackLayout Grid.Row="1" Grid.RowSpan="2"
+                             VerticalOptions="End">
+            <Label Text="{Binding NewToilet.Rating, StringFormat='Selected Star = {0}'}"
+                   FontSize="15"/>
+            <Label Text="{Binding CurrentStateText, StringFormat='Checkbox is - {0}'}"
+                   FontSize="15"/>
+        </VerticalStackLayout>
     </Grid>
 </ContentPage>

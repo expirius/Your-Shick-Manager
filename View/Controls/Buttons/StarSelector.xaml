@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MFASeeker.View.Controls.Buttons.StarSelector"
+             xmlns:local="clr-namespace:MFASeeker.View.Controls.Buttons">
+    <HorizontalStackLayout x:Name="StarSelectorLayout" HorizontalOptions="CenterAndExpand">
+        <ImageButton HeightRequest="60" WidthRequest="60" Clicked="OnStarClicked" CommandParameter="1"/>
+        <ImageButton HeightRequest="60" WidthRequest="60" Clicked="OnStarClicked" CommandParameter="2"/>
+        <ImageButton HeightRequest="60" WidthRequest="60" Clicked="OnStarClicked" CommandParameter="3"/>
+        <ImageButton HeightRequest="60" WidthRequest="60" Clicked="OnStarClicked" CommandParameter="4"/>
+        <ImageButton HeightRequest="60" WidthRequest="60" Clicked="OnStarClicked" CommandParameter="5"/>
+    </HorizontalStackLayout>
+</ContentView>

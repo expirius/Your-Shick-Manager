@@ -1,12 +1,20 @@
-﻿namespace MFASeeker.Model
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+
+namespace MFASeeker.Model
 {
-    public class Toilet
+    [ObservableObject]
+    public partial class Toilet
     {
-        public int Id;
-        public string? Name;
-        public Location? Location;
-        public string? Description;
-        public double Rating;
+        [ObservableProperty]
+        private int id;
+        [ObservableProperty]
+        private string? name;
+        [ObservableProperty]
+        private Location? location;
+        [ObservableProperty]
+        private string? description;
+        [ObservableProperty]
+        private double rating;
 
         public bool IsValid()
         {

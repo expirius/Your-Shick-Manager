@@ -31,7 +31,7 @@ namespace MFASeeker.Model
             Map.Home = n => n.CenterOnAndZoomTo(sphericalMercatorCoordinate, n.Resolutions[19]);
             return Map;
         }
-        public static void EnableCompassMode()
+        public static void ToggleCompassMode()
         {
             // Мониторинг компаса
             Geolocator.OnCompassChangedAction += (newReading) =>
@@ -39,7 +39,7 @@ namespace MFASeeker.Model
                 if (Map == null || _myLocationLayer == null)
                     return;
                 if (newReading == -1)
-                    _myLocationLayer.UpdateMyViewDirection(-1, Map.Navigator.Viewport.Rotation, true);
+                    _myLocationLayer.UpdateMyViewDirection(-1, 0, false);
                 else
                     _myLocationLayer.UpdateMyViewDirection(newReading, Map.Navigator.Viewport.Rotation, true);
             };
@@ -60,10 +60,13 @@ namespace MFASeeker.Model
             // Мониторинг текущего местоположения
             var progress = new Progress<Location>(location =>
             {
-                // конвертируется МПоинт в сферические координаты
-                currentLocationMPoint = SphericalMercator.FromLonLat(location.Longitude, location.Latitude).ToMPoint();
-                if (!cancellationToken.IsCancellationRequested && _myLocationLayer != null)
-                    _myLocationLayer.UpdateMyLocation(currentLocationMPoint, true);
+                if (!cancellationToken.IsCancellationRequested)
+                {
+                    // конвертируется МПоинт в сферические координаты
+                    currentLocationMPoint = SphericalMercator.FromLonLat(location.Longitude, location.Latitude).ToMPoint();
+                    if (_myLocationLayer != null)
+                        _myLocationLayer.UpdateMyLocation(currentLocationMPoint, true);
+                }
             });
             // При изменении локции прогресс прогоняется заново
             await Geolocator.Default.StartListening(progress, cancellationToken);

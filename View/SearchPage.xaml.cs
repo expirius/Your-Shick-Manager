@@ -8,6 +8,7 @@ using Mapsui.Widgets.Zoom;
 using MFASeeker.Services;
 using MFASeeker.ViewModel;
  using CommunityToolkit.Mvvm.Input;
+using MFASeeker.View.Controls;
 
 namespace MFASeeker.View;
 
