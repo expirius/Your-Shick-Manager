@@ -68,7 +68,7 @@ namespace MFASeeker.Model
                 _ => @"Resources.Icons.defaultrank_toilet.svg"
             };
 
-            feature.Styles.Add(CreateSvgStyle(svgIconPath, 0.1));
+            feature.Styles.Add(CreateSvgStyle(svgIconPath, 0.08));
             feature.Styles.Add(CreateCalloutStyleByToilet(toilet));
             return feature;
         }
@@ -96,7 +96,7 @@ namespace MFASeeker.Model
                     >= 1 => @"Resources.Icons.rank1_toilet.svg",
                     _ => @"Resources.Icons.defaultrank_toilet.svg"
                 };
-                feature.Styles.Add(CreateSvgStyle(svgIconPath, 0.06));
+                feature.Styles.Add(CreateSvgStyle(svgIconPath, 0.08));
                 //feature.Styles.Add(CreateCalloutStyle(feature.ToStringOfKeyValuePairs()));
                 feature.Styles.Add(CreateCalloutStyleByToilet(t));
                 return feature;
