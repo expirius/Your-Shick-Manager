@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<toolkit:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls_buttons="clr-namespace:MFASeeker.View.Controls.Buttons" 
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             x:Class="MFASeeker.View.NewPinPopup" 
+               Color="Transparent">
+    <Frame CornerRadius="40" BackgroundColor="Black">
+        <VerticalStackLayout>
+        <Label Text="Имя" FontSize="Medium" HorizontalOptions="Center"/>
+        <Entry Placeholder="Название метки" Text="{Binding NewToilet.Name}" />
+
+        <Label Text="Рейтинг" FontSize="Medium" HorizontalOptions="Center"/>
+        <controls_buttons:StarSelector SelectedStar="{Binding NewToilet.Rating}"/>
+
+        <Label Text="Описание" FontSize="Medium" HorizontalOptions="Center"/>
+        <Entry Placeholder="Описание" Text="{Binding NewToilet.Description}"/>
+
+            <HorizontalStackLayout HorizontalOptions="Center">
+                <Button Text="Подтвердить" 
+                        Clicked="OnYesButtonClicked" 
+                        Margin="0,0,10,0"/>
+                <Button Text="Отмена" 
+                        Clicked="OnCancelButtonClicked" 
+                        Margin="10, 0,0,0"/>
+            </HorizontalStackLayout>
+        </VerticalStackLayout>
+    </Frame>
+</toolkit:Popup>
