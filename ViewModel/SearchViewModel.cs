@@ -10,6 +10,7 @@ using Mapsui.Styles;
 using Mapsui.UI.Maui;
 using MFASeeker.Model;
 using MFASeeker.View;
+using System.ComponentModel;
 
 namespace MFASeeker.ViewModel;
 
@@ -29,11 +30,11 @@ public partial class SearchViewModel : ObservableObject
     private Toilet? newToilet; 
 
     [ObservableProperty]
-    private bool locationCheckBoxIsChecked;
+    private static bool locationCheckBoxIsChecked;
     [ObservableProperty]
     private MapControl mapControl;
     [ObservableProperty]
-    private bool isEnabledSpectateMode;
+    private static bool isEnabledSpectateMode;
     [ObservableProperty]
     private string? currentStateText;
     // Стандартное состояние для чекбокса
@@ -56,6 +57,7 @@ public partial class SearchViewModel : ObservableObject
         MapControl.SingleTap += OnMapTaped; // Тап по карте
         MapControl.LongTap += OnMapLongTaped;
         MapControl.Map.Info += MapOnInfo; // Тап по пину
+        MapControl.Map.Navigator.ViewportChanged += OnViewPortChanged; // при перетаскивании карты
     }
     // Метод для переключения состояний
     public void ChangeState()
@@ -86,12 +88,14 @@ public partial class SearchViewModel : ObservableObject
                 LocationCheckBoxIsChecked = true;
                 CurrentStateText = "Follow";
                 MapManager.ToggleCompassMode();
-                await MapManager.EnableSpectateModeAsync(cts.Token);
+                await MapManager.EnableSpectateModeAsync();
                 break;
             case TriState.UnFollow:
                 LocationCheckBoxIsChecked = false;
                 CurrentStateText = "Unfollow";
+
                 MapManager.ToggleCompassMode();
+                MapManager.StopLocationUpdates();
                 /*
                  * ЛОГИКА для отвязки камеры
                  */
@@ -158,5 +162,9 @@ public partial class SearchViewModel : ObservableObject
 
             e.MapInfo?.Layer?.DataHasChanged(); // Обновляем слой для перерисовки графики
         }
+    }
+    private static void OnViewPortChanged(object? sender, PropertyChangedEventArgs e)
+    {
+     // при передвижении вьюпорта логика (сброк отслеживания)
     }
 }
