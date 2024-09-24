@@ -125,7 +125,6 @@ public partial class SearchViewModel : ObservableObject
                 pointFeatures.Features.Add(newFeature);
                 // Обновляем данные на карте
                 pointFeatures.DataHasChanged();
-м
                 // сбрасываю данные туалета (но лучше сделать метод .Clear();
                 NewToilet = new();
             }
