@@ -1,4 +1,7 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Maui.Core;
+using CommunityToolkit.Maui.Views;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using Mapsui;
 using Mapsui.Extensions;
 using Mapsui.Layers;
@@ -6,7 +9,7 @@ using Mapsui.Projections;
 using Mapsui.Styles;
 using Mapsui.UI.Maui;
 using MFASeeker.Model;
-using System.Diagnostics;
+using MFASeeker.View;
 
 namespace MFASeeker.ViewModel;
 
@@ -20,6 +23,7 @@ public partial class SearchViewModel : ObservableObject
     }
     private static GenericCollectionLayer<List<IFeature>>? pointFeatures;
     private static CalloutStyle? _activeCalloutStyle;
+    private readonly IPopupService popupService;
 
     [ObservableProperty]
     private Toilet? newToilet; 
@@ -34,8 +38,10 @@ public partial class SearchViewModel : ObservableObject
     private string? currentStateText;
     // Стандартное состояние для чекбокса
     private TriState _currentState;
-    public SearchViewModel()
+    public SearchViewModel(IPopupService popupService)
     {
+        this.popupService = popupService;
+
         MapControl = new() { Map = MapManager.CreateMap() };
 
         pointFeatures = new()
@@ -92,19 +98,20 @@ public partial class SearchViewModel : ObservableObject
                 break;
         }
     }
-    // events
-    public event EventHandler<Toilet>? ToiletEventArgs;
 
-    private void OnMapLongTaped(object? sender, Mapsui.UI.TappedEventArgs e)
+    private async void OnMapLongTaped(object? sender, Mapsui.UI.TappedEventArgs e)
     {
-        if (e.ScreenPosition != null && pointFeatures != null)
+       
+        var popup = new NewPinPopup();
+        object? result = await App.Current.MainPage.ShowPopupAsync(popup);
+        if (result is bool isConfirmed && isConfirmed)
         {
             if (sender is not MapControl mapControl) return;
             if (NewToilet == null) return;
-            
+
             // Конвертация координат из экрана в географические
             var worldPosition = mapControl.Map.Navigator.Viewport.ScreenToWorld(e.ScreenPosition);
-
+            // Передаем данные местоположения метки
             NewToilet.Location = new()
             {
                 Longitude = SphericalMercator.ToLonLat(worldPosition).X,
@@ -113,9 +120,15 @@ public partial class SearchViewModel : ObservableObject
 
             // Добавляем фичу на карту
             var newFeature = PinManager.AddNewMarkOnLayer(NewToilet);
-            pointFeatures.Features.Add(newFeature);
-
-            pointFeatures.DataHasChanged();
+            if (pointFeatures != null)
+            {
+                pointFeatures.Features.Add(newFeature);
+                // Обновляем данные на карте
+                pointFeatures.DataHasChanged();
+м
+                // сбрасываю данные туалета (но лучше сделать метод .Clear();
+                NewToilet = new();
+            }
         }
     }
     private static void OnMapTaped(object? sender, Mapsui.UI.TappedEventArgs e)

@@ -9,6 +9,7 @@ using MFASeeker.Services;
 using MFASeeker.ViewModel;
  using CommunityToolkit.Mvvm.Input;
 using MFASeeker.View.Controls;
+using CommunityToolkit.Maui.Views;
 
 namespace MFASeeker.View;
 
@@ -22,8 +23,6 @@ public partial class SearchPage : ContentPage
         _searchViewModel = searchViewModel;
     }
 
-
-    // Удалить как будет разработан ChangeStatCheckboxCommand
     private void LocationSwitchCheckBox_CheckedChanged(object sender, CheckedChangedEventArgs e)
     {
         _searchViewModel.ChangeState();

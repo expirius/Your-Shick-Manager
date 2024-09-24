@@ -5,16 +5,14 @@
              xmlns:vm ="clr-namespace:MFASeeker.ViewModel"
              x:DataType="vm:SearchViewModel"
              xmlns:cbuttons="clr-namespace:MFASeeker.View.Controls.Buttons;assembly=MFASeeker"
-             xmlns:controls="clr-namespace:MFASeeker.View.Controls"
+             xmlns:controls="clr-namespace:MFASeeker.View"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              Title="Карта">
     <Grid HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <cbuttons:StarSelector SelectedStar="{Binding NewToilet.Rating}"/>
-        <controls:NewPinPopup IsVisible="False"/>
-
         <Entry
             IsVisible="False"
             Placeholder ="Введите ваше местоположение"
@@ -62,5 +60,15 @@
             <Label Text="{Binding CurrentStateText, StringFormat='Checkbox is - {0}'}"
                    FontSize="15"/>
         </VerticalStackLayout>
+        <!-- popup -->
+        <Button 
+            Grid.Row="1" Grid.RowSpan="2" 
+            VerticalOptions="End"
+            ImageSource="menu_icon.png"
+            HeightRequest="50"
+            IsVisible="False"
+            CornerRadius="0"
+            Background="Transparent"/>
+
     </Grid>
 </ContentPage>
