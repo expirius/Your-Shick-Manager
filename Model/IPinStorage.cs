@@ -2,8 +2,8 @@
 {
     public interface IPinStorage
     {
-        List<Toilet> LoadMarkers();
-        void SaveMarkers(List<Toilet> markers);
+        List<Toilet> GetMarkers();
+        void SaveMarker(Toilet marker);
         void DeleteMarker(Toilet marker);
     }
 }

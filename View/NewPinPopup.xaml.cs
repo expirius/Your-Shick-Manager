@@ -4,8 +4,6 @@ namespace MFASeeker.View;
 
 public partial class NewPinPopup : Popup
 {
-    public event EventHandler<bool>? OnResult;
-
     public NewPinPopup()
     {
         InitializeComponent();

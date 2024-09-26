@@ -16,9 +16,8 @@ namespace MFASeeker.Model
 
         private static readonly MPoint MOSCOWLOCATION = new(37.6156, 55.7522);
         private static MyLocationLayer? _myLocationLayer;
-        private static CancellationTokenSource cancellationTokenSource;
+        private static CancellationTokenSource? cancellationTokenSource;
         private static MPoint? currentLocationMPoint;
-        private static bool IsMonitoringLocation = false;
 
         // Работа с картой
         public static Map CreateMap()
@@ -65,10 +64,7 @@ namespace MFASeeker.Model
             {
                 // конвертируется МПоинт в сферические координаты
                 currentLocationMPoint = SphericalMercator.FromLonLat(location.Longitude, location.Latitude).ToMPoint();
-                if (_myLocationLayer != null)
-                {
-                    _myLocationLayer.UpdateMyLocation(currentLocationMPoint, true);
-                }
+                _myLocationLayer?.UpdateMyLocation(currentLocationMPoint, true);
             });
             // При изменении локции прогресс прогоняется заново
             await Geolocator.Default.StartListening(progress, cancellationTokenSource.Token);
@@ -80,7 +76,8 @@ namespace MFASeeker.Model
             //cancellationTokenSource?.Dispose(); // Освободить ресурс токена
             //cancellationTokenSource = null; // Обнулить ссылку
             //Geolocator.Default.StopListening(); // Вызов метода для остановки прослушивания
-            _myLocationLayer.IsCentered = false;
+            if (_myLocationLayer != null)
+                _myLocationLayer.IsCentered = false;
         }
         // Виджеты
         private static ZoomInOutWidget CreateZoomInOutWidget(Orientation orientation,

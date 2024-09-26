@@ -22,7 +22,9 @@ public partial class SearchViewModel : ObservableObject
         Follow,
         UnFollow
     }
+
     private static WritableLayer? pointFeatures;
+    private static WritableLayer? _tempPointFeatures;
     private static CalloutStyle? _activeCalloutStyle;
     private readonly IPopupService popupService;
 
@@ -40,13 +42,12 @@ public partial class SearchViewModel : ObservableObject
     // Стандартное состояние для чекбокса
     private TriState _currentState;
 
-    public SearchViewModel(IPopupService popupService)
+    public SearchViewModel()
     {
-        this.popupService = popupService;
-
         MapControl = new() { Map = MapManager.CreateMap() };
-
-        pointFeatures = MapPinManager.CreatePointLayer();
+        // Слой с точками туалетов
+        pointFeatures = MapPinManager.CreatePointLayer("AllToiletsLayer", true);
+        // Загрузка точек на слой из ... чего либо
         pointFeatures.AddRange(MapPinManager.GetFeaturesLocal());
 
         MapControl.Map.Layers.Add(pointFeatures);
@@ -102,32 +103,26 @@ public partial class SearchViewModel : ObservableObject
     }
     private async void OnMapLongTaped(object? sender, Mapsui.UI.TappedEventArgs e)
     {
-       
+        //Попап с полями новой точки
         var popup = new NewPinPopup();
-        object? result = await App.Current.MainPage.ShowPopupAsync(popup);
+        object? result = await Application.Current.MainPage.ShowPopupAsync(popup);
         if (result is bool isConfirmed && isConfirmed)
         {
             if (sender is not MapControl mapControl) return;
             if (NewToilet == null) return;
 
-            // Конвертация координат из экрана в географические
             var worldPosition = mapControl.Map.Navigator.Viewport.ScreenToWorld(e.ScreenPosition);
-            // Передаем данные местоположения метки
             NewToilet.Location = new()
             {
                 Longitude = SphericalMercator.ToLonLat(worldPosition).X,
                 Latitude = SphericalMercator.ToLonLat(worldPosition).Y
             };
+          
+            pointFeatures?.Add(MapPinManager.GetFeatureMark(NewToilet));
+            pointFeatures?.DataHasChanged();
 
-            // Добавляем фичу на карту
-            if (pointFeatures != null)
-            {
-                pointFeatures.Add(MapPinManager.CreateMarkFeature(NewToilet));
-                // Обновляем данные на карте
-                pointFeatures.DataHasChanged();
-                // сбрасываю данные туалета (но лучше сделать метод .Clear();
-                NewToilet = new();
-            }
+            // сбрасываю данные туалета VM (но лучше сделать метод .Clear();
+            NewToilet = new();
         }
     }
     private static void OnMapTaped(object? sender, Mapsui.UI.TappedEventArgs e)
