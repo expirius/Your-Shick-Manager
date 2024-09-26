@@ -16,9 +16,8 @@ namespace MFASeeker.Model
 
         private static readonly MPoint MOSCOWLOCATION = new(37.6156, 55.7522);
         private static MyLocationLayer? _myLocationLayer;
-        private static CancellationTokenSource cancellationTokenSource;
+        private static CancellationTokenSource? cancellationTokenSource;
         private static MPoint? currentLocationMPoint;
-        private static bool IsMonitoringLocation = false;
 
         // Работа с картой
         public static Map CreateMap()
