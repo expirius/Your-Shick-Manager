@@ -10,6 +10,7 @@ using Mapsui.Styles;
 using Mapsui.UI.Maui;
 using MFASeeker.Model;
 using MFASeeker.View;
+using System.ComponentModel;
 
 namespace MFASeeker.ViewModel;
 
@@ -21,7 +22,7 @@ public partial class SearchViewModel : ObservableObject
         Follow,
         UnFollow
     }
-    private static GenericCollectionLayer<List<IFeature>>? pointFeatures;
+    private static WritableLayer? pointFeatures;
     private static CalloutStyle? _activeCalloutStyle;
     private readonly IPopupService popupService;
 
@@ -29,33 +30,32 @@ public partial class SearchViewModel : ObservableObject
     private Toilet? newToilet; 
 
     [ObservableProperty]
-    private bool locationCheckBoxIsChecked;
+    private static bool locationCheckBoxIsChecked;
     [ObservableProperty]
     private MapControl mapControl;
     [ObservableProperty]
-    private bool isEnabledSpectateMode;
+    private static bool isEnabledSpectateMode;
     [ObservableProperty]
     private string? currentStateText;
     // Стандартное состояние для чекбокса
     private TriState _currentState;
+
     public SearchViewModel(IPopupService popupService)
     {
         this.popupService = popupService;
 
         MapControl = new() { Map = MapManager.CreateMap() };
 
-        pointFeatures = new()
-        {
-            Features = PinManager.CreatePointLayer(),
-            IsMapInfoLayer = true,
-            Name = "AllToiletsLayer"
-        };
+        pointFeatures = MapPinManager.CreatePointLayer();
+        pointFeatures.AddRange(MapPinManager.GetFeaturesLocal());
+
         MapControl.Map.Layers.Add(pointFeatures);
         NewToilet = new();
 
         MapControl.SingleTap += OnMapTaped; // Тап по карте
         MapControl.LongTap += OnMapLongTaped;
         MapControl.Map.Info += MapOnInfo; // Тап по пину
+        MapControl.Map.Navigator.ViewportChanged += OnViewPortChanged; // при перетаскивании карты
     }
     // Метод для переключения состояний
     public void ChangeState()
@@ -86,19 +86,20 @@ public partial class SearchViewModel : ObservableObject
                 LocationCheckBoxIsChecked = true;
                 CurrentStateText = "Follow";
                 MapManager.ToggleCompassMode();
-                await MapManager.EnableSpectateModeAsync(cts.Token);
+                await MapManager.EnableSpectateModeAsync();
                 break;
             case TriState.UnFollow:
                 LocationCheckBoxIsChecked = false;
                 CurrentStateText = "Unfollow";
+
                 MapManager.ToggleCompassMode();
+                MapManager.StopLocationUpdates();
                 /*
                  * ЛОГИКА для отвязки камеры
                  */
                 break;
         }
     }
-
     private async void OnMapLongTaped(object? sender, Mapsui.UI.TappedEventArgs e)
     {
        
@@ -119,13 +120,11 @@ public partial class SearchViewModel : ObservableObject
             };
 
             // Добавляем фичу на карту
-            var newFeature = PinManager.AddNewMarkOnLayer(NewToilet);
             if (pointFeatures != null)
             {
-                pointFeatures.Features.Add(newFeature);
+                pointFeatures.Add(MapPinManager.CreateMarkFeature(NewToilet));
                 // Обновляем данные на карте
                 pointFeatures.DataHasChanged();
-м
                 // сбрасываю данные туалета (но лучше сделать метод .Clear();
                 NewToilet = new();
             }
@@ -156,8 +155,12 @@ public partial class SearchViewModel : ObservableObject
             // Активируем новую метку
             calloutStyle.Enabled = !calloutStyle.Enabled;
             _activeCalloutStyle = calloutStyle.Enabled ? calloutStyle : null;
-
+            
             e.MapInfo?.Layer?.DataHasChanged(); // Обновляем слой для перерисовки графики
         }
+    }
+    private static void OnViewPortChanged(object? sender, PropertyChangedEventArgs e)
+    {
+     // при передвижении вьюпорта логика (сброк отслеживания)
     }
 }

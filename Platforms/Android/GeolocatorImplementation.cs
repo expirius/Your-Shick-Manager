@@ -39,6 +39,14 @@ public class GeolocatorImplementation : IGeolocator
                 new Microsoft.Maui.Devices.Sensors.Location(location.Latitude, location.Longitude));
         await taskCompletionSource.Task;
     }
+    public void StopListening()
+    {
+        if (locator != null)
+        {
+            locator.Dispose();
+            locator = null;
+        }
+    }
 }
 
 internal class GeolocationContinuousListener : Java.Lang.Object, ILocationListener

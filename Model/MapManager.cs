@@ -3,6 +3,8 @@ using Mapsui.Extensions;
 using Mapsui.Projections;
 using Mapsui.Tiling;
 using Mapsui.Widgets.Zoom;
+using Microsoft.Maui.Devices.Sensors;
+using System.Threading;
 using Map = Mapsui.Map;
 using MyLocationLayer = Mapsui.Layers.MyLocationLayer;
 
@@ -14,8 +16,9 @@ namespace MFASeeker.Model
 
         private static readonly MPoint MOSCOWLOCATION = new(37.6156, 55.7522);
         private static MyLocationLayer? _myLocationLayer;
-        private static CancellationToken cancellationToken;
+        private static CancellationTokenSource cancellationTokenSource;
         private static MPoint? currentLocationMPoint;
+        private static bool IsMonitoringLocation = false;
 
         // Работа с картой
         public static Map CreateMap()
@@ -45,7 +48,7 @@ namespace MFASeeker.Model
             };
             Geolocator.ToggleCompass();
         }
-        public static async Task EnableSpectateModeAsync(CancellationToken token)
+        public static async Task EnableSpectateModeAsync()
         {
             //
             if (Map == null) return;
@@ -55,21 +58,29 @@ namespace MFASeeker.Model
                 Map.Layers.Add(_myLocationLayer);
             }
             //
-            cancellationToken = token;
-
+            cancellationTokenSource = new();
+            _myLocationLayer.IsCentered = true;
             // Мониторинг текущего местоположения
             var progress = new Progress<Location>(location =>
             {
-                if (!cancellationToken.IsCancellationRequested)
+                // конвертируется МПоинт в сферические координаты
+                currentLocationMPoint = SphericalMercator.FromLonLat(location.Longitude, location.Latitude).ToMPoint();
+                if (_myLocationLayer != null)
                 {
-                    // конвертируется МПоинт в сферические координаты
-                    currentLocationMPoint = SphericalMercator.FromLonLat(location.Longitude, location.Latitude).ToMPoint();
-                    if (_myLocationLayer != null)
-                        _myLocationLayer.UpdateMyLocation(currentLocationMPoint, true);
+                    _myLocationLayer.UpdateMyLocation(currentLocationMPoint, true);
                 }
             });
             // При изменении локции прогресс прогоняется заново
-            await Geolocator.Default.StartListening(progress, cancellationToken);
+            await Geolocator.Default.StartListening(progress, cancellationTokenSource.Token);
+        }
+        public static void StopLocationUpdates()
+        {
+            //// Остановить прослушивание местоположения
+            //cancellationTokenSource?.Cancel(); // Остановить токен, чтобы освободить ресурсы
+            //cancellationTokenSource?.Dispose(); // Освободить ресурс токена
+            //cancellationTokenSource = null; // Обнулить ссылку
+            //Geolocator.Default.StopListening(); // Вызов метода для остановки прослушивания
+            _myLocationLayer.IsCentered = false;
         }
         // Виджеты
         private static ZoomInOutWidget CreateZoomInOutWidget(Orientation orientation,
