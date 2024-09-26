@@ -15,6 +15,16 @@ namespace MFASeeker.Model
         [ObservableProperty]
         private double rating;
 
+        public Toilet()
+        {
+            Id = 0;
+            Name = "";
+            Location = null;
+            Rating = 0;
+            Description = "";
+            CreatedDate = DateTime.Now;
+            UserName = DeviceInfo.Current.Name;
+        }
         public string? UserName { get; set; }
         public string? UserId { get; set; }
         public DateTime CreatedDate { get; set; }

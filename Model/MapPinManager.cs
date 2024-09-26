@@ -22,7 +22,7 @@ namespace MFASeeker.Model
                 IsMapInfoLayer = isInfoLayer,
             };
         }
-        private static PointFeature GetFeature(Toilet toilet)
+        private static PointFeature CreateFeature(Toilet toilet)
         {
                 // описание точки
                 var feature = new PointFeature(SphericalMercator.FromLonLat(toilet.Location.Longitude, toilet.Location.Latitude).ToMPoint());
@@ -35,29 +35,25 @@ namespace MFASeeker.Model
                 // styles
                 feature.Styles.Add(CreateSvgStyle(ToiletIconProvider.GetIconPath(toilet), 0.08));
                 feature.Styles.Add(CreateCalloutStyleByToilet(toilet));
-
+                
                 return feature;
         }
-        public static PointFeature CreateMarkFeature(Toilet toilet)
+        public static PointFeature GetFeatureMark(Toilet toilet)
         {
-            Toilet newToilet = new()
-            {
-                Name = toilet.Name ?? "",
-                Location = toilet.Location,
-                Rating = toilet.Rating,
-                Description = toilet.Description ?? "",
-                CreatedDate = DateTime.Now,
-                UserName = DeviceInfo.Current.Name,
-            };
-            return GetFeature(newToilet);
+            // сохранение в память
+            JsonPinStorage pinStorage = new();
+            pinStorage.SaveMarker(toilet);
+            // Возврат фичи
+            return CreateFeature(toilet);
         }
         // Локальные пины для теста
         public static IEnumerable<PointFeature> GetFeaturesLocal()
         {
-            var toilets = GetLocalToiletsTest();
+            JsonPinStorage pinStorage = new();
+            var toilets = pinStorage.GetMarkers();
             // добавление самой точки и её иконки + callout style
-
-            return toilets.Select(t =>
+            if (toilets != null)
+                return toilets.Select(t =>
             {
                 var feature = new PointFeature(SphericalMercator.FromLonLat(t.Location.Longitude, t.Location.Latitude).ToMPoint());
                 feature[nameof(t.Name)] = t.Name;
@@ -72,20 +68,10 @@ namespace MFASeeker.Model
 
                 return feature;
             });
+            else { return []; }
             
         }
-        private static IEnumerable<Toilet> GetLocalToiletsTest()
-        {
-            return
-            [
-                new() { Id = 0, Rating = 0, Name = "Кофейня", Description = "ОПИСАНИЕ БОЛЬШОЕ ОЧЕНЬ ОПИСАНИЕ БОЛЬШОЕ ОЧЕНЬ ОПИСАНИЕ БОЛЬШОЕ ОЧЕНЬ", Location = new Location(53.256586, 34.373289)},
-                new() { Id = 1, Rating = 5, Name = "Гостиница, ресторан", Description = "фыы asdasf фывфы", Location = new Location(53.254117, 34.377019)},
-                new() { Id = 2, Rating = 3.44, Name = "Озон", Description = "Попросись у кассиршы, иногда пускает0#%#@ ффф.", Location = new Location(53.253010, 34.375285)},
-                new() { Id = 3, Rating = 2.2, Name = "Пивнушка", Description = "", Location = new Location(53.254977, 34.373497)},
-                new() { Id = 4, Rating = 1.9690, Name = "A school", Location = new Location(53.254519, 34.375026)},
-                new() { Id = 5, Rating = 4, Name = "Сарай", Location = new Location(53.256070, 34.374074)},
-            ];
-        }
+
         // Стиль карточки пина
         private static CalloutStyle CreateCalloutStyleByToilet(Toilet t)
         {

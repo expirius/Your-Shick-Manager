@@ -118,7 +118,7 @@ public partial class SearchViewModel : ObservableObject
                 Latitude = SphericalMercator.ToLonLat(worldPosition).Y
             };
           
-            pointFeatures?.Add(MapPinManager.CreateMarkFeature(NewToilet));
+            pointFeatures?.Add(MapPinManager.GetFeatureMark(NewToilet));
             pointFeatures?.DataHasChanged();
 
             // сбрасываю данные туалета VM (но лучше сделать метод .Clear();
