@@ -1,5 +1,17 @@
+
 # It is Your Shick
-<img src="https://github.com/user-attachments/assets/3b8c23d3-a54b-47a1-9a8d-22b31e3df186" alt="AppIcon" width="400" />
-<br>
-<img src="https://github.com/user-attachments/assets/c2e5ae83-227b-462f-82c7-8f62cd6c3eb2" alt="Главное меню" width="220" />
+
+![logo](https://github.com/user-attachments/assets/3b8c23d3-a54b-47a1-9a8d-22b31e3df186)
+
+### Приложение, созданное для отслеживания и категоризации ближайших толчков
+---
+Из возможностей:
+
+* Возможность оставлять метки и отзывы о прошедшем опыте
+* Рейтинг туалетов по пятибальной шкале
+* Все данные хранятся локально и доступны всегда
+
+![preview](Images/preview.png)
+
+![rating](Images/ratings.jpg)
 
