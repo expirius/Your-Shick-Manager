@@ -36,6 +36,7 @@ namespace MFASeeker.Model
                 _myLocationLayer = new MyLocationLayer(Map);
                 Map.Layers.Add(_myLocationLayer);
             }
+            _ = StartListeningLocation();
             return Map;
         }
         public static void ToggleCompassMode()
@@ -52,22 +53,27 @@ namespace MFASeeker.Model
             };
             Geolocator.ToggleCompass();
         }
-        public static async Task StartListeningLocation()
+        public static void StartSpectateMode()
         {
-            if (_myLocationLayer == null) return;
-            cancellationTokenSource = new();
-            _myLocationLayer.IsCentered = true;
-            // Мониторинг текущего местоположения
-            var progress = new Progress<Location>(UpdateLocation);
-            //запуск прослушивания
-            await Geolocator.Default.StartListening(progress, cancellationTokenSource.Token);
+            if (_myLocationLayer != null)
+            {
+                _myLocationLayer.IsCentered = true;
+            }
         }
-        public static void StopLocationUpdate()
+        public static void StopSpectateMode()
         {
             if (_myLocationLayer != null)
                 _myLocationLayer.IsCentered = false;
         }
 
+        private static async Task StartListeningLocation()
+        {
+            if (_myLocationLayer == null) return;
+            cancellationTokenSource = new();
+            StartSpectateMode();
+            var progress = new Progress<Location>(UpdateLocation);
+            await Geolocator.Default.StartListening(progress, cancellationTokenSource.Token);
+        }
         private static void UpdateLocation(Location location)
         {
             // Конвертируем в сферические координаты и обновляем карту
