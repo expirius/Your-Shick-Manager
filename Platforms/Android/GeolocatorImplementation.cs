@@ -1,4 +1,5 @@
-﻿using Android.Locations;
+﻿using Android.Content;
+using Android.Locations;
 using Android.OS;
 using Android.Runtime;
 using MFASeeker;
@@ -54,12 +55,22 @@ internal class GeolocationContinuousListener : Java.Lang.Object, ILocationListen
     public Action<Location>? OnLocationChangedAction { get; set; }
 
     LocationManager? locationManager;
-
     public GeolocationContinuousListener()
     {
         locationManager = (LocationManager?)Android.App.Application.Context.GetSystemService(Android.Content.Context.LocationService);
+
+        var isInternetAvailable = Connectivity.NetworkAccess == NetworkAccess.Internet;
         // Requests location updates each second and notify if location changes more then 100 meters
-        locationManager?.RequestLocationUpdates(LocationManager.GpsProvider, 100, 1, this); // 
+        if (isInternetAvailable)
+        {
+            // Используем сетевой провайдер при наличии интернета
+            locationManager?.RequestLocationUpdates(LocationManager.NetworkProvider, 100, 1, this);
+        }
+        else
+        {
+            // Используем GPS провайдер при отсутствии интернета
+            locationManager?.RequestLocationUpdates(LocationManager.GpsProvider, 100, 1, this);
+        }
     }
 
     public void OnLocationChanged(Location location)
