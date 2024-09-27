@@ -7,8 +7,14 @@ namespace MFASeeker.Model
         private readonly string filePath;
         public JsonPinStorage()
         {
-            filePath = Path.Combine(FileSystem.Current.CacheDirectory, "markers.json"); // Использование локального хранилища
-            if (!File.Exists(filePath))
+            filePath = Path.Combine(FileSystem.Current.AppDataDirectory, "markers.json"); // Использование локального хранилища
+            string oldFilePath = Path.Combine(FileSystem.Current.CacheDirectory, "markers.json");
+            // Если файл существует в кеше (старое расположение), то отдаем файл в локальную директорию
+            if (File.Exists(oldFilePath) && !File.Exists(filePath))
+            {
+                File.Copy(oldFilePath, filePath, true);
+            }
+            else if(!File.Exists(oldFilePath) && !File.Exists(filePath))
             {
                 // Создаем пустой файл с начальными данными
                 var toiletsList = new List<Toilet>(); // Пустой список
