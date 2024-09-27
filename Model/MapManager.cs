@@ -79,7 +79,11 @@ namespace MFASeeker.Model
             // Конвертируем в сферические координаты и обновляем карту
             CurrentLocationMPoint = SphericalMercator.FromLonLat(location.Longitude, location.Latitude).ToMPoint();
             _myLocationLayer?.UpdateMyLocation(CurrentLocationMPoint, true);
+
+            LocationUpdated?.Invoke(location);
         }
+        // events
+        public static event Action<Location> LocationUpdated;
         // Виджеты
         private static ZoomInOutWidget CreateZoomInOutWidget(Orientation orientation,
         Mapsui.Widgets.VerticalAlignment verticalAlignment, Mapsui.Widgets.HorizontalAlignment horizontalAlignment)

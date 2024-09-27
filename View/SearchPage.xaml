@@ -51,7 +51,18 @@
                   VerticalOptions="End" HorizontalOptions="End"
                   IsChecked="{Binding LocationCheckBoxIsChecked}"
                   CheckedChanged="LocationSwitchCheckBox_CheckedChanged"/> -->
-        
+
+        <Label 
+            Text="{Binding CurrentLocationLabel}" 
+            Grid.Row="0" Grid.RowSpan="2"
+            VerticalOptions="StartAndExpand"
+            HorizontalOptions="CenterAndExpand"
+            FontAttributes="Bold"
+            Shadow="5,0,0,Black"
+            Margin="40"
+            FontSize="Title"
+            TextColor="Black"
+            />
         <!-- TEST LABELS -->
         <VerticalStackLayout Grid.Row="1" Grid.RowSpan="2"
                              VerticalOptions="End">

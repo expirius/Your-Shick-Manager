@@ -9,6 +9,7 @@ using Mapsui.Projections;
 using Mapsui.Styles;
 using Mapsui.UI.Maui;
 using MFASeeker.Model;
+using MFASeeker.Services;
 using MFASeeker.View;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -32,6 +33,10 @@ public partial class SearchViewModel : ObservableObject
 
     [ObservableProperty]
     private bool locationCheckBoxIsChecked;
+
+    [ObservableProperty]
+    private string currentLocationLabel;
+
     public IAsyncRelayCommand UpdateCheckBoxCommand { get; }
 
     public SearchViewModel()
@@ -48,6 +53,7 @@ public partial class SearchViewModel : ObservableObject
         MapControl.LongTap += OnMapLongTaped;
         MapControl.Map.Info += MapOnInfo; // Тап по пину
         MapControl.Map.Navigator.ViewportChanged += OnViewPortChanged; // при перетаскивании карты
+        MapManager.LocationUpdated += OnLocationUpdate;
 
         LocationCheckBoxIsChecked = true;
         ChangeSpectateModeCommand.Execute(null);
@@ -126,5 +132,13 @@ public partial class SearchViewModel : ObservableObject
     private static void OnViewPortChanged(object? sender, PropertyChangedEventArgs e)
     {
      // при передвижении вьюпорта логика (сброк отслеживания)
+    }
+    private async void OnLocationUpdate(Location location)
+    {
+        if (location != null)
+        {
+            if (CurrentLocationLabel != null)
+                CurrentLocationLabel = await StandartGeoCodingService.GetAddressFromCoordinates(location.Latitude, location.Longitude);
+        }
     }
 }
