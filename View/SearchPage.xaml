@@ -38,7 +38,7 @@
                 ImageActive="arrow_active.png"
                 ImageInactive="arrow.png"
                 IsChecked="{Binding LocationCheckBoxIsChecked, Mode=TwoWay}"
-                IsCheckedChanged="LocationSwitchCheckBox_CheckedChanged"
+                CheckedCommand="{Binding ChangeSpectateModeCommand}"
             />
         </Frame>
         <!-- Временное решение пока кастомный чекбокс в разработке 
@@ -51,7 +51,17 @@
                   VerticalOptions="End" HorizontalOptions="End"
                   IsChecked="{Binding LocationCheckBoxIsChecked}"
                   CheckedChanged="LocationSwitchCheckBox_CheckedChanged"/> -->
-        
+
+        <Label 
+            Text="{Binding CurrentLocationLabel}" 
+            Grid.Row="0" Grid.RowSpan="2"
+            VerticalOptions="StartAndExpand"
+            HorizontalOptions="CenterAndExpand"
+            FontAttributes="Bold"
+            Margin="40"
+            FontSize="Title"
+            TextColor="Black"
+            />
         <!-- TEST LABELS -->
         <VerticalStackLayout Grid.Row="1" Grid.RowSpan="2"
                              VerticalOptions="End">

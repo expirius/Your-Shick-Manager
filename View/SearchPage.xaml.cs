@@ -22,9 +22,4 @@ public partial class SearchPage : ContentPage
         BindingContext = searchViewModel;
         _searchViewModel = searchViewModel;
     }
-
-    private void LocationSwitchCheckBox_CheckedChanged(object sender, CheckedChangedEventArgs e)
-    {
-        _searchViewModel.ChangeState();
-    }
 }
