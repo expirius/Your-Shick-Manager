@@ -58,7 +58,6 @@
             VerticalOptions="StartAndExpand"
             HorizontalOptions="CenterAndExpand"
             FontAttributes="Bold"
-            Shadow="5,0,0,Black"
             Margin="40"
             FontSize="Title"
             TextColor="Black"
