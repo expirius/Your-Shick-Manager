@@ -61,6 +61,10 @@ internal class GeolocationContinuousListener : Java.Lang.Object, ILocationListen
 
         var isInternetAvailable = Connectivity.NetworkAccess == NetworkAccess.Internet;
         // Requests location updates each second and notify if location changes more then 100 meters
+#if DEBUG
+        locationManager?.RequestLocationUpdates(LocationManager.GpsProvider, 100, 1, this);
+#else
+
         if (isInternetAvailable)
         {
             // Используем сетевой провайдер при наличии интернета
@@ -71,6 +75,7 @@ internal class GeolocationContinuousListener : Java.Lang.Object, ILocationListen
             // Используем GPS провайдер при отсутствии интернета
             locationManager?.RequestLocationUpdates(LocationManager.GpsProvider, 100, 1, this);
         }
+#endif
     }
 
     public void OnLocationChanged(Location location)

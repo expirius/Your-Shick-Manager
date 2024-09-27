@@ -49,7 +49,6 @@ public partial class SearchViewModel : ObservableObject
         pointFeatures = MapPinManager.CreatePointLayer("AllToiletsLayer", true);
         // Загрузка точек на слой из ... чего либо
         pointFeatures.AddRange(MapPinManager.GetFeaturesLocal());
-
         MapControl.Map.Layers.Add(pointFeatures);
         NewToilet = new();
 
@@ -57,6 +56,7 @@ public partial class SearchViewModel : ObservableObject
         MapControl.LongTap += OnMapLongTaped;
         MapControl.Map.Info += MapOnInfo; // Тап по пину
         MapControl.Map.Navigator.ViewportChanged += OnViewPortChanged; // при перетаскивании карты
+
     }
     // Метод для переключения состояний
     public void ChangeState()
@@ -87,14 +87,14 @@ public partial class SearchViewModel : ObservableObject
                 LocationCheckBoxIsChecked = true;
                 CurrentStateText = "Follow";
                 MapManager.ToggleCompassMode();
-                await MapManager.EnableSpectateModeAsync();
+                await MapManager.StartListeningLocation();
                 break;
             case TriState.UnFollow:
                 LocationCheckBoxIsChecked = false;
                 CurrentStateText = "Unfollow";
 
                 MapManager.ToggleCompassMode();
-                MapManager.StopLocationUpdates();
+                MapManager.StopLocationUpdate();
                 /*
                  * ЛОГИКА для отвязки камеры
                  */
