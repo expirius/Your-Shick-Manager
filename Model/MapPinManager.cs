@@ -9,6 +9,7 @@ using Mapsui.Utilities;
 using Exception = System.Exception;
 using System.Text;
 using System.Text.Json;
+using MFASeeker.Services;
 
 namespace MFASeeker.Model
 {
@@ -76,11 +77,18 @@ namespace MFASeeker.Model
         private static CalloutStyle CreateCalloutStyleByToilet(Toilet t)
         {
             // Формируем строку с нужной информацией
-            var keyValuePairs = new StringBuilder();
-            keyValuePairs.AppendLine($"Точка: {t.Name}");
-            keyValuePairs.AppendLine($"Описание: {t.Description}");
-            keyValuePairs.AppendLine($"Рейтинг: {t.Rating}");
-
+            StringBuilder keyValuePairs = new();
+            keyValuePairs.AppendLine($"Точка: {t.Name}\n");
+            keyValuePairs.AppendLine($"Описание: {t.Description}\n");
+            keyValuePairs.AppendLine($"Рейтинг: {t.Rating}\n");
+            /*
+            * получение адреса в callout'e. 
+            * Обязательно в будущем каждому туалету давать адрес при сохранении точки.
+            * Так меньше нагрузки
+            */
+            var address = Task.Run(() => StandartGeoCodingService.GetAddressFromCoordinates(t.Location.Latitude, t.Location.Longitude))
+                .GetAwaiter().GetResult();
+            keyValuePairs.AppendLine($"Адрес: {address}");
             return new CalloutStyle
             {
                     Title = keyValuePairs.ToString(),
