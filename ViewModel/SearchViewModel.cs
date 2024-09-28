@@ -76,11 +76,11 @@ public partial class SearchViewModel : ObservableObject
         }
     }
 
-    private async void OnMapLongTaped(object? sender, Mapsui.UI.TappedEventArgs e)
+    private void OnMapLongTaped(object? sender, Mapsui.UI.TappedEventArgs e)
     {
         //Попап с полями новой точки
         var popup = new NewPinPopup();
-        object? result = await Application.Current.MainPage.ShowPopupAsync(popup);
+        object? result = Application.Current.MainPage.ShowPopupAsync(popup);
         if (result is bool isConfirmed && isConfirmed)
         {
             if (sender is not MapControl mapControl) return;
@@ -92,7 +92,7 @@ public partial class SearchViewModel : ObservableObject
                 Longitude = SphericalMercator.ToLonLat(worldPosition).X,
                 Latitude = SphericalMercator.ToLonLat(worldPosition).Y
             };
-          
+
             pointFeatures?.Add(MapPinManager.GetFeatureMark(NewToilet));
             pointFeatures?.DataHasChanged();
 
