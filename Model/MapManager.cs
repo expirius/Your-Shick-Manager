@@ -20,7 +20,7 @@ namespace MFASeeker.Model
         public static MPoint? CurrentLocationMPoint;
 
         // Работа с картой
-        public static Map CreateMap()
+        public static ref Map? CreateMap()
         {
             Map = new() { CRS = "EPSG:3857" };
             Map.Layers.Add(OpenStreetMap.CreateTileLayer());
@@ -37,19 +37,25 @@ namespace MFASeeker.Model
                 Map.Layers.Add(_myLocationLayer);
             }
             _ = StartListeningLocation();
-            return Map;
+            return ref Map;
         }
+        /* ЭТО НЕПРАВИЛЬНО РАБОТАЮЩИЙ КОМПАС
+            * При изменении rotation у viewport 
+            * UpdateMyViewDirection не учитывает Map.Navigator.Viewport.Rotation
+            * Скорее всего карта не обновляется, т.к. ее бэкнул из метода
+            * И там отдался объект а не ссылка на свойство
+            * Доделаю через время, наверно. Пока не дебажил
+            */
         public static void ToggleCompassMode()
         {
-            // Мониторинг компаса
             Geolocator.OnCompassChangedAction += (newReading) =>
             {
                 if (Map == null || _myLocationLayer == null)
                     return;
-                if (newReading == -1)
-                    _myLocationLayer.UpdateMyViewDirection(-1, 0, false);
-                else
-                    _myLocationLayer.UpdateMyViewDirection(newReading, Map.Navigator.Viewport.Rotation, true);
+                //if (newReading == -1)
+                //    _myLocationLayer.UpdateMyViewDirection(-1, 0);
+                //else
+                //    _myLocationLayer.UpdateMyViewDirection(newReading, Map.Navigator.Viewport.Rotation);
             };
             Geolocator.ToggleCompass();
         }
