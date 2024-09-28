@@ -55,6 +55,7 @@
         <Label 
             Text="{Binding CurrentLocationLabel}" 
             Grid.Row="0" Grid.RowSpan="2"
+            VerticalTextAlignment="End"
             VerticalOptions="StartAndExpand"
             HorizontalOptions="CenterAndExpand"
             FontAttributes="Bold"

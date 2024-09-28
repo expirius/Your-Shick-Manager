@@ -137,8 +137,7 @@ public partial class SearchViewModel : ObservableObject
     {
         if (location != null)
         {
-            if (CurrentLocationLabel != null)
-                CurrentLocationLabel = await StandartGeoCodingService.GetAddressFromCoordinates(location.Latitude, location.Longitude);
+             CurrentLocationLabel = await StandartGeoCodingService.GetAddressFromCoordinates(location.Latitude, location.Longitude);
         }
     }
 }

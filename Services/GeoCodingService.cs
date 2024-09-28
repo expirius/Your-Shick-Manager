@@ -11,16 +11,33 @@ namespace MFASeeker.Services
     {
         public static async Task<string> GetAddressFromCoordinates(double latitude, double longitude)
         {
-            var placemarks = await Geocoding.GetPlacemarksAsync(latitude, longitude);
-            var placemark = placemarks?.FirstOrDefault();
-            if (placemark != null)
+            try
             {
-                return
-                    $"{placemark.Locality}, \n" + // Город
-                    $"{placemark.Thoroughfare} " + // Адраес
-                    $"{placemark.SubThoroughfare}"; // Дом
+                var placemarks = await Geocoding.GetPlacemarksAsync(latitude, longitude);
+
+                if (placemarks != null && placemarks.Any())
+                {
+                    var placemark = placemarks.FirstOrDefault();
+                    if (placemark != null)
+                    {
+                        return
+                            $"{placemark.Locality}, " +  // Город
+                            $"{placemark.Thoroughfare} " +  // Адрес
+                            $"{placemark.SubThoroughfare}"; // Дом
+                    }
+                }
             }
-            return "";
+            catch (ObjectDisposedException ex)
+            {
+                // Обработка ошибки если объект очищен
+                Console.WriteLine($"ObjectDisposedException: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Exception: {ex.Message}");
+            }
+
+            return "N/A";
         }
     }
 }

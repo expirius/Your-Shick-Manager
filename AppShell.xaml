@@ -10,22 +10,22 @@
     <!-- -->
     <FlyoutItem CurrentItem="{x:Reference MainFlyout}">
         <ShellContent
-        Title="Поиск"
-        Icon="search_icon.png"
-        ContentTemplate="{DataTemplate local:SearchPage}"
-        Route="Поиск"/>
+            Title="Поиск"
+            Icon="search_icon.png"
+            Route="Карта"
+            ContentTemplate="{DataTemplate local:SearchPage}"/>
 
         <ShellContent
-            
-            Icon="toilet_bot.png"
             x:Name="MainFlyout"
+            Icon="toilet_bot.png"
             Title="Главная"
-    ContentTemplate="{DataTemplate local:MainPage}"
-    Route="Главная"/>
+            Route="Главная"
+            ContentTemplate="{DataTemplate local:MainPage}"/>
 
         <ShellContent
-Title="Карта"
-        Icon="map_marker_ico.png"
-Route="Карта"/>
+            Title="Метки"
+            Icon="menu_icon.png"
+            Route="Метки"
+            ContentTemplate="{DataTemplate local:PinManagerPage}"/>
     </FlyoutItem>
 </Shell>
