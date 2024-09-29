@@ -8,22 +8,25 @@
     <ContentPage.BindingContext>
         <vm:PinManagerViewModel/>
     </ContentPage.BindingContext>
-    <VerticalStackLayout>
+    <ScrollView Orientation="Vertical">
+        <StackLayout Margin="10">
         <Button Text="Обновить" Command="{Binding UpdatePinsCommand}"/>
-        <ListView 
-            ItemsSource="{Binding ActivePinList}"
-            HasUnevenRows="True">
+        <CollectionView 
+            ItemsSource="{Binding ActivePinList}">
           
-            <ListView.ItemTemplate>
+            <CollectionView.ItemTemplate>
                 <DataTemplate>
-                    <ViewCell>
-                        <SwipeView SwipeStarted="OnSwipeStarted">
-                            <SwipeView.RightItems>
-                                <SwipeItems>
-                                    <SwipeItem Text="Удалить"
-                                               BackgroundColor="LightPink"/>
-                                </SwipeItems>
-                            </SwipeView.RightItems>
+                    <SwipeView SwipeStarted="OnSwipeStarted">
+                        <SwipeView.RightItems>
+                            <SwipeItems>
+                                <SwipeItem Text="Удалить" BackgroundColor="LightPink"
+                                           CommandParameter="{Binding .}"
+                                           Command="{Binding Source={x:RelativeSource 
+                                                        AncestorType={x:Type vm:PinManagerViewModel}},
+                                                        Path=DeletePinCommand}" />
+                            </SwipeItems>
+                        </SwipeView.RightItems>
+                        <Frame Margin="10" Background="#1b2929" >
                             <StackLayout Orientation="Horizontal">
                                 <Image HeightRequest="70" WidthRequest="70" 
                                    Source="{Binding Rating, Converter={converters:RaitingPNGConverter}}" />
@@ -34,10 +37,11 @@
                                     <Label Text="{Binding CreatedDate, StringFormat='{0:MM/dd/yyyy HH:mm}'}"/>
                                 </StackLayout>
                             </StackLayout>
-                        </SwipeView>
-                    </ViewCell>
+                        </Frame>
+                    </SwipeView>
                 </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
-    </VerticalStackLayout>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </StackLayout>
+    </ScrollView>
 </ContentPage>
