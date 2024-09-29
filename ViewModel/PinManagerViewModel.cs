@@ -23,18 +23,18 @@ namespace MFASeeker.ViewModel
         {
             ActivePinList = [];
             JsonPinStorage jsonPinStorage = new();
-            UpdatePins();
+            _ = UpdatePins();
         }
 
         [RelayCommand]
-        private void UpdatePins()
+        private async Task UpdatePins()
         {
             JsonPinStorage jsonPinStorage = new();
             ActivePinList?.Clear();
-            ActivePinList = jsonPinStorage
-               .GetMarkers()
-               .OrderByDescending(toilet => toilet.CreatedDate) 
-               .ToObservableCollection(); 
+
+            ActivePinList = (await jsonPinStorage.GetMarkersAsync())
+                .OrderByDescending(toilet => toilet.CreatedDate)
+                .ToObservableCollection(); 
         }
         [RelayCommand]
         private void DeletePin()
