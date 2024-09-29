@@ -20,7 +20,7 @@ namespace MFASeeker.Model
         public static MPoint? CurrentLocationMPoint;
 
         // Работа с картой
-        public static ref Map? CreateMap()
+        public static Map CreateMap()
         {
             Map = new() { CRS = "EPSG:3857" };
             Map.Layers.Add(OpenStreetMap.CreateTileLayer());
@@ -30,14 +30,13 @@ namespace MFASeeker.Model
             // Переобразование под сферический тип координат для OSM
             var sphericalMercatorCoordinate = SphericalMercator.FromLonLat(MOSCOWLOCATION.X, MOSCOWLOCATION.Y).ToMPoint();
             Map.Home = n => n.CenterOnAndZoomTo(sphericalMercatorCoordinate, n.Resolutions[19]);
+
             // Слой с позицией пользователя
-            if (_myLocationLayer == null)
-            {
-                _myLocationLayer = new MyLocationLayer(Map);
-                Map.Layers.Add(_myLocationLayer);
-            }
+            _myLocationLayer = new MyLocationLayer(Map);
+            Map.Layers.Add(_myLocationLayer);
+
             _ = StartListeningLocation();
-            return ref Map;
+            return Map;
         }
         /* ЭТО НЕПРАВИЛЬНО РАБОТАЮЩИЙ КОМПАС
             * При изменении rotation у viewport 
