@@ -30,26 +30,31 @@ namespace MFASeeker.Model
             // Переобразование под сферический тип координат для OSM
             var sphericalMercatorCoordinate = SphericalMercator.FromLonLat(MOSCOWLOCATION.X, MOSCOWLOCATION.Y).ToMPoint();
             Map.Home = n => n.CenterOnAndZoomTo(sphericalMercatorCoordinate, n.Resolutions[19]);
+
             // Слой с позицией пользователя
-            if (_myLocationLayer == null)
-            {
-                _myLocationLayer = new MyLocationLayer(Map);
-                Map.Layers.Add(_myLocationLayer);
-            }
+            _myLocationLayer = new MyLocationLayer(Map);
+            Map.Layers.Add(_myLocationLayer);
+
             _ = StartListeningLocation();
             return Map;
         }
+        /* ЭТО НЕПРАВИЛЬНО РАБОТАЮЩИЙ КОМПАС
+            * При изменении rotation у viewport 
+            * UpdateMyViewDirection не учитывает Map.Navigator.Viewport.Rotation
+            * Скорее всего карта не обновляется, т.к. ее бэкнул из метода
+            * И там отдался объект а не ссылка на свойство
+            * Доделаю через время, наверно. Пока не дебажил
+            */
         public static void ToggleCompassMode()
         {
-            // Мониторинг компаса
             Geolocator.OnCompassChangedAction += (newReading) =>
             {
                 if (Map == null || _myLocationLayer == null)
                     return;
-                if (newReading == -1)
-                    _myLocationLayer.UpdateMyViewDirection(-1, 0, false);
-                else
-                    _myLocationLayer.UpdateMyViewDirection(newReading, Map.Navigator.Viewport.Rotation, true);
+                //if (newReading == -1)
+                //    _myLocationLayer.UpdateMyViewDirection(-1, 0);
+                //else
+                //    _myLocationLayer.UpdateMyViewDirection(newReading, Map.Navigator.Viewport.Rotation);
             };
             Geolocator.ToggleCompass();
         }

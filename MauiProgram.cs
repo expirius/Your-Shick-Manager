@@ -28,8 +28,12 @@ namespace MFASeeker
             //
             builder.Services.AddSingleton<MainPage>();
             builder.Services.AddSingleton<MainViewModel>();
+
             builder.Services.AddSingleton<SearchViewModel>();
             builder.Services.AddSingleton<SearchPage>();
+
+            builder.Services.AddSingleton<PinManagerPage>();
+            builder.Services.AddSingleton<PinManagerViewModel>();
 #if DEBUG
     		builder.Logging.AddDebug();
 #endif

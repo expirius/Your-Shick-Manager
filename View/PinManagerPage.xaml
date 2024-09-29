@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MFASeeker.View.PinManagerPage"
+             xmlns:vm="clr-namespace:MFASeeker.ViewModel"
+             xmlns:converters="clr-namespace:MFASeeker.Converters"
+             Title="PinManagerPage">
+    <ContentPage.BindingContext>
+        <vm:PinManagerViewModel/>
+    </ContentPage.BindingContext>
+    <VerticalStackLayout>
+        <Button Text="Обновить" Command="{Binding UpdatePinsCommand}"/>
+        <ListView 
+            ItemsSource="{Binding ActivePinList}"
+            HasUnevenRows="True">
+          
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <SwipeView SwipeStarted="OnSwipeStarted">
+                            <SwipeView.RightItems>
+                                <SwipeItems>
+                                    <SwipeItem Text="Удалить"
+                                               BackgroundColor="LightPink"/>
+                                </SwipeItems>
+                            </SwipeView.RightItems>
+                            <StackLayout Orientation="Horizontal">
+                                <Image HeightRequest="70" WidthRequest="70" 
+                                   Source="{Binding Rating, Converter={converters:RaitingPNGConverter}}" />
+
+                                <StackLayout Orientation="Vertical" HeightRequest="70">
+                                    <Label Text="{Binding Name}"/>
+                                    <Label Text="{Binding Location, Converter={converters:GeoCodingConverter} }"/>
+                                    <Label Text="{Binding CreatedDate, StringFormat='{0:MM/dd/yyyy HH:mm}'}"/>
+                                </StackLayout>
+                            </StackLayout>
+                        </SwipeView>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </VerticalStackLayout>
+</ContentPage>

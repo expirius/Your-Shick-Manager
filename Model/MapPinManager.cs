@@ -9,6 +9,7 @@ using Mapsui.Utilities;
 using Exception = System.Exception;
 using System.Text;
 using System.Text.Json;
+using MFASeeker.Services;
 
 namespace MFASeeker.Model
 {
@@ -38,23 +39,23 @@ namespace MFASeeker.Model
                 
                 return feature;
         }
-        public static PointFeature GetFeatureMark(Toilet toilet)
+        public async static Task<PointFeature> GetFeatureMark(Toilet toilet)
         {
             // сохранение в память
             JsonPinStorage pinStorage = new();
-            pinStorage.SaveMarker(toilet);
+            await pinStorage.SaveMarkerAsync(toilet);
             // Возврат фичи
             return CreateFeature(toilet);
         }
         // Локальные пины для теста
-        public static IEnumerable<PointFeature> GetFeaturesLocal()
+        public async static Task<IEnumerable<PointFeature>> GetFeaturesLocalAsync()
         {
             JsonPinStorage pinStorage = new();
-            var toilets = pinStorage.GetMarkers();
+            var toilets = await pinStorage.GetMarkersAsync();
             // добавление самой точки и её иконки + callout style
             if (toilets != null)
                 return toilets.Select(t =>
-            {
+                {
                 var feature = new PointFeature(SphericalMercator.FromLonLat(t.Location.Longitude, t.Location.Latitude).ToMPoint());
                 feature[nameof(t.Name)] = t.Name;
                 feature[nameof(t.Id)] = t.Id;
@@ -76,11 +77,18 @@ namespace MFASeeker.Model
         private static CalloutStyle CreateCalloutStyleByToilet(Toilet t)
         {
             // Формируем строку с нужной информацией
-            var keyValuePairs = new StringBuilder();
-            keyValuePairs.AppendLine($"Точка: {t.Name}");
-            keyValuePairs.AppendLine($"Описание: {t.Description}");
-            keyValuePairs.AppendLine($"Рейтинг: {t.Rating}");
-
+            StringBuilder keyValuePairs = new();
+            keyValuePairs.AppendLine($"Точка: {t.Name}\n");
+            keyValuePairs.AppendLine($"Описание: {t.Description}\n");
+            keyValuePairs.AppendLine($"Рейтинг: {t.Rating}\n");
+            /*
+            * получение адреса в callout'e. 
+            * Обязательно в будущем каждому туалету давать адрес при сохранении точки.
+            * Так меньше нагрузки
+            */
+            var address = Task.Run(() => StandartGeoCodingService.GetAddressFromCoordinates(t.Location.Latitude, t.Location.Longitude))
+                .GetAwaiter().GetResult();
+            keyValuePairs.AppendLine($"Адрес: {address}");
             return new CalloutStyle
             {
                     Title = keyValuePairs.ToString(),
