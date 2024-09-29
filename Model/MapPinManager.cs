@@ -39,19 +39,19 @@ namespace MFASeeker.Model
                 
                 return feature;
         }
-        public static PointFeature GetFeatureMark(Toilet toilet)
+        public async static Task<PointFeature> GetFeatureMark(Toilet toilet)
         {
             // сохранение в память
             JsonPinStorage pinStorage = new();
-            pinStorage.SaveMarker(toilet);
+            await pinStorage.SaveMarkerAsync(toilet);
             // Возврат фичи
             return CreateFeature(toilet);
         }
         // Локальные пины для теста
-        public static IEnumerable<PointFeature> GetFeaturesLocal()
+        public async static Task<IEnumerable<PointFeature>> GetFeaturesLocal()
         {
             JsonPinStorage pinStorage = new();
-            var toilets = pinStorage.GetMarkers();
+            var toilets = await pinStorage.GetMarkersAsync();
             // добавление самой точки и её иконки + callout style
             if (toilets != null)
                 return toilets.Select(t =>
