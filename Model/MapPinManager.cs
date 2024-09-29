@@ -48,7 +48,7 @@ namespace MFASeeker.Model
             return CreateFeature(toilet);
         }
         // Локальные пины для теста
-        public async static Task<IEnumerable<PointFeature>> GetFeaturesLocal()
+        public async static Task<IEnumerable<PointFeature>> GetFeaturesLocalAsync()
         {
             JsonPinStorage pinStorage = new();
             var toilets = await pinStorage.GetMarkersAsync();
