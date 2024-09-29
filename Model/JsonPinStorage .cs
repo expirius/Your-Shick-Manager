@@ -21,7 +21,7 @@ public class JsonPinStorage : IPinStorage
         }
     }
 
-    public async Task<List<Toilet>> GetMarkers()
+    public async Task<List<Toilet>> GetMarkersAsync()
     {
         try
         {
@@ -39,18 +39,18 @@ public class JsonPinStorage : IPinStorage
         }
     }
 
-    public async Task SaveMarker(Toilet marker)
+    public async Task SaveMarkerAsync(Toilet marker)
     {
-        var toiletsJson = await GetMarkers();
+        var toiletsJson = await GetMarkersAsync();
         toiletsJson.Add(marker);
 
         var json = JsonSerializer.Serialize(toiletsJson);
         await File.WriteAllTextAsync(filePath, json);
     }
 
-    public async Task DeleteMarker(Toilet marker)
+    public async Task DeleteMarkerAsync(Toilet marker)
     {
-        var toiletsJson = await GetMarkers();
+        var toiletsJson = await GetMarkersAsync();
         var markerToDelete = toiletsJson.FirstOrDefault(t => t.Id == marker.Id);
         if (markerToDelete != null)
         {
