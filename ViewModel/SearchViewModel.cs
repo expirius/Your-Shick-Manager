@@ -19,7 +19,6 @@ namespace MFASeeker.ViewModel;
 public partial class SearchViewModel : ObservableObject
 {
     private static WritableLayer? pointFeatures;
-    private static WritableLayer? _tempPointFeatures;
     private static CalloutStyle? _activeCalloutStyle;
     private readonly IPopupService popupService;
 

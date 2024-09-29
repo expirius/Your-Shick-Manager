@@ -55,7 +55,7 @@ namespace MFASeeker.Model
             // добавление самой точки и её иконки + callout style
             if (toilets != null)
                 return toilets.Select(t =>
-            {
+                {
                 var feature = new PointFeature(SphericalMercator.FromLonLat(t.Location.Longitude, t.Location.Latitude).ToMPoint());
                 feature[nameof(t.Name)] = t.Name;
                 feature[nameof(t.Id)] = t.Id;

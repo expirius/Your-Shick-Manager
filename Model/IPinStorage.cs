@@ -2,8 +2,8 @@
 {
     public interface IPinStorage
     {
-        List<Toilet> GetMarkers();
-        void SaveMarker(Toilet marker);
-        void DeleteMarker(Toilet marker);
+        Task<List<Toilet>> GetMarkers();
+        Task SaveMarker(Toilet marker);
+        Task DeleteMarker(Toilet marker);
     }
 }
