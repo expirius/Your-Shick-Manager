@@ -23,10 +23,10 @@ public partial class SearchViewModel : ObservableObject
     private readonly IPopupService popupService;
 
     [ObservableProperty]
-    private Toilet? newToilet;
+    private Toilet? newToilet = new();
 
     [ObservableProperty]
-    private MapControl mapControl;
+    private MapControl searchMapControl;
     [ObservableProperty]
     private string? currentStateText;
 
@@ -40,23 +40,29 @@ public partial class SearchViewModel : ObservableObject
 
     public SearchViewModel()
     {
-        MapControl = new() { Map = MapManager.CreateMap() };
-        // Слой с точками туалетов
-        pointFeatures = MapPinManager.CreatePointLayer("AllToiletsLayer", true);
-        // Загрузка точек на слой из ... чего либо
-        pointFeatures.AddRange(MapPinManager.GetFeaturesLocal());
-        MapControl.Map.Layers.Add(pointFeatures);
-        NewToilet = new();
+        SearchMapControl = new() { Map = MapManager.CreateMap() };
 
-        MapControl.SingleTap += OnMapTaped; // Тап по карте
-        MapControl.LongTap += OnMapLongTaped;
-        MapControl.Map.Info += MapOnInfo; // Тап по пину
-        MapControl.Map.Navigator.ViewportChanged += OnViewPortChanged; // при перетаскивании карты
+        SearchMapControl.SingleTap += OnMapTaped; // Тап по карте
+        SearchMapControl.LongTap += OnMapLongTaped;
+        SearchMapControl.Map.Info += MapOnInfo; // Тап по пину
+        SearchMapControl.Map.Navigator.ViewportChanged += OnViewPortChanged; // при перетаскивании карты
         MapManager.LocationUpdated += OnLocationUpdate;
 
         LocationCheckBoxIsChecked = true;
         ChangeSpectateModeCommand.Execute(null);
+
+        InitializeAsync();
     }
+
+    private async void InitializeAsync()
+    {
+        var features = await MapPinManager.GetFeaturesLocalAsync();
+
+        pointFeatures = MapPinManager.CreatePointLayer("AllToiletsLayer", true);
+        pointFeatures.AddRange(features);
+        SearchMapControl.Map.Layers.Add(pointFeatures);
+    }
+
     // Метод для обновления состояния CheckBox
     [RelayCommand]
     public void ChangeSpectateMode()
@@ -92,7 +98,7 @@ public partial class SearchViewModel : ObservableObject
                 Latitude = SphericalMercator.ToLonLat(worldPosition).Y
             };
 
-            pointFeatures?.Add(MapPinManager.GetFeatureMark(NewToilet));
+            pointFeatures?.Add(await MapPinManager.GetFeatureMark(NewToilet));
             pointFeatures?.DataHasChanged();
 
             // сбрасываю данные туалета VM (но лучше сделать метод .Clear();

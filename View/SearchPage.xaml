@@ -20,7 +20,7 @@
             VerticalOptions="Start" 
             HorizontalOptions="Fill"
             Margin="10, -10, 15, 0"/>
-        <ContentView Grid.Row="1" Grid.RowSpan="2"  x:Name="mapView" Content="{Binding MapControl}"/>
+        <ContentView Grid.Row="1" Grid.RowSpan="2"  x:Name="mapView" Content="{Binding SearchMapControl}"/>
 
         <Frame
             HeightRequest="80"
