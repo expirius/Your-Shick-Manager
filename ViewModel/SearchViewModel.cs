@@ -83,26 +83,31 @@ public partial class SearchViewModel : ObservableObject
 
     private async void OnMapLongTaped(object? sender, Mapsui.UI.TappedEventArgs e)
     {
-        //Попап с полями новой точки
-        var popup = new NewPinPopup();
-        object? result = await Application.Current.MainPage.ShowPopupAsync(popup);
-        if (result is bool isConfirmed && isConfirmed)
+        if (sender is not MapControl mapControl) return;
         {
-            if (sender is not MapControl mapControl) return;
-            if (NewToilet == null) return;
-
-            var worldPosition = mapControl.Map.Navigator.Viewport.ScreenToWorld(e.ScreenPosition);
-            NewToilet.Location = new()
+            // Блокирую управление картой
+            mapControl.IsEnabled = false;
+            //Попап с полями новой точки
+            var popup = new NewPinPopup();
+            object? result = await Application.Current.MainPage.ShowPopupAsync(popup);
+            if (result is bool isConfirmed && isConfirmed)
             {
-                Longitude = SphericalMercator.ToLonLat(worldPosition).X,
-                Latitude = SphericalMercator.ToLonLat(worldPosition).Y
-            };
+                if (NewToilet == null) return;
 
-            pointFeatures?.Add(await MapPinManager.GetFeatureMark(NewToilet));
-            pointFeatures?.DataHasChanged();
+                var worldPosition = mapControl.Map.Navigator.Viewport.ScreenToWorld(e.ScreenPosition);
+                NewToilet.Location = new()
+                {
+                    Longitude = SphericalMercator.ToLonLat(worldPosition).X,
+                    Latitude = SphericalMercator.ToLonLat(worldPosition).Y
+                };
 
-            // сбрасываю данные туалета VM (но лучше сделать метод .Clear();
-            NewToilet = new();
+                pointFeatures?.Add(await MapPinManager.GetFeatureMark(NewToilet));
+                pointFeatures?.DataHasChanged();
+
+                // сбрасываю данные туалета VM (но лучше сделать метод .Clear();
+                NewToilet = new();
+            }
+            mapControl.IsEnabled = true;
         }
     }
     private static void OnMapTaped(object? sender, Mapsui.UI.TappedEventArgs e)
