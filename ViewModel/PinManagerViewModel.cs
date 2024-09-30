@@ -16,30 +16,31 @@ namespace MFASeeker.ViewModel
 {
     public partial class PinManagerViewModel : ObservableObject
     {
+        private readonly JsonPinStorage jsonPinStorage = new();
         [ObservableProperty]
-        private ObservableCollection<Toilet>? activePinList;
+        private static ObservableCollection<Toilet>? activePinList;
 
         public PinManagerViewModel()
         {
             ActivePinList = [];
-            JsonPinStorage jsonPinStorage = new();
             _ = UpdatePins();
         }
 
         [RelayCommand]
         private async Task UpdatePins()
         {
-            JsonPinStorage jsonPinStorage = new();
-            ActivePinList?.Clear();
-
             ActivePinList = (await jsonPinStorage.GetMarkersAsync())
                 .OrderByDescending(toilet => toilet.CreatedDate)
                 .ToObservableCollection(); 
         }
         [RelayCommand]
-        private void DeletePin()
+        private async Task DeletePin(object? value)
         {
-            
+            if (value is Toilet toilet)
+            {
+                await jsonPinStorage.DeleteMarkerAsync(marker: toilet);
+                await UpdatePins();
+            }
         }
         [RelayCommand]
         private void EditPin()
