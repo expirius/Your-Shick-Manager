@@ -7,6 +7,7 @@ using Mapsui.Extensions;
 using Mapsui.Layers;
 using Mapsui.Projections;
 using Mapsui.Styles;
+using Mapsui.UI;
 using Mapsui.UI.Maui;
 using MFASeeker.Model;
 using MFASeeker.Services;
@@ -45,7 +46,7 @@ public partial class SearchViewModel : ObservableObject
         SearchMapControl.SingleTap += OnMapTaped; // Тап по карте
         SearchMapControl.LongTap += OnMapLongTaped;
         SearchMapControl.Map.Info += MapOnInfo; // Тап по пину
-        SearchMapControl.Map.Navigator.ViewportChanged += OnViewPortChanged; // при перетаскивании карты
+        SearchMapControl.TouchMove += OnTouchMove; // при перетаскивании карты
         MapManager.LocationUpdated += OnLocationUpdate;
 
         LocationCheckBoxIsChecked = true;
@@ -71,13 +72,14 @@ public partial class SearchViewModel : ObservableObject
         {
             CurrentStateText = "Unfollow";
             MapManager.ToggleCompassMode();
-            MapManager.StopSpectateMode();
+            MapManager.DisableCentredUser();
         }
         else
         {
             CurrentStateText = "Follow";
             MapManager.ToggleCompassMode();
-            MapManager.StartSpectateMode();
+            MapManager.EnableCentredUser();
+            MapManager.CenterToUserLocation();
         }
     }
 
@@ -85,7 +87,9 @@ public partial class SearchViewModel : ObservableObject
     {
         if (sender is not MapControl mapControl) return;
         {
-            // Блокирую управление картой
+
+            // Блокирую управление картой и центрирование на метку пользователя
+            MapManager.DisableCentredUser();
             mapControl.IsEnabled = false;
             //Попап с полями новой точки
             var popup = new NewPinPopup();
@@ -107,10 +111,13 @@ public partial class SearchViewModel : ObservableObject
                 // сбрасываю данные туалета VM (но лучше сделать метод .Clear();
                 NewToilet = new();
             }
+            // Возобновляем центрирование и управление картой
             mapControl.IsEnabled = true;
+            if (LocationCheckBoxIsChecked)
+                MapManager.EnableCentredUser();
         }
     }
-    private static void OnMapTaped(object? sender, Mapsui.UI.TappedEventArgs e)
+    private void OnMapTaped(object? sender, Mapsui.UI.TappedEventArgs e)
     {
         if (e.NumOfTaps > 0 && _activeCalloutStyle != null && pointFeatures != null)
         {
@@ -120,7 +127,7 @@ public partial class SearchViewModel : ObservableObject
             pointFeatures.DataHasChanged();
         }
     }
-    private static void MapOnInfo(object? sender, MapInfoEventArgs e)
+    private void MapOnInfo(object? sender, MapInfoEventArgs e)
     {
         var calloutStyle = e.MapInfo?.Feature?.Styles.Where(s => s is CalloutStyle)
             .Cast<CalloutStyle>().FirstOrDefault();
@@ -139,9 +146,10 @@ public partial class SearchViewModel : ObservableObject
             e.MapInfo?.Layer?.DataHasChanged(); // Обновляем слой для перерисовки графики
         }
     }
-    private static void OnViewPortChanged(object? sender, PropertyChangedEventArgs e)
+    private void OnTouchMove(object? sender, TouchedEventArgs e)
     {
-     // при передвижении вьюпорта логика (сброк отслеживания)
+        // при передвижении вьюпорта логика (сброс отслеживания)
+        LocationCheckBoxIsChecked = false;
     }
     private async void OnLocationUpdate(Location location)
     {
