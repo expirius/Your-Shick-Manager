@@ -3,8 +3,6 @@ using Mapsui.Extensions;
 using Mapsui.Projections;
 using Mapsui.Tiling;
 using Mapsui.Widgets.Zoom;
-using Microsoft.Maui.Devices.Sensors;
-using System.Threading;
 using Map = Mapsui.Map;
 using MyLocationLayer = Mapsui.Layers.MyLocationLayer;
 
@@ -58,14 +56,20 @@ namespace MFASeeker.Model
             };
             Geolocator.ToggleCompass();
         }
-        public static void StartSpectateMode()
+
+        public static void CenterToUserLocation()
+        {
+            if (CurrentLocationMPoint != null)
+                Map?.Navigator.CenterOn(CurrentLocationMPoint);
+        }
+        public static void EnableCentredUser()
         {
             if (_myLocationLayer != null)
             {
                 _myLocationLayer.IsCentered = true;
             }
         }
-        public static void StopSpectateMode()
+        public static void DisableCentredUser()
         {
             if (_myLocationLayer != null)
                 _myLocationLayer.IsCentered = false;
@@ -75,7 +79,6 @@ namespace MFASeeker.Model
         {
             if (_myLocationLayer == null) return;
             cancellationTokenSource = new();
-            StartSpectateMode();
             var progress = new Progress<Location>(UpdateLocation);
             await Geolocator.Default.StartListening(progress, cancellationTokenSource.Token);
         }
