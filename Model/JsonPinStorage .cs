@@ -1,5 +1,6 @@
-﻿using MFASeeker.Model;
-using System.Text.Json;
+﻿using System.Text.Json;
+
+namespace MFASeeker.Model;
 
 public class JsonPinStorage : IPinStorage
 {
