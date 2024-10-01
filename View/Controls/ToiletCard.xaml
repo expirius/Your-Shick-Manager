@@ -4,27 +4,44 @@
              xmlns:model ="clr-namespace:MFASeeker.Model"
              xmlns:converters="clr-namespace:MFASeeker.Converters"
              xmlns:effects ="clr-namespace:MFASeeker.View.Effects"
+             xmlns:controls="clr-namespace:MFASeeker.View.Controls.Buttons"
              x:Class="MFASeeker.View.Controls.ToiletCard"
              x:DataType="model:Toilet">
-    <Frame >
+    <Frame 
+                Background="Transparent" 
+                ZIndex="1" 
+                VerticalOptions="End">
         <Grid>
+            <Grid ZIndex="1" Background="Black" Opacity="0.7" VerticalOptions="End">
+                <StackLayout 
+                Margin="20">
+                <Label 
+                        MaxLines="2"
+                        LineBreakMode="TailTruncation"
+                        FontSize="Title"
+                        Text="Нижекамовский ТЦ asdasdaddaaaaaaaaasda''АэроГрин''" />
+                <Label FontSize="Subtitle" Text="Москва, Мыльно-Рыльная д. 22, кв. 15" />
+
+                <HorizontalStackLayout VerticalOptions="Center">
+                    <Label FontSize="Body" Text="Создан " />
+                    <Label FontSize="Body" Text="23.02.2012" />
+                </HorizontalStackLayout>
+
+                <HorizontalStackLayout VerticalOptions="Center">
+                    <Label FontSize="Body" Text="До точки " />
+                    <Label FontSize="Body" Text="43 мин - 232 м" />
+                </HorizontalStackLayout>
+                    
+                <controls:StarSelector SelectedStar="3" />
+                </StackLayout>
+            </Grid>
+
             <!-- Верхняя картинка карусели -->
-            <Grid Background="Black" ZIndex="1" Opacity="0.6"/>
             <Image Source="toilet_undefined.png">
                 <Image.Behaviors>
-                    <effects:BlurBehavior Radius="10"/>
+                    <effects:BlurBehavior Radius="20"/>
                 </Image.Behaviors>
             </Image>
-            <StackLayout Orientation="Vertical">
-                <Label Text="Адрес"/>
-            <Label Text="Москва, Мыльно-Рыльная д. 22, кв. 15" />
-
-            <Label Text="Создан" />
-            <Label Text="23.02.2012" />
-
-            <Label Text="До точки:" />
-            <Label Text="43 мин - 232 м" />
-            </StackLayout>
         </Grid>
     </Frame>
 </ContentView>
