@@ -11,14 +11,17 @@
     </ContentPage.BindingContext>
     <ScrollView Orientation="Vertical">
         <StackLayout >
-            <ScrollView Orientation="Horizontal">
-                <HorizontalStackLayout Margin="10">
-                    <controls:ToiletCard WidthRequest="350"/>
-                    <controls:ToiletCard WidthRequest="350"/>
-                    <controls:ToiletCard WidthRequest="350"/>
-                    <controls:ToiletCard WidthRequest="350"/>
-                </HorizontalStackLayout>
-            </ScrollView>
+            <CollectionView ItemsLayout="HorizontalList"  ItemsSource="{Binding ActivePinList}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <ScrollView Orientation="Horizontal">
+                            <HorizontalStackLayout>
+                                <controls:ToiletCard Toilet="{Binding .}" WidthRequest="350"/>
+                            </HorizontalStackLayout>
+                        </ScrollView>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
             <Button Background="DarkCyan" TextColor="White" Text="Обновить" Command="{Binding UpdatePinsCommand}"/>
             <CollectionView 
             ItemsSource="{Binding ActivePinList}">
