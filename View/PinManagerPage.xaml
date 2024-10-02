@@ -10,18 +10,25 @@
         <vm:PinManagerViewModel/>
     </ContentPage.BindingContext>
     <ScrollView Orientation="Vertical">
-        <StackLayout Margin="10">
-        <controls:ToiletCard />
-        <Button Background="DarkCyan" TextColor="White" Text="Обновить" Command="{Binding UpdatePinsCommand}"/>
-        <CollectionView 
+        <StackLayout >
+            <ScrollView Orientation="Horizontal">
+                <HorizontalStackLayout Margin="10">
+                    <controls:ToiletCard WidthRequest="350"/>
+                    <controls:ToiletCard WidthRequest="350"/>
+                    <controls:ToiletCard WidthRequest="350"/>
+                    <controls:ToiletCard WidthRequest="350"/>
+                </HorizontalStackLayout>
+            </ScrollView>
+            <Button Background="DarkCyan" TextColor="White" Text="Обновить" Command="{Binding UpdatePinsCommand}"/>
+            <CollectionView 
             ItemsSource="{Binding ActivePinList}">
           
-            <CollectionView.ItemTemplate>
-                <DataTemplate>
-                    <SwipeView SwipeStarted="OnSwipeStarted">
-                        <SwipeView.RightItems>
-                            <SwipeItems>
-                                <SwipeItem Text="Удалить" BackgroundColor="LightPink"
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <SwipeView SwipeStarted="OnSwipeStarted">
+                            <SwipeView.RightItems>
+                                <SwipeItems>
+                                    <SwipeItem Text="Удалить" BackgroundColor="LightPink"
                                            CommandParameter="{Binding .}"
                                            Command="{Binding Source={x:RelativeSource 
                                                         AncestorType={x:Type vm:PinManagerViewModel}},
@@ -31,7 +38,7 @@
                         <Frame Margin="10" Background="DarkCyan" >
                             <StackLayout Orientation="Horizontal">
                                 <!-- для теста-->
-                                    <Border StrokeShape="RoundRectangle 80,80,80,80"
+                                    <Border StrokeShape="RoundRectangle 0,0,80,80"
                                            Margin="0,0,20,0">
                                         <Image Aspect="Fill" Source="toilet_undefined.png" HeightRequest="70" WidthRequest="70" />
                                     </Border>
