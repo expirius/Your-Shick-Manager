@@ -1,5 +1,4 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-
 namespace MFASeeker.Model
 {
     public partial class Toilet
@@ -24,7 +23,7 @@ namespace MFASeeker.Model
         public string? UserId { get; set; }
         public DateTime CreatedDate { get; set; }
 
-        public string GetMarkerInfo()
+        public string GetInfo()
         {
             return $"Name: {Name}, Location: {Location}, Description: {Description}, Rating: {Rating}, Created By: {UserId}, On: {CreatedDate}";
         }
