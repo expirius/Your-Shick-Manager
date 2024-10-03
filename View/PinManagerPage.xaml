@@ -3,14 +3,43 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="MFASeeker.View.PinManagerPage"
              xmlns:controls="clr-namespace:MFASeeker.View.Controls"
+             xmlns:buttons="clr-namespace:MFASeeker.View.Controls.Buttons"
              xmlns:vm="clr-namespace:MFASeeker.ViewModel"
              xmlns:model="clr-namespace:MFASeeker.Model"
+             x:DataType="vm:PinManagerViewModel"
              xmlns:converters="clr-namespace:MFASeeker.Converters"
              Title="PinManagerPage">
 
     <ScrollView Orientation="Vertical">
         <StackLayout >
-            <CollectionView x:DataType="vm:PinManagerViewModel"
+            <Grid>
+                <Button Background="DarkCyan" 
+                        TextColor="White" Text="Обновить" 
+                        Command="{Binding UpdatePinsCommand}"/>
+                <ImageButton Padding="5" 
+                             Source="menu_icon.png" 
+                             WidthRequest="40" HeightRequest="40" 
+                             VerticalOptions="Center"
+                             HorizontalOptions="End"
+                             Clicked="ImageButton_Clicked"/>
+            </Grid>
+
+            <CarouselView  x:DataType="vm:PinManagerViewModel" 
+                           x:Name="CarouselCards"
+                           IndicatorView="indicatorView"
+                           ItemsSource="{Binding ActivePinList}">
+                <CarouselView.ItemTemplate>
+                    <DataTemplate x:DataType="model:Toilet">
+                        <controls:ToiletCard Toilet="{Binding .}" Margin="5" />
+                    </DataTemplate>
+                </CarouselView.ItemTemplate>
+                
+            </CarouselView>
+            <IndicatorView x:Name="indicatorView" IndicatorSize="18" 
+                           IsVisible="{Binding Path=IsVisible, Source={x:Reference CarouselCards}}"
+                           VerticalOptions="Center" HorizontalOptions="Center"/>
+            
+            <CollectionView IsVisible="False" x:DataType="vm:PinManagerViewModel"
                 ItemsLayout="HorizontalList"  
                 ItemsSource="{Binding ActivePinList}">
                 <CollectionView.ItemTemplate>
@@ -23,9 +52,9 @@
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>
-            <Button Background="DarkCyan" TextColor="White" Text="Обновить" Command="{Binding UpdatePinsCommand}"/>
-            <CollectionView 
-            ItemsSource="{Binding ActivePinList}">
+
+            <CollectionView ItemsSource="{Binding ActivePinList}"
+                            x:Name="ListCards">
           
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
@@ -39,7 +68,7 @@
                                                         Path=DeletePinCommand}" />
                             </SwipeItems>
                         </SwipeView.RightItems>
-                        <Frame Margin="10" Background="DarkCyan" >
+                        <Frame Margin="10" Background="DarkCyan" x:DataType="model:Toilet" >
                             <StackLayout Orientation="Horizontal">
                                 <!-- для теста-->
                                     <Border StrokeShape="RoundRectangle 0,0,80,80"
