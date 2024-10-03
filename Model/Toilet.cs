@@ -2,18 +2,13 @@
 
 namespace MFASeeker.Model
 {
-    public partial class Toilet : ObservableObject
+    public partial class Toilet
     {
-        [ObservableProperty]
-        private int id;
-        [ObservableProperty]
-        private string? name;
-        [ObservableProperty]
-        private Location? location;
-        [ObservableProperty]
-        private string? description;
-        [ObservableProperty]
-        private double rating;
+        public int Id {  get; set; }
+        public string? Name {  get; set; }
+        public Location? Location { get; set; }
+        public string? Description {  get; set; }
+        public double Rating {  get; set; }
 
         public Toilet()
         {
