@@ -38,7 +38,9 @@ namespace MFASeeker.ViewModel
         {
             if (value is Toilet toilet)
             {
-                await jsonPinStorage.DeleteMarkerAsync(marker: toilet);
+                // В принципе можно и весь объект передать, а смысл? 
+                //await jsonPinStorage.DeleteMarkerAsync(marker: toilet);
+                await jsonPinStorage.DeleteMarkerAsync(guid: toilet.Guid);
                 await UpdatePins();
             }
         }
