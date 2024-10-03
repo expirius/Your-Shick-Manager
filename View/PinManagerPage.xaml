@@ -4,16 +4,17 @@
              x:Class="MFASeeker.View.PinManagerPage"
              xmlns:controls="clr-namespace:MFASeeker.View.Controls"
              xmlns:vm="clr-namespace:MFASeeker.ViewModel"
+             xmlns:model="clr-namespace:MFASeeker.Model"
              xmlns:converters="clr-namespace:MFASeeker.Converters"
              Title="PinManagerPage">
-    <ContentPage.BindingContext>
-        <vm:PinManagerViewModel/>
-    </ContentPage.BindingContext>
+
     <ScrollView Orientation="Vertical">
         <StackLayout >
-            <CollectionView ItemsLayout="HorizontalList"  ItemsSource="{Binding ActivePinList}">
+            <CollectionView x:DataType="vm:PinManagerViewModel"
+                ItemsLayout="HorizontalList"  
+                ItemsSource="{Binding ActivePinList}">
                 <CollectionView.ItemTemplate>
-                    <DataTemplate>
+                    <DataTemplate x:DataType="model:Toilet">
                         <ScrollView Orientation="Horizontal">
                             <HorizontalStackLayout>
                                 <controls:ToiletCard Toilet="{Binding .}" WidthRequest="350"/>

@@ -4,6 +4,7 @@ namespace MFASeeker.Model
     public partial class Toilet
     {
         public int Id {  get; set; }
+        public string Guid { get; set; }
         public string? Name {  get; set; }
         public Location? Location { get; set; }
         public string? Description {  get; set; }
@@ -12,6 +13,7 @@ namespace MFASeeker.Model
         public Toilet()
         {
             Id = 0;
+            this.Guid = CreateGuid();
             Name = "";
             Location = null;
             Rating = 0;
@@ -30,6 +32,11 @@ namespace MFASeeker.Model
         public bool IsValid()
         {
             return !string.IsNullOrWhiteSpace(Name);
+        }
+
+        private string CreateGuid()
+        {
+            return System.Guid.NewGuid().ToString().GetHashCode().ToString("x");
         }
     }
 }
