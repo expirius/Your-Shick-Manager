@@ -20,7 +20,7 @@ namespace MFASeeker.ViewModel
         public event Action<Toilet>? PinAdded;
         // НЕОБХОДИМО РЕАЛИЗОВАТЬ, ДЛЯ ТОГО ЧТОБЫ В VM отрисовывались обновления и наоборот
         // БЕЗ СВЯЗАННОСТИ КОДА
-        public event Action<ObservableCollection<Toilet>> ToiletsRefreshed;
+        public event Action<ObservableCollection<Toilet>>? ToiletsUpdated;
 
         private readonly JsonPinStorage jsonPinStorage = new();
         [ObservableProperty]
@@ -37,7 +37,9 @@ namespace MFASeeker.ViewModel
         {
             ActivePinList = (await jsonPinStorage.GetMarkersAsync())
                 .OrderByDescending(toilet => toilet.CreatedDate)
-                .ToObservableCollection(); 
+                .ToObservableCollection();
+
+            ToiletsUpdated?.Invoke(ActivePinList);
         }
         [RelayCommand]
         private async Task AddToilet(Toilet toilet)

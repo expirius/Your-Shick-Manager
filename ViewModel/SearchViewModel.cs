@@ -12,6 +12,7 @@ using Mapsui.UI.Maui;
 using MFASeeker.Model;
 using MFASeeker.Services;
 using MFASeeker.View;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 
@@ -49,28 +50,12 @@ public partial class SearchViewModel : ObservableObject
         MapManager.LocationUpdated += OnLocationUpdate;
 
         pinManagerVM = pinMngrVM;
-
-        pinManagerVM.PinDeleted += OnPinDeleted;
-        pinManagerVM.PinAdded += OnPinAdded;
+        pinManagerVM.ToiletsUpdated += OnToiletsUpdated;
 
         LocationCheckBoxIsChecked = true;
         ChangeSpectateModeCommand.Execute(null);
 
         InitializeAsync();
-    }
-
-    // Обновление меток
-    // МЕТКИ ДОЛЖНЫ БУДУТ ОБНОВЛЯТЬСЯ УЖЕ НЕ ИЗ ПАМЯТИ
-    // А ИЗ PINMANAGER'A. Например: RefreshToiletsCommand()
-    public async Task RefreshLocalFeatures()
-    {
-        if (pointFeatures != null)
-        {
-            pointFeatures.Clear();
-            var tmp = await MapPinManager.GetFeaturesLocalAsync();
-            pointFeatures.AddRange(tmp);
-            pointFeatures?.DataHasChanged();
-        }
     }
     // Метод для обновления состояния CheckBox
     [RelayCommand]
@@ -92,10 +77,9 @@ public partial class SearchViewModel : ObservableObject
     }
     private async void InitializeAsync()
     {
-        var features = await MapPinManager.GetFeaturesLocalAsync();
-
+        //var features = await MapPinManager.GetFeaturesLocalAsync();
+        // pointFeatures.AddRange(features);
         pointFeatures = MapPinManager.CreatePointLayer("AllToiletsLayer", true);
-        pointFeatures.AddRange(features);
         SearchMapControl.Map.Layers.Add(pointFeatures);
     }
     private async void OnMapLongTaped(object? sender, Mapsui.UI.TappedEventArgs e)
@@ -121,8 +105,8 @@ public partial class SearchViewModel : ObservableObject
                 };
 
                 // Добавляем метку на карту
-                pointFeatures?.Add(await MapPinManager.GetFeatureMark(NewToilet));
-                pointFeatures?.DataHasChanged();
+                //pointFeatures?.Add(MapPinManager.GetFeature(NewToilet));
+                //pointFeatures?.DataHasChanged();
 
                 // Отдаем в pinManager
                 pinManagerVM?.AddToiletCommand.Execute(NewToilet);
@@ -169,13 +153,19 @@ public partial class SearchViewModel : ObservableObject
         // при передвижении вьюпорта логика (сброс отслеживания)
         LocationCheckBoxIsChecked = false;
     }
-    private async void OnPinAdded(Toilet toilet)
+
+    // Обновление меток
+    // МЕТКИ ДОЛЖНЫ БУДУТ ОБНОВЛЯТЬСЯ УЖЕ НЕ ИЗ ПАМЯТИ
+    // А ИЗ PINMANAGER'A. Например: RefreshToiletsCommand()
+    public void OnToiletsUpdated(ObservableCollection<Toilet> toilets)
     {
-        await RefreshLocalFeatures();
-    }
-    private async void OnPinDeleted(Toilet toilet)
-    {
-        await RefreshLocalFeatures();
+        if (pointFeatures != null)
+        {
+            pointFeatures.Clear();
+            var tmp = MapPinManager.GetFeatures(toilets.AsEnumerable());
+            pointFeatures.AddRange(tmp);
+            pointFeatures?.DataHasChanged();
+        }
     }
     private async void OnLocationUpdate(Location location)
     {
