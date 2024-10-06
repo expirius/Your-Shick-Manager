@@ -23,7 +23,7 @@ namespace MFASeeker.Model
                 IsMapInfoLayer = isInfoLayer,
             };
         }
-        private static PointFeature CreateFeature(Toilet toilet)
+        public static PointFeature GetFeature(Toilet toilet)
         {
                 // описание точки
                 var feature = new PointFeature(SphericalMercator.FromLonLat(toilet.Location.Longitude, toilet.Location.Latitude).ToMPoint());
@@ -39,39 +39,51 @@ namespace MFASeeker.Model
                 
                 return feature;
         }
-        public async static Task<PointFeature> GetFeatureMark(Toilet toilet)
+        public static IEnumerable<PointFeature> GetFeatures(IEnumerable<Toilet> toilets)
         {
-            //// сохранение в память
-            //JsonPinStorage pinStorage = new();
-            //await pinStorage.SaveMarkerAsync(toilet);
-            //// Возврат фичи
-            return CreateFeature(toilet);
-        }
-        // Локальные пины для теста
-        public async static Task<IEnumerable<PointFeature>> GetFeaturesLocalAsync()
-        {
-            JsonPinStorage pinStorage = new();
-            var toilets = await pinStorage.GetMarkersAsync();
             // добавление самой точки и её иконки + callout style
             if (toilets != null)
                 return toilets.Select(t =>
                 {
-                var feature = new PointFeature(SphericalMercator.FromLonLat(t.Location.Longitude, t.Location.Latitude).ToMPoint());
-                feature[nameof(t.Name)] = t.Name;
-                feature[nameof(t.Id)] = t.Id;
-                feature[nameof(t.Location.Longitude)] = t.Location.Longitude;
-                feature[nameof(t.Location.Latitude)] = t.Location.Latitude;
-                feature[nameof(t.Description)] = t.Description;
-                feature[nameof(t.Rating)] = t.Rating;
-                // styles
-                feature.Styles.Add(CreateSvgStyle(ToiletIconProvider.GetIconPath(t), 0.08));
-                feature.Styles.Add(CreateCalloutStyleByToilet(t));
+                    var feature = new PointFeature(SphericalMercator.FromLonLat(t.Location.Longitude, t.Location.Latitude).ToMPoint());
+                    feature[nameof(t.Name)] = t.Name;
+                    feature[nameof(t.Id)] = t.Id;
+                    feature[nameof(t.Location.Longitude)] = t.Location.Longitude;
+                    feature[nameof(t.Location.Latitude)] = t.Location.Latitude;
+                    feature[nameof(t.Description)] = t.Description;
+                    feature[nameof(t.Rating)] = t.Rating;
+                    // styles
+                    feature.Styles.Add(CreateSvgStyle(ToiletIconProvider.GetIconPath(t), 0.08));
+                    feature.Styles.Add(CreateCalloutStyleByToilet(t));
 
-                return feature;
-            });
+                    return feature;
+                });
             else { return []; }
-            
         }
+        // Локальные пины для теста
+        //public async static Task<IEnumerable<PointFeature>> GetFeaturesLocalAsync()
+        //{
+        //    JsonPinStorage pinStorage = new();
+        //    var toilets = await pinStorage.GetMarkersAsync();
+        //    // добавление самой точки и её иконки + callout style
+        //    if (toilets != null)
+        //        return toilets.Select(t =>
+        //        {
+        //        var feature = new PointFeature(SphericalMercator.FromLonLat(t.Location.Longitude, t.Location.Latitude).ToMPoint());
+        //        feature[nameof(t.Name)] = t.Name;
+        //        feature[nameof(t.Id)] = t.Id;
+        //        feature[nameof(t.Location.Longitude)] = t.Location.Longitude;
+        //        feature[nameof(t.Location.Latitude)] = t.Location.Latitude;
+        //        feature[nameof(t.Description)] = t.Description;
+        //        feature[nameof(t.Rating)] = t.Rating;
+        //        // styles
+        //        feature.Styles.Add(CreateSvgStyle(ToiletIconProvider.GetIconPath(t), 0.08));
+        //        feature.Styles.Add(CreateCalloutStyleByToilet(t));
+
+        //        return feature;
+        //    });
+        //    else { return []; }  
+        //}
 
         // Стиль карточки пина
         private static CalloutStyle CreateCalloutStyleByToilet(Toilet t)
