@@ -16,34 +16,56 @@ namespace MFASeeker.ViewModel
 {
     public partial class PinManagerViewModel : ObservableObject
     {
+        public event Action<Toilet>? PinDeleted;
+        public event Action<Toilet>? PinAdded;
+        // НЕОБХОДИМО РЕАЛИЗОВАТЬ, ДЛЯ ТОГО ЧТОБЫ В VM отрисовывались обновления и наоборот
+        // БЕЗ СВЯЗАННОСТИ КОДА
+        public event Action<ObservableCollection<Toilet>>? ToiletsUpdated;
+
         private readonly JsonPinStorage jsonPinStorage = new();
         [ObservableProperty]
-        private static ObservableCollection<Toilet>? activePinList;
+        private ObservableCollection<Toilet>? activePinList;
 
         public PinManagerViewModel()
         {
             ActivePinList = [];
-            _ = UpdatePins();
+            _ = RefreshToilets();
         }
 
         [RelayCommand]
-        private async Task UpdatePins()
+        private async Task RefreshToilets()
         {
             ActivePinList = (await jsonPinStorage.GetMarkersAsync())
                 .OrderByDescending(toilet => toilet.CreatedDate)
-                .ToObservableCollection(); 
+                .ToObservableCollection();
+
+            ToiletsUpdated?.Invoke(ActivePinList);
         }
         [RelayCommand]
-        private async Task DeletePin(object? value)
+        private async Task AddToilet(Toilet toilet)
+        {
+            await jsonPinStorage.SaveMarkerAsync(toilet);
+            await RefreshToilets();
+
+            PinAdded?.Invoke(toilet);
+        }
+        [RelayCommand]
+        private async Task DeleteToilet(object? value)
         {
             if (value is Toilet toilet)
             {
-                await jsonPinStorage.DeleteMarkerAsync(marker: toilet);
-                await UpdatePins();
+                // В принципе можно и весь объект передать, а смысл? 
+                //await jsonPinStorage.DeleteMarkerAsync(marker: toilet);
+                await jsonPinStorage.DeleteMarkerAsync(guid: toilet.Guid);
+
+                // Обновляем активный лист
+                await RefreshToilets();
+                // Уведомляем об удалении
+                PinDeleted?.Invoke(toilet);
             }
         }
         [RelayCommand]
-        private void EditPin()
+        private void EditToilet()
         {
 
         }

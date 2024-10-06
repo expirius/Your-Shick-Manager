@@ -2,6 +2,8 @@
 
 namespace MFASeeker.Model;
 
+// Всё это дело лучше увести в static 
+// Переименовать в LocalPinStorage
 public class JsonPinStorage : IPinStorage
 {
     private readonly string filePath;
@@ -53,6 +55,17 @@ public class JsonPinStorage : IPinStorage
     {
         var toiletsJson = await GetMarkersAsync();
         var markerToDelete = toiletsJson.FirstOrDefault(t => t.Id == marker.Id);
+        if (markerToDelete != null)
+        {
+            toiletsJson.Remove(markerToDelete);
+            var json = JsonSerializer.Serialize(toiletsJson);
+            await File.WriteAllTextAsync(filePath, json);
+        }
+    }
+    public async Task DeleteMarkerAsync(string guid)
+    {
+        var toiletsJson = await GetMarkersAsync();
+        var markerToDelete = toiletsJson.FirstOrDefault(t => t.Guid == guid);
         if (markerToDelete != null)
         {
             toiletsJson.Remove(markerToDelete);

@@ -12,6 +12,7 @@ using Mapsui.UI.Maui;
 using MFASeeker.Model;
 using MFASeeker.Services;
 using MFASeeker.View;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 
@@ -19,9 +20,10 @@ namespace MFASeeker.ViewModel;
 
 public partial class SearchViewModel : ObservableObject
 {
+    private static PinManagerViewModel? pinManagerVM;
+
     private static WritableLayer? pointFeatures;
     private static CalloutStyle? _activeCalloutStyle;
-    private readonly IPopupService popupService;
 
     [ObservableProperty]
     private Toilet? newToilet = new();
@@ -35,11 +37,9 @@ public partial class SearchViewModel : ObservableObject
     private bool locationCheckBoxIsChecked;
 
     [ObservableProperty]
-    private string currentLocationLabel;
+    private string? currentLocationLabel;
 
-    public IAsyncRelayCommand UpdateCheckBoxCommand { get; }
-
-    public SearchViewModel()
+    public SearchViewModel(PinManagerViewModel pinMngrVM)
     {
         SearchMapControl = new() { Map = MapManager.CreateMap() };
 
@@ -49,21 +49,14 @@ public partial class SearchViewModel : ObservableObject
         SearchMapControl.TouchMove += OnTouchMove; // при перетаскивании карты
         MapManager.LocationUpdated += OnLocationUpdate;
 
+        pinManagerVM = pinMngrVM;
+        pinManagerVM.ToiletsUpdated += OnToiletsUpdated;
+
         LocationCheckBoxIsChecked = true;
         ChangeSpectateModeCommand.Execute(null);
 
         InitializeAsync();
     }
-
-    private async void InitializeAsync()
-    {
-        var features = await MapPinManager.GetFeaturesLocalAsync();
-
-        pointFeatures = MapPinManager.CreatePointLayer("AllToiletsLayer", true);
-        pointFeatures.AddRange(features);
-        SearchMapControl.Map.Layers.Add(pointFeatures);
-    }
-
     // Метод для обновления состояния CheckBox
     [RelayCommand]
     public void ChangeSpectateMode()
@@ -82,7 +75,13 @@ public partial class SearchViewModel : ObservableObject
             MapManager.CenterToUserLocation();
         }
     }
-
+    private async void InitializeAsync()
+    {
+        //var features = await MapPinManager.GetFeaturesLocalAsync();
+        // pointFeatures.AddRange(features);
+        pointFeatures = MapPinManager.CreatePointLayer("AllToiletsLayer", true);
+        SearchMapControl.Map.Layers.Add(pointFeatures);
+    }
     private async void OnMapLongTaped(object? sender, Mapsui.UI.TappedEventArgs e)
     {
         if (sender is not MapControl mapControl) return;
@@ -105,9 +104,12 @@ public partial class SearchViewModel : ObservableObject
                     Latitude = SphericalMercator.ToLonLat(worldPosition).Y
                 };
 
-                pointFeatures?.Add(await MapPinManager.GetFeatureMark(NewToilet));
-                pointFeatures?.DataHasChanged();
+                // Добавляем метку на карту
+                //pointFeatures?.Add(MapPinManager.GetFeature(NewToilet));
+                //pointFeatures?.DataHasChanged();
 
+                // Отдаем в pinManager
+                pinManagerVM?.AddToiletCommand.Execute(NewToilet);
                 // сбрасываю данные туалета VM (но лучше сделать метод .Clear();
                 NewToilet = new();
             }
@@ -151,6 +153,20 @@ public partial class SearchViewModel : ObservableObject
         // при передвижении вьюпорта логика (сброс отслеживания)
         LocationCheckBoxIsChecked = false;
     }
+
+    // Обновление меток
+    // МЕТКИ ДОЛЖНЫ БУДУТ ОБНОВЛЯТЬСЯ УЖЕ НЕ ИЗ ПАМЯТИ
+    // А ИЗ PINMANAGER'A. Например: RefreshToiletsCommand()
+    public void OnToiletsUpdated(ObservableCollection<Toilet> toilets)
+    {
+        if (pointFeatures != null)
+        {
+            pointFeatures.Clear();
+            var tmp = MapPinManager.GetFeatures(toilets.AsEnumerable());
+            pointFeatures.AddRange(tmp);
+            pointFeatures?.DataHasChanged();
+        }
+    }
     private async void OnLocationUpdate(Location location)
     {
         if (location != null)
@@ -158,4 +174,5 @@ public partial class SearchViewModel : ObservableObject
              CurrentLocationLabel = await StandartGeoCodingService.GetAddressFromCoordinates(location.Latitude, location.Longitude);
         }
     }
+
 }

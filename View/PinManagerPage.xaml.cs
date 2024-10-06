@@ -1,7 +1,6 @@
 using MFASeeker.ViewModel;
 
 namespace MFASeeker.View;
-
 public partial class PinManagerPage : ContentPage
 {
 	private PinManagerViewModel _pinManagerVM;
@@ -12,6 +11,8 @@ public partial class PinManagerPage : ContentPage
         BindingContext = pinManagerVM;
         _pinManagerVM = pinManagerVM;
 
+        CarouselCards.IsVisible = true;
+        ListCards.IsVisible = false;
     }
 
     private void OnSwipeStarted(object sender, SwipeStartedEventArgs e)
@@ -23,6 +24,20 @@ public partial class PinManagerPage : ContentPage
                 _previousSwipeView.Close();
             }
             _previousSwipeView = currentSwipeView;
+        }
+    }
+
+    private void ImageButton_Clicked(object sender, EventArgs e)
+    {
+        if (CarouselCards.IsVisible)
+        {
+            CarouselCards.IsVisible = false;
+            ListCards.IsVisible = true;
+        }
+        else
+        {
+            CarouselCards.IsVisible = true;
+            ListCards.IsVisible = false;
         }
     }
 }
