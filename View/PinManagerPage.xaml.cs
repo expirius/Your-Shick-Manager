@@ -1,4 +1,3 @@
-#if ANDROID
 using MFASeeker.ViewModel;
 
 namespace MFASeeker.View;
@@ -42,4 +41,3 @@ public partial class PinManagerPage : ContentPage
         }
     }
 }
-#endif

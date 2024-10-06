@@ -2,6 +2,8 @@
 
 namespace MFASeeker.Model;
 
+// Всё это дело лучше увести в static 
+// Переименовать в LocalPinStorage
 public class JsonPinStorage : IPinStorage
 {
     private readonly string filePath;

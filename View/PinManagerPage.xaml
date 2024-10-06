@@ -11,85 +11,87 @@
              Title="PinManagerPage">
 
     <ScrollView Orientation="Vertical">
-        <StackLayout >
-            <Grid>
-                <Button Background="DarkCyan" 
+        <StackLayout>
+                <Grid>
+                    <Button Background="DarkCyan" 
                         TextColor="White" Text="Обновить" 
                         Command="{Binding UpdatePinsCommand}"/>
-                <ImageButton Padding="5" 
+                    <ImageButton Padding="5" 
                              Source="menu_icon.png" 
                              WidthRequest="40" HeightRequest="40" 
                              VerticalOptions="Center"
                              HorizontalOptions="End"
                              Clicked="ImageButton_Clicked"/>
-            </Grid>
+                </Grid>
 
-            <CarouselView  x:DataType="vm:PinManagerViewModel" 
+                <CarouselView
+                          x:DataType="vm:PinManagerViewModel" 
                            x:Name="CarouselCards"
                            IndicatorView="indicatorView"
+                           
                            ItemsSource="{Binding ActivePinList}">
-                <CarouselView.ItemTemplate>
-                    <DataTemplate x:DataType="model:Toilet">
-                        <controls:ToiletCard Toilet="{Binding .}" Margin="5" />
-                    </DataTemplate>
-                </CarouselView.ItemTemplate>
-                
-            </CarouselView>
-            <IndicatorView x:Name="indicatorView" IndicatorSize="18" 
+                    <CarouselView.ItemTemplate>
+                        <DataTemplate x:DataType="model:Toilet" >
+                            <controls:ToiletCard Toilet="{Binding .}" Margin="5" />
+                        </DataTemplate>
+                    </CarouselView.ItemTemplate>
+
+                </CarouselView>
+                <IndicatorView x:Name="indicatorView" IndicatorSize="18" 
                            IsVisible="{Binding Path=IsVisible, Source={x:Reference CarouselCards}}"
                            VerticalOptions="Center" HorizontalOptions="Center"/>
-            
-            <CollectionView IsVisible="False" x:DataType="vm:PinManagerViewModel"
+
+                <CollectionView IsVisible="False" x:DataType="vm:PinManagerViewModel"
                 ItemsLayout="HorizontalList"  
                 ItemsSource="{Binding ActivePinList}">
-                <CollectionView.ItemTemplate>
-                    <DataTemplate x:DataType="model:Toilet">
-                        <ScrollView Orientation="Horizontal">
-                            <HorizontalStackLayout>
-                                <controls:ToiletCard Toilet="{Binding .}" WidthRequest="350"/>
-                            </HorizontalStackLayout>
-                        </ScrollView>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="model:Toilet">
+                            <ScrollView Orientation="Horizontal">
+                                <HorizontalStackLayout>
+                                    <controls:ToiletCard Toilet="{Binding .}" WidthRequest="350"/>
+                                </HorizontalStackLayout>
+                            </ScrollView>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
 
-            <CollectionView ItemsSource="{Binding ActivePinList}"
+                <CollectionView ItemsSource="{Binding ActivePinList}"
                             x:Name="ListCards">
-          
-                <CollectionView.ItemTemplate>
-                    <DataTemplate>
-                        <SwipeView SwipeStarted="OnSwipeStarted">
-                            <SwipeView.RightItems>
-                                <SwipeItems>
-                                    <SwipeItem Text="Удалить" BackgroundColor="LightPink"
+
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <SwipeView SwipeStarted="OnSwipeStarted">
+                                <SwipeView.RightItems>
+                                    <SwipeItems>
+                                        <SwipeItem Text="Удалить" BackgroundColor="LightPink"
                                            CommandParameter="{Binding .}"
                                            Command="{Binding Source={x:RelativeSource 
                                                         AncestorType={x:Type vm:PinManagerViewModel}},
                                                         Path=DeletePinCommand}" />
-                            </SwipeItems>
-                        </SwipeView.RightItems>
-                        <Frame Margin="10" Background="DarkCyan" x:DataType="model:Toilet" >
-                            <StackLayout Orientation="Horizontal">
-                                <!-- для теста-->
-                                    <Border StrokeShape="RoundRectangle 0,0,80,80"
+                                    </SwipeItems>
+                                </SwipeView.RightItems>
+                                <Frame Margin="10" Background="DarkCyan" x:DataType="model:Toilet" >
+                                    <StackLayout Orientation="Horizontal">
+                                        <!-- для теста-->
+                                        <Border StrokeShape="RoundRectangle 0,0,80,80"
                                            Margin="0,0,20,0">
-                                        <Image Aspect="Fill" Source="toilet_undefined.png" HeightRequest="70" WidthRequest="70" />
-                                    </Border>
-                                    <!-- ВЕРНУТЬ К ПРИВЯЗКЕ!
+                                            <Image Aspect="Fill" Source="toilet_undefined.png" HeightRequest="70" WidthRequest="70" />
+                                        </Border>
+                                        <!-- ВЕРНУТЬ К ПРИВЯЗКЕ!
                                     <Image HeightRequest="70" WidthRequest="70" 
                                    Source="{Binding Rating, Converter={converters:RaitingPNGConverter}}" />
 -->
-                                <StackLayout Orientation="Vertical" HeightRequest="70">
-                                    <Label Text="{Binding Name}"/>
-                                    <Label Text="{Binding Location, Converter={converters:GeoCodingConverter} }"/>
-                                    <Label Text="{Binding CreatedDate, StringFormat='{0:MM/dd/yyyy HH:mm}'}"/>
-                                </StackLayout>
-                            </StackLayout>
-                        </Frame>
-                    </SwipeView>
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
-        </CollectionView>
-    </StackLayout>
+                                        <StackLayout Orientation="Vertical" HeightRequest="70">
+                                            <Label Text="{Binding Name}"/>
+                                            <Label Text="{Binding Location, Converter={converters:GeoCodingConverter} }"/>
+                                            <Label Text="{Binding CreatedDate, StringFormat='{0:MM/dd/yyyy HH:mm}'}"/>
+                                        </StackLayout>
+                                    </StackLayout>
+                                </Frame>
+                            </SwipeView>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </StackLayout>
     </ScrollView>
 </ContentPage>

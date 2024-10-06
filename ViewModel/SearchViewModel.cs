@@ -21,7 +21,6 @@ public partial class SearchViewModel : ObservableObject
 {
     private static WritableLayer? pointFeatures;
     private static CalloutStyle? _activeCalloutStyle;
-    private readonly IPopupService popupService;
 
     [ObservableProperty]
     private Toilet? newToilet = new();
@@ -35,11 +34,9 @@ public partial class SearchViewModel : ObservableObject
     private bool locationCheckBoxIsChecked;
 
     [ObservableProperty]
-    private string currentLocationLabel;
+    private string? currentLocationLabel;
 
-    public IAsyncRelayCommand UpdateCheckBoxCommand { get; }
-
-    public SearchViewModel()
+    public SearchViewModel(PinManagerViewModel pinManagerVM)
     {
         SearchMapControl = new() { Map = MapManager.CreateMap() };
 
@@ -55,15 +52,17 @@ public partial class SearchViewModel : ObservableObject
         InitializeAsync();
     }
 
-    private async void InitializeAsync()
+    // Обновление меток
+    public async Task UpdateMarkers()
     {
-        var features = await MapPinManager.GetFeaturesLocalAsync();
-
-        pointFeatures = MapPinManager.CreatePointLayer("AllToiletsLayer", true);
-        pointFeatures.AddRange(features);
-        SearchMapControl.Map.Layers.Add(pointFeatures);
+        if (pointFeatures != null)
+        {
+            pointFeatures.Clear();
+            var tmp = await MapPinManager.GetFeaturesLocalAsync();
+            pointFeatures.AddRange(tmp);
+            pointFeatures?.DataHasChanged();
+        }
     }
-
     // Метод для обновления состояния CheckBox
     [RelayCommand]
     public void ChangeSpectateMode()
@@ -82,7 +81,14 @@ public partial class SearchViewModel : ObservableObject
             MapManager.CenterToUserLocation();
         }
     }
+    private async void InitializeAsync()
+    {
+        var features = await MapPinManager.GetFeaturesLocalAsync();
 
+        pointFeatures = MapPinManager.CreatePointLayer("AllToiletsLayer", true);
+        pointFeatures.AddRange(features);
+        SearchMapControl.Map.Layers.Add(pointFeatures);
+    }
     private async void OnMapLongTaped(object? sender, Mapsui.UI.TappedEventArgs e)
     {
         if (sender is not MapControl mapControl) return;
@@ -151,6 +157,10 @@ public partial class SearchViewModel : ObservableObject
         // при передвижении вьюпорта логика (сброс отслеживания)
         LocationCheckBoxIsChecked = false;
     }
+    private void OnPinDeleted(Toilet deletedToilet)
+    {
+
+    }
     private async void OnLocationUpdate(Location location)
     {
         if (location != null)
@@ -158,4 +168,5 @@ public partial class SearchViewModel : ObservableObject
              CurrentLocationLabel = await StandartGeoCodingService.GetAddressFromCoordinates(location.Latitude, location.Longitude);
         }
     }
+
 }

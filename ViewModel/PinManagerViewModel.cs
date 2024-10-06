@@ -16,6 +16,8 @@ namespace MFASeeker.ViewModel
 {
     public partial class PinManagerViewModel : ObservableObject
     {
+        public event Action<Toilet>? PinDeleted;
+
         private readonly JsonPinStorage jsonPinStorage = new();
         [ObservableProperty]
         private static ObservableCollection<Toilet>? activePinList;
@@ -42,6 +44,8 @@ namespace MFASeeker.ViewModel
                 //await jsonPinStorage.DeleteMarkerAsync(marker: toilet);
                 await jsonPinStorage.DeleteMarkerAsync(guid: toilet.Guid);
                 await UpdatePins();
+                // Уведомляем об удалении
+                PinDeleted?.Invoke(toilet);
             }
         }
         [RelayCommand]
