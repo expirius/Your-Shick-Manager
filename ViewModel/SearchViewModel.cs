@@ -19,6 +19,8 @@ namespace MFASeeker.ViewModel;
 
 public partial class SearchViewModel : ObservableObject
 {
+    private static PinManagerViewModel? pinManagerVM;
+
     private static WritableLayer? pointFeatures;
     private static CalloutStyle? _activeCalloutStyle;
 
@@ -36,7 +38,7 @@ public partial class SearchViewModel : ObservableObject
     [ObservableProperty]
     private string? currentLocationLabel;
 
-    public SearchViewModel(PinManagerViewModel pinManagerVM)
+    public SearchViewModel(PinManagerViewModel pinMngrVM)
     {
         SearchMapControl = new() { Map = MapManager.CreateMap() };
 
@@ -46,6 +48,11 @@ public partial class SearchViewModel : ObservableObject
         SearchMapControl.TouchMove += OnTouchMove; // при перетаскивании карты
         MapManager.LocationUpdated += OnLocationUpdate;
 
+        pinManagerVM = pinMngrVM;
+
+        pinManagerVM.PinDeleted += OnPinDeleted;
+        pinManagerVM.PinAdded += OnPinAdded;
+
         LocationCheckBoxIsChecked = true;
         ChangeSpectateModeCommand.Execute(null);
 
@@ -53,7 +60,9 @@ public partial class SearchViewModel : ObservableObject
     }
 
     // Обновление меток
-    public async Task UpdateMarkers()
+    // МЕТКИ ДОЛЖНЫ БУДУТ ОБНОВЛЯТЬСЯ УЖЕ НЕ ИЗ ПАМЯТИ
+    // А ИЗ PINMANAGER'A. Например: RefreshToiletsCommand()
+    public async Task RefreshLocalFeatures()
     {
         if (pointFeatures != null)
         {
@@ -111,9 +120,12 @@ public partial class SearchViewModel : ObservableObject
                     Latitude = SphericalMercator.ToLonLat(worldPosition).Y
                 };
 
+                // Добавляем метку на карту
                 pointFeatures?.Add(await MapPinManager.GetFeatureMark(NewToilet));
                 pointFeatures?.DataHasChanged();
 
+                // Отдаем в pinManager
+                pinManagerVM?.AddToiletCommand.Execute(NewToilet);
                 // сбрасываю данные туалета VM (но лучше сделать метод .Clear();
                 NewToilet = new();
             }
@@ -157,9 +169,13 @@ public partial class SearchViewModel : ObservableObject
         // при передвижении вьюпорта логика (сброс отслеживания)
         LocationCheckBoxIsChecked = false;
     }
-    private void OnPinDeleted(Toilet deletedToilet)
+    private async void OnPinAdded(Toilet toilet)
     {
-
+        await RefreshLocalFeatures();
+    }
+    private async void OnPinDeleted(Toilet toilet)
+    {
+        await RefreshLocalFeatures();
     }
     private async void OnLocationUpdate(Location location)
     {

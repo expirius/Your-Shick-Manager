@@ -15,7 +15,7 @@
                 <Grid>
                     <Button Background="DarkCyan" 
                         TextColor="White" Text="Обновить" 
-                        Command="{Binding UpdatePinsCommand}"/>
+                        Command="{Binding RefreshToiletsCommand}"/>
                     <ImageButton Padding="5" 
                              Source="menu_icon.png" 
                              WidthRequest="40" HeightRequest="40" 
@@ -67,7 +67,7 @@
                                            CommandParameter="{Binding .}"
                                            Command="{Binding Source={x:RelativeSource 
                                                         AncestorType={x:Type vm:PinManagerViewModel}},
-                                                        Path=DeletePinCommand}" />
+                                                        Path=DeleteToiletCommand}" />
                                     </SwipeItems>
                                 </SwipeView.RightItems>
                                 <Frame Margin="10" Background="DarkCyan" x:DataType="model:Toilet" >

@@ -41,10 +41,10 @@ namespace MFASeeker.Model
         }
         public async static Task<PointFeature> GetFeatureMark(Toilet toilet)
         {
-            // сохранение в память
-            JsonPinStorage pinStorage = new();
-            await pinStorage.SaveMarkerAsync(toilet);
-            // Возврат фичи
+            //// сохранение в память
+            //JsonPinStorage pinStorage = new();
+            //await pinStorage.SaveMarkerAsync(toilet);
+            //// Возврат фичи
             return CreateFeature(toilet);
         }
         // Локальные пины для теста
