@@ -25,14 +25,21 @@
                 </Grid>
 
                 <CarouselView
-                          x:DataType="vm:PinManagerViewModel" 
+                           VerticalOptions="Center"
+                           x:DataType="vm:PinManagerViewModel" 
                            x:Name="CarouselCards"
                            IndicatorView="indicatorView"
                            
                            ItemsSource="{Binding ActivePinList}">
                     <CarouselView.ItemTemplate>
                         <DataTemplate x:DataType="model:Toilet" >
-                            <controls:ToiletCard Toilet="{Binding .}" Margin="5" />
+                           <Border 
+                                  Margin="5"
+                                  Background="Transparent"
+                                  Stroke="Transparent"
+                                  StrokeShape="RoundRectangle 35">
+                               <controls:ToiletCard HeightRequest="550" Toilet="{Binding .}" Margin="5" />
+                          </Border>
                         </DataTemplate>
                     </CarouselView.ItemTemplate>
 
@@ -40,7 +47,7 @@
                 <IndicatorView x:Name="indicatorView" IndicatorSize="18" 
                            IsVisible="{Binding Path=IsVisible, Source={x:Reference CarouselCards}}"
                            VerticalOptions="Center" HorizontalOptions="Center"/>
-
+                <!-- Коллекция без карусели -->
                 <CollectionView IsVisible="False" x:DataType="vm:PinManagerViewModel"
                 ItemsLayout="HorizontalList"  
                 ItemsSource="{Binding ActivePinList}">

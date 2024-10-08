@@ -20,9 +20,16 @@ namespace MFASeeker.Converters
                                                                  imageService.StringToByteBase64(imageFile.ByteBase64)));
                 return temp;
             }
-            return null;
-        }
+            if (value is List<ImageFile> images && images.Count > 0)
+            {
+                LocalImageService imageService = new();
+                ImageSource? temp = ImageSource.FromStream(() => imageService.ByteArrayToStream(
+                                                                 imageService.StringToByteBase64(images[0].ByteBase64)));
+                return temp;
+            }
+            return ImageSource.FromFile(@"toilet_undefined.png");
 
+        }
         public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
         {
             throw new NotImplementedException();
