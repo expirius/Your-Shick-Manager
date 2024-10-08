@@ -28,8 +28,6 @@
                            VerticalOptions="Center"
                            x:DataType="vm:PinManagerViewModel" 
                            x:Name="CarouselCards"
-                           IndicatorView="indicatorView"
-                           
                            ItemsSource="{Binding ActivePinList}">
                     <CarouselView.ItemTemplate>
                         <DataTemplate x:DataType="model:Toilet" >
@@ -44,9 +42,11 @@
                     </CarouselView.ItemTemplate>
 
                 </CarouselView>
+            <!-- indicator view
                 <IndicatorView x:Name="indicatorView" IndicatorSize="18" 
                            IsVisible="{Binding Path=IsVisible, Source={x:Reference CarouselCards}}"
                            VerticalOptions="Center" HorizontalOptions="Center"/>
+            -->
                 <!-- Коллекция без карусели -->
                 <CollectionView IsVisible="False" x:DataType="vm:PinManagerViewModel"
                 ItemsLayout="HorizontalList"  
@@ -79,16 +79,14 @@
                                 </SwipeView.RightItems>
                                 <Frame Margin="10" Background="DarkCyan" x:DataType="model:Toilet" >
                                     <StackLayout Orientation="Horizontal">
-                                        <!-- для теста-->
-                                        <Border StrokeShape="RoundRectangle 0,0,80,80"
+                                        <!-- first user image -->
+                                        <Border StrokeShape="RoundRectangle 10,10,10,10"
                                            Margin="0,0,20,0">
-                                            <Image Aspect="Fill" Source="toilet_undefined.png" HeightRequest="70" WidthRequest="70" />
+                                            <Image Aspect="AspectFill" 
+                                                   Source="{Binding Images, Converter={converters:ImageConverter}}" 
+                                                   HeightRequest="90" WidthRequest="90" />
                                         </Border>
-                                        <!-- ВЕРНУТЬ К ПРИВЯЗКЕ!
-                                    <Image HeightRequest="70" WidthRequest="70" 
-                                   Source="{Binding Rating, Converter={converters:RaitingPNGConverter}}" />
--->
-                                        <StackLayout Orientation="Vertical" HeightRequest="70">
+                                        <StackLayout VerticalOptions="Center" Orientation="Vertical" HeightRequest="70">
                                             <Label Text="{Binding Name}"/>
                                             <Label Text="{Binding Location, Converter={converters:GeoCodingConverter} }"/>
                                             <Label Text="{Binding CreatedDate, StringFormat='{0:MM/dd/yyyy HH:mm}'}"/>

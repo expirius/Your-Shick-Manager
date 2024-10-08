@@ -13,22 +13,28 @@ namespace MFASeeker.Converters
     {
         public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
         {
-            if (value is ImageFile imageFile)
+            try
             {
-                LocalImageService imageService = new();
-                ImageSource? temp = ImageSource.FromStream(() => imageService.ByteArrayToStream(
-                                                                 imageService.StringToByteBase64(imageFile.ByteBase64)));
-                return temp;
-            }
-            if (value is List<ImageFile> images && images.Count > 0)
+                if (value is ImageFile imageFile)
+                {
+                    LocalImageService imageService = new();
+                    ImageSource? temp = ImageSource.FromStream(() => imageService.ByteArrayToStream(
+                                                                     imageService.StringToByteBase64(imageFile.ByteBase64)));
+                    return temp;
+                }
+                if (value is List<ImageFile> images && images.Count > 0)
+                {
+                    LocalImageService imageService = new();
+                    ImageSource? temp = ImageSource.FromStream(() => imageService.ByteArrayToStream(
+                                                                     imageService.StringToByteBase64(images[0].ByteBase64)));
+                    return temp;
+                }
+            } catch (Exception ex)
             {
-                LocalImageService imageService = new();
-                ImageSource? temp = ImageSource.FromStream(() => imageService.ByteArrayToStream(
-                                                                 imageService.StringToByteBase64(images[0].ByteBase64)));
-                return temp;
+                Console.WriteLine(ex.Message);
+                return ImageSource.FromFile(@"toilet_undefined.png");
             }
             return ImageSource.FromFile(@"toilet_undefined.png");
-
         }
         public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
         {
