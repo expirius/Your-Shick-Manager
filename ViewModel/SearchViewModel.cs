@@ -57,9 +57,25 @@ public partial class SearchViewModel : ObservableObject
 
         InitializeAsync();
     }
+    [RelayCommand]
+    private async Task AddImage()
+    {
+        var localImageService = new LocalImageService();
+        var fileResult = await localImageService.TakePhoto();
+
+        if (fileResult != null)
+        {
+            ImageFile? imageFile = await localImageService.Upload(fileResult);
+            if (imageFile != null)
+            {
+                NewToilet?.Images.Add(imageFile);
+                Console.WriteLine("Image added: " + imageFile.ByteBase64);
+            }
+        }
+    }
     // Метод для обновления состояния CheckBox
     [RelayCommand]
-    public void ChangeSpectateMode()
+    private void ChangeSpectateMode()
     {
         if (!LocationCheckBoxIsChecked)
         {
@@ -91,7 +107,10 @@ public partial class SearchViewModel : ObservableObject
             MapManager.DisableCentredUser();
             mapControl.IsEnabled = false;
             //Попап с полями новой точки
-            var popup = new NewPinPopup();
+            var popup = new NewPinPopup
+            {
+                BindingContext = this
+            };
             object? result = await Application.Current.MainPage.ShowPopupAsync(popup);
             if (result is bool isConfirmed && isConfirmed)
             {

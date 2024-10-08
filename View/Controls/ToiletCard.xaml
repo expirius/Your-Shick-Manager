@@ -42,7 +42,12 @@
             </Grid>
 
             <!-- Верхняя картинка карусели -->
-            <Image Source="toilet_undefined.png">
+            <Image Source="{Binding Images[0], Converter={converters:ImageConverter}}">
+                <Image.Behaviors>
+                    <effects:BlurBehavior Radius="30"/>
+                </Image.Behaviors>
+            </Image>
+            <Image Source="toilet_undefined.png" IsVisible="False">
                 <Image.Behaviors>
                     <effects:BlurBehavior Radius="30"/>
                 </Image.Behaviors>
