@@ -35,9 +35,8 @@
         </Grid>
 
         <!-- Верхняя картинка карусели -->
-        <Image
-                Aspect="AspectFill"
-                Source="{Binding Images, Converter={converters:ImageConverter}}">
+        <Image Source="{Binding  Images, Converter={converters:ImageConverter}}"
+                Aspect="AspectFill">
             <Image.Behaviors>
                 <effects:BlurBehavior Radius="10"/>
             </Image.Behaviors>

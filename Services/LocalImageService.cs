@@ -35,12 +35,33 @@ namespace MFASeeker.Services
                 return null;
             }
         }
-       /// <summary>
-       /// Конвертирует fileResult в поток (stream)
-       /// </summary>
-       /// <param name="fileResult"></param>
-       /// <returns></returns>
-        public async Task<Stream?> FileResultToStream(FileResult fileResult)
+        /// <summary>
+        /// Сохраняет byte[] как файл изображения на устройство
+        /// </summary>
+        /// <param name="bytes">Массив байт изображения</param>
+        /// <param name="fileName">Имя файла для сохранения</param>
+        /// <returns>Путь к сохраненному файлу</returns>
+        public string SaveByteArrayToFile(byte[] bytes, string fileName)
+        {
+            string fullPath = Path.Combine(FileSystem.CacheDirectory, fileName);
+
+            try
+            {
+                File.WriteAllBytes(fullPath, bytes);
+                return fullPath; // Возвращает путь к сохраненному файлу
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return string.Empty; // В случае ошибки возвращает пустую строку
+            }
+        }
+    /// <summary>
+    /// Конвертирует fileResult в поток (stream)
+    /// </summary>
+    /// <param name="fileResult"></param>
+    /// <returns></returns>
+    public async Task<Stream?> FileResultToStream(FileResult fileResult)
         {
             if (fileResult == null)
                 return null;

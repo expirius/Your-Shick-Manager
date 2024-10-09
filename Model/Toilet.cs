@@ -36,7 +36,6 @@ namespace MFASeeker.Model
         {
             return !string.IsNullOrWhiteSpace(Name);
         }
-
         private string CreateGuid()
         {
             return System.Guid.NewGuid().ToString().GetHashCode().ToString("x");
