@@ -56,12 +56,37 @@ namespace MFASeeker.Services
                 return string.Empty; // В случае ошибки возвращает пустую строку
             }
         }
-    /// <summary>
-    /// Конвертирует fileResult в поток (stream)
-    /// </summary>
-    /// <param name="fileResult"></param>
-    /// <returns></returns>
-    public async Task<Stream?> FileResultToStream(FileResult fileResult)
+        public UriImageSource GetImageSourceFromFile(string filePath)
+        {
+            return new UriImageSource
+            {
+                Uri = new Uri(@$"{filePath}"), 
+                CachingEnabled = true
+            };
+        }
+        public UriImageSource GetImageSourceFromImageFile(ImageFile imageFile)
+        {
+            // Преобразуем base64 в массив байтов
+            byte[] bytes = Convert.FromBase64String(imageFile.ByteBase64);
+
+            // Сохраняем массив байтов в файл и получаем путь
+            string filePath = SaveByteArrayToFile(bytes, imageFile.FileName);
+
+            // Проверяем, что файл был успешно сохранен
+            if (!string.IsNullOrEmpty(filePath))
+            {
+                return GetImageSourceFromFile(filePath);
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Конвертирует fileResult в поток (stream)
+        /// </summary>
+        /// <param name="fileResult"></param>
+        /// <returns></returns>
+        public async Task<Stream?> FileResultToStream(FileResult fileResult)
         {
             if (fileResult == null)
                 return null;
