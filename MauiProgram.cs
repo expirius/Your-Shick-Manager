@@ -43,16 +43,7 @@ namespace MFASeeker
 #if DEBUG
             builder.Logging.AddDebug();
 #endif
-#if __ANDROID__
-            ImageHandler.Mapper.PrependToMapping(nameof(Microsoft.Maui.IImage.Source), (handler, view) => PrependToMappingImageSource(handler, view));
-#endif
             return builder.Build();
         }
-#if __ANDROID__
-        public static void PrependToMappingImageSource(IImageHandler handler, Microsoft.Maui.IImage image)
-        {
-            handler.PlatformView?.Clear();
-        }
-#endif
     }
 }
