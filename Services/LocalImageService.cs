@@ -41,20 +41,23 @@ namespace MFASeeker.Services
         /// <param name="bytes">Массив байт изображения</param>
         /// <param name="fileName">Имя файла для сохранения</param>
         /// <returns>Путь к сохраненному файлу</returns>
-        public string SaveByteArrayToFile(byte[] bytes, string fileName)
+        public Task<string> SaveByteArrayToFile(byte[] bytes, string fileName)
         {
-            string fullPath = Path.Combine(FileSystem.CacheDirectory, fileName);
+            return Task.Run(() =>
+            {
+                string fullPath = Path.Combine(FileSystem.CacheDirectory, fileName);
 
-            try
-            {
-                File.WriteAllBytes(fullPath, bytes);
-                return fullPath; // Возвращает путь к сохраненному файлу
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                return string.Empty; // В случае ошибки возвращает пустую строку
-            }
+                try
+                {
+                    File.WriteAllBytes(fullPath, bytes);
+                    return fullPath; // Возвращает путь к сохраненному файлу
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    return string.Empty; // В случае ошибки возвращает пустую строку
+                }
+            });
         }
 
         /// <summary>

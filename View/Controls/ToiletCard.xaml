@@ -43,7 +43,7 @@
                                     Aspect="AspectFill"
                                     Source="{Binding Images, Converter={converters:ImageConverter}}">
             <ffimageloading:CachedImage.Transformations>
-                <fftransformations:BlurredTransformation Radius="3" />
+                <fftransformations:BlurredTransformation Radius="4" />
             </ffimageloading:CachedImage.Transformations>
         </ffimageloading:CachedImage>
     </Grid>

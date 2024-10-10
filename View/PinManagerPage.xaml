@@ -25,15 +25,14 @@
                              Clicked="ImageButton_Clicked"/>
                 </Grid>
             <gcarousel:GalleryCarousel 
-                IsVisible="False"
-                
+                IsVisible="True"
                 BindableLayout.ItemsSource="{Binding ActivePinList}">
                 <BindableLayout.ItemTemplate>
                     <DataTemplate>
                         <Border 
                           WidthRequest="350"
                           HeightRequest="550"
-                          Margin="15"
+                          Margin="0,10,0,0"
                           Stroke="Transparent"
                           StrokeShape="RoundRectangle 35">
                             <Border.Shadow>

@@ -38,7 +38,6 @@ namespace MFASeeker.ViewModel
             ActivePinList = (await jsonPinStorage.GetMarkersAsync())
                 .OrderByDescending(toilet => toilet.CreatedDate)
                 .ToObservableCollection();
-
             ToiletsUpdated?.Invoke(ActivePinList);
         }
         [RelayCommand]
