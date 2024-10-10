@@ -22,7 +22,7 @@ namespace MFASeeker.Converters
             }
             if (value is ObservableCollection<ImageFile> images && images.Count > 0)
             {
-                return images[0].Image;
+                return images[0]?.Image;
                 //ImageSource? temp = ImageSource.FromStream(() => imageService.ByteArrayToStream(
                 //                                                 imageService.StringToByteBase64(images[0].ByteBase64)));
                 //return temp;

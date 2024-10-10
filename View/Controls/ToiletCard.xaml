@@ -41,8 +41,6 @@
         <ffimageloading:CachedImage LoadingPlaceholder="toilet_undefined.png" 
                                     ErrorPlaceholder="toilet_undefined.png"
                                     Aspect="AspectFill"
-                                    CacheDuration="30"
-                                    CacheType="All"
                                     Source="{Binding Images, Converter={converters:ImageConverter}}">
             <ffimageloading:CachedImage.Transformations>
                 <fftransformations:BlurredTransformation Radius="3" />

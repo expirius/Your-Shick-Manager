@@ -25,21 +25,22 @@
                 </Grid>
 <!-- Карусель с проблемным битмапом -->
             <CarouselView
-                    IsVisible="True"
-                 Loop="False"
+                IsVisible="True"
+             
                 IndicatorView="indicatorView"
                            VerticalOptions="Center"
                            x:Name="CarouselCards"
                            ItemsSource="{Binding ActivePinList}">
                 <CarouselView.ItemTemplate>
                     <DataTemplate x:DataType="model:Toilet">
-                        <Border 
-                                  Margin="5"
-                                  Background="Transparent"
+                        <Grid>
+                            <Border 
+                                  Margin="15"
                                   Stroke="Transparent"
                                   StrokeShape="RoundRectangle 35">
-                            <controls:ToiletCard HeightRequest="550" BindingContext="{Binding .}" Margin="5" />
-                        </Border>
+                            <controls:ToiletCard HeightRequest="550" BindingContext="{Binding .}" />
+                            </Border>
+                        </Grid>
                     </DataTemplate>
                 </CarouselView.ItemTemplate>
 
