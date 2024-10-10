@@ -2,6 +2,8 @@
 using MFASeeker.View;
 using MFASeeker.ViewModel;
 using Microsoft.Extensions.Logging;
+using Microsoft.Maui.Handlers;
+using Microsoft.Maui.Platform;
 using SkiaSharp.Views.Maui.Controls.Hosting;
 //using Material.Components.Maui.Extensions;
 
@@ -37,8 +39,16 @@ namespace MFASeeker
 #if DEBUG
             builder.Logging.AddDebug();
 #endif
-
+#if __ANDROID__
+            ImageHandler.Mapper.PrependToMapping(nameof(Microsoft.Maui.IImage.Source), (handler, view) => PrependToMappingImageSource(handler, view));
+#endif
             return builder.Build();
         }
+#if __ANDROID__
+        public static void PrependToMappingImageSource(IImageHandler handler, Microsoft.Maui.IImage image)
+        {
+            handler.PlatformView?.Clear();
+        }
+#endif
     }
 }

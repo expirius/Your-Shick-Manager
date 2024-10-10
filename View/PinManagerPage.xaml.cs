@@ -11,8 +11,8 @@ public partial class PinManagerPage : ContentPage
         BindingContext = pinManagerVM;
         _pinManagerVM = pinManagerVM;
 
-        CarouselCards.IsVisible = true;
-        ListCards.IsVisible = false;
+        //CarouselCards.IsVisible = true;
+        //ListCards.IsVisible = false;
     }
 
     private void OnSwipeStarted(object sender, SwipeStartedEventArgs e)
@@ -29,15 +29,15 @@ public partial class PinManagerPage : ContentPage
 
     private void ImageButton_Clicked(object sender, EventArgs e)
     {
-        if (CarouselCards.IsVisible)
-        {
-            CarouselCards.IsVisible = false;
-            ListCards.IsVisible = true;
-        }
-        else
-        {
-            CarouselCards.IsVisible = true;
-            ListCards.IsVisible = false;
-        }
+        //if (CarouselCards.IsVisible)
+        //{
+        //    CarouselCards.IsVisible = false;
+        //    ListCards.IsVisible = true;
+        //}
+        //else
+        //{
+        //    CarouselCards.IsVisible = true;
+        //    ListCards.IsVisible = false;
+        //}
     }
 }

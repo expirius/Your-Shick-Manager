@@ -4,9 +4,10 @@
              xmlns:model ="clr-namespace:MFASeeker.Model"
              xmlns:converters="clr-namespace:MFASeeker.Converters"
              xmlns:effects ="clr-namespace:MFASeeker.View.Effects"
-             xmlns:controls="clr-namespace:MFASeeker.View.Controls.Buttons"
-             x:Class="MFASeeker.View.Controls.ToiletCard"
-             x:DataType="model:Toilet">
+             xmlns:controls="clr-namespace:MFASeeker.View.Controls"
+             xmlns:buttons="clr-namespace:MFASeeker.View.Controls.Buttons"
+             x:DataType="model:Toilet"
+             x:Class="MFASeeker.View.Controls.ToiletCard">
     <Grid>
         <Grid
                   ZIndex="1" Background="#99000000">
@@ -30,15 +31,16 @@
                     <Label TextColor="Cyan" FontSize="Body" Text="До точки " />
                     <Label TextColor="Cyan" FontSize="Body" Text="43 мин - 232 м"/>
                 </HorizontalStackLayout>
-                <controls:StarSelector SelectedStar="{Binding Rating}" IsEnabled="False" />
+                <buttons:StarSelector SelectedStar="{Binding Rating}" IsEnabled="False" />
             </StackLayout>
         </Grid>
 
         <!-- Верхняя картинка карусели -->
-        <Image Source="{Binding  Images, Converter={converters:ImageConverter}}"
+        <!-- OLD IMAGE with converter -->
+        <Image Source="{Binding Images,Converter={converters:ImageConverter}}"
                 Aspect="AspectFill">
             <Image.Behaviors>
-                <effects:BlurBehavior Radius="10"/>
+                <effects:BlurBehavior Radius="10" />
             </Image.Behaviors>
         </Image>
     </Grid>

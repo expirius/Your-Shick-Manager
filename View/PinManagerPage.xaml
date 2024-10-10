@@ -6,8 +6,8 @@
              xmlns:buttons="clr-namespace:MFASeeker.View.Controls.Buttons"
              xmlns:vm="clr-namespace:MFASeeker.ViewModel"
              xmlns:model="clr-namespace:MFASeeker.Model"
-             x:DataType="vm:PinManagerViewModel"
              xmlns:converters="clr-namespace:MFASeeker.Converters"
+             x:DataType="vm:PinManagerViewModel"
              Title="PinManagerPage">
 
     <ScrollView Orientation="Vertical">
@@ -23,45 +23,52 @@
                              HorizontalOptions="End"
                              Clicked="ImageButton_Clicked"/>
                 </Grid>
-
-                <CarouselView
+<!-- Карусель с проблемным битмапом -->
+            <IndicatorView x:Name="indicatorView" IndicatorSize="18" 
+                           IsVisible="True"
+                           VerticalOptions="Center" HorizontalOptions="Center"/>
+            <CarouselView
+                    IsVisible="True"
                            VerticalOptions="Center"
-                           x:DataType="vm:PinManagerViewModel" 
                            x:Name="CarouselCards"
                            ItemsSource="{Binding ActivePinList}">
-                    <CarouselView.ItemTemplate>
-                        <DataTemplate x:DataType="model:Toilet" >
-                           <Border 
+                <CarouselView.ItemTemplate>
+                    <DataTemplate x:DataType="model:Toilet">
+                        <Border 
                                   Margin="5"
                                   Background="Transparent"
                                   Stroke="Transparent"
                                   StrokeShape="RoundRectangle 35">
-                               <controls:ToiletCard HeightRequest="550" Toilet="{Binding .}" Margin="5" />
-                          </Border>
-                        </DataTemplate>
-                    </CarouselView.ItemTemplate>
+                            <controls:ToiletCard HeightRequest="550" BindingContext="{Binding .}" Margin="5" />
+                        </Border>
+                    </DataTemplate>
+                </CarouselView.ItemTemplate>
 
-                </CarouselView>
-            <!-- indicator view
-                <IndicatorView x:Name="indicatorView" IndicatorSize="18" 
-                           IsVisible="{Binding Path=IsVisible, Source={x:Reference CarouselCards}}"
-                           VerticalOptions="Center" HorizontalOptions="Center"/>
-            -->
-                <!-- Коллекция без карусели -->
-                <CollectionView IsVisible="False" x:DataType="vm:PinManagerViewModel"
+            </CarouselView> 
+
+
+            <!-- Коллекция без карусели 
+                <CollectionView 
+                    IsVisible="True"
+                    x:Name="CarouselCards"
+                    x:DataType="vm:PinManagerViewModel"
                 ItemsLayout="HorizontalList"  
                 ItemsSource="{Binding ActivePinList}">
                     <CollectionView.ItemTemplate>
                         <DataTemplate x:DataType="model:Toilet">
                             <ScrollView Orientation="Horizontal">
-                                <HorizontalStackLayout>
-                                    <controls:ToiletCard Toilet="{Binding .}" WidthRequest="350"/>
-                                </HorizontalStackLayout>
-                            </ScrollView>
+                            <Border 
+        Margin="5"
+        Background="Transparent"
+        Stroke="Transparent"
+        StrokeShape="RoundRectangle 35">
+                                <controls:ToiletCard HeightRequest="550" WidthRequest="370" BindingContext="{Binding .}" Margin="5" />
+                            </Border>
+                        </ScrollView>
                         </DataTemplate>
                     </CollectionView.ItemTemplate>
-                </CollectionView>
-
+                </CollectionView>  -->
+<!--
                 <CollectionView ItemsSource="{Binding ActivePinList}"
                             x:Name="ListCards">
 
@@ -79,12 +86,18 @@
                                 </SwipeView.RightItems>
                                 <Frame Margin="10" Background="DarkCyan" x:DataType="model:Toilet" >
                                     <StackLayout Orientation="Horizontal">
-                                        <!-- first user image -->
+                               
                                         <Border StrokeShape="RoundRectangle 10,10,10,10"
                                            Margin="0,0,20,0">
-                                            <Image Aspect="AspectFill" 
+                              
+                                            <controls:ImageBase64 
+                                                HeightRequest="90" WidthRequest="90"
+                                                Aspect="AspectFill"
+                                                Source="{Binding Images[0].ByteBase64}"/>
+                                         
+                                            <Image Aspect="AspectFill"
                                                    Source="{Binding Images, Converter={converters:ImageConverter}}" 
-                                                   HeightRequest="90" WidthRequest="90" />
+                                                   HeightRequest="90" WidthRequest="90" /> 
                                         </Border>
                                         <StackLayout VerticalOptions="Center" Orientation="Vertical" HeightRequest="70">
                                             <Label Text="{Binding Name}"/>
@@ -96,7 +109,7 @@
                             </SwipeView>
                         </DataTemplate>
                     </CollectionView.ItemTemplate>
-                </CollectionView>
+                </CollectionView> -->
             </StackLayout>
     </ScrollView>
 </ContentPage>
