@@ -4,6 +4,7 @@
              xmlns:model ="clr-namespace:MFASeeker.Model"
              xmlns:converters="clr-namespace:MFASeeker.Converters"
              xmlns:effects ="clr-namespace:MFASeeker.View.Effects"
+             xmlns:fftransformations="clr-namespace:FFImageLoading.Transformations;assembly=FFImageLoading.Maui"
              xmlns:ffimageloading="clr-namespace:FFImageLoading.Maui;assembly=FFImageLoading.Maui"
              xmlns:controls="clr-namespace:MFASeeker.View.Controls"
              xmlns:buttons="clr-namespace:MFASeeker.View.Controls.Buttons"
@@ -40,14 +41,12 @@
         <ffimageloading:CachedImage LoadingPlaceholder="toilet_undefined.png" 
                                     ErrorPlaceholder="toilet_undefined.png"
                                     Aspect="AspectFill"
+                                    CacheDuration="30"
+                                    CacheType="All"
                                     Source="{Binding Images, Converter={converters:ImageConverter}}">
+            <ffimageloading:CachedImage.Transformations>
+                <fftransformations:BlurredTransformation Radius="3" />
+            </ffimageloading:CachedImage.Transformations>
         </ffimageloading:CachedImage>
-        <!-- OLD IMAGE with converter 
-        <Image Source="{Binding Images,Converter={converters:ImageConverter}}"
-                Aspect="AspectFill">
-            <Image.Behaviors>
-                <effects:BlurBehavior Radius="10" />
-            </Image.Behaviors>
-        </Image> -->
     </Grid>
 </ContentView>
