@@ -1,4 +1,5 @@
-﻿using MFASeeker.Services;
+﻿using FFImageLoading.Maui;
+using MFASeeker.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -1,5 +1,6 @@
 ﻿using MFASeeker.Model;
 using MFASeeker.Services;
+using System.Collections.ObjectModel;
 using System.Globalization;
 
 namespace MFASeeker.Converters
@@ -8,6 +9,10 @@ namespace MFASeeker.Converters
     {
         public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
         {
+            if (value is string byteBase64)
+            {
+                //return System.Convert.FromBase64String(byteBase64);
+            }
             LocalImageService imageService = new();
             if (value is ImageFile imageFile)
             {
@@ -15,7 +20,7 @@ namespace MFASeeker.Converters
                 //                                                 imageService.StringToByteBase64(imageFile.ByteBase64)));
                 //return temp;
             }
-            if (value is List<ImageFile> images && images.Count > 0)
+            if (value is ObservableCollection<ImageFile> images && images.Count > 0)
             {
                 return images[0].Image;
                 //ImageSource? temp = ImageSource.FromStream(() => imageService.ByteArrayToStream(

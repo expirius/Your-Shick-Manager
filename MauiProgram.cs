@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Maui;
+using FFImageLoading.Maui;
 using MFASeeker.View;
 using MFASeeker.ViewModel;
 using Microsoft.Extensions.Logging;
@@ -19,6 +20,7 @@ namespace MFASeeker
             builder
                 .UseMauiApp<App>()
                 .UseSkiaSharp(true) // Карты MAPSUI
+                .UseFFImageLoading() // FFImageLoading
                 .ConfigureFonts(fonts =>
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
@@ -36,6 +38,8 @@ namespace MFASeeker
 
             builder.Services.AddSingleton<PinManagerPage>();
             builder.Services.AddSingleton<PinManagerViewModel>();
+
+
 #if DEBUG
             builder.Logging.AddDebug();
 #endif

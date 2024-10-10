@@ -10,7 +10,7 @@ namespace MFASeeker.Model
         public Location? Location { get; set; }
         public string? Description {  get; set; }
         public double Rating {  get; set; }
-        public List<ImageFile> Images { get; set; }
+        public ObservableCollection<ImageFile> Images { get; set; }
 
         public Toilet()
         {

@@ -24,11 +24,10 @@
                              Clicked="ImageButton_Clicked"/>
                 </Grid>
 <!-- Карусель с проблемным битмапом -->
-            <IndicatorView x:Name="indicatorView" IndicatorSize="18" 
-                           IsVisible="True"
-                           VerticalOptions="Center" HorizontalOptions="Center"/>
             <CarouselView
                     IsVisible="True"
+                 Loop="False"
+                IndicatorView="indicatorView"
                            VerticalOptions="Center"
                            x:Name="CarouselCards"
                            ItemsSource="{Binding ActivePinList}">
@@ -44,7 +43,10 @@
                     </DataTemplate>
                 </CarouselView.ItemTemplate>
 
-            </CarouselView> 
+            </CarouselView>
+            <IndicatorView x:Name="indicatorView" IndicatorSize="18" 
+                IsVisible="True"
+                VerticalOptions="Center" HorizontalOptions="Center"/>
 
 
             <!-- Коллекция без карусели 

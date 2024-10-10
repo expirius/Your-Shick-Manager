@@ -4,6 +4,7 @@
              xmlns:model ="clr-namespace:MFASeeker.Model"
              xmlns:converters="clr-namespace:MFASeeker.Converters"
              xmlns:effects ="clr-namespace:MFASeeker.View.Effects"
+             xmlns:ffimageloading="clr-namespace:FFImageLoading.Maui;assembly=FFImageLoading.Maui"
              xmlns:controls="clr-namespace:MFASeeker.View.Controls"
              xmlns:buttons="clr-namespace:MFASeeker.View.Controls.Buttons"
              x:DataType="model:Toilet"
@@ -36,12 +37,17 @@
         </Grid>
 
         <!-- Верхняя картинка карусели -->
-        <!-- OLD IMAGE with converter -->
+        <ffimageloading:CachedImage LoadingPlaceholder="toilet_undefined.png" 
+                                    ErrorPlaceholder="toilet_undefined.png"
+                                    Aspect="AspectFill"
+                                    Source="{Binding Images, Converter={converters:ImageConverter}}">
+        </ffimageloading:CachedImage>
+        <!-- OLD IMAGE with converter 
         <Image Source="{Binding Images,Converter={converters:ImageConverter}}"
                 Aspect="AspectFill">
             <Image.Behaviors>
                 <effects:BlurBehavior Radius="10" />
             </Image.Behaviors>
-        </Image>
+        </Image> -->
     </Grid>
 </ContentView>
