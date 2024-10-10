@@ -5,6 +5,7 @@
              xmlns:controls="clr-namespace:MFASeeker.View.Controls"
              xmlns:buttons="clr-namespace:MFASeeker.View.Controls.Buttons"
              xmlns:vm="clr-namespace:MFASeeker.ViewModel"
+             xmlns:gcarousel="clr-namespace:GalleryCarousel;assembly=GalleryCarousel"
              xmlns:model="clr-namespace:MFASeeker.Model"
              xmlns:converters="clr-namespace:MFASeeker.Converters"
              x:DataType="vm:PinManagerViewModel"
@@ -23,34 +24,50 @@
                              HorizontalOptions="End"
                              Clicked="ImageButton_Clicked"/>
                 </Grid>
+            <gcarousel:GalleryCarousel 
+                IsVisible="False"
+                
+                BindableLayout.ItemsSource="{Binding ActivePinList}">
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate>
+                        <Border 
+                          WidthRequest="350"
+                          HeightRequest="550"
+                          Margin="15"
+                          Stroke="Transparent"
+                          StrokeShape="RoundRectangle 35">
+                            <Border.Shadow>
+                                <Shadow Brush="Black" Offset="0,5" Radius="5" Opacity="0.2" />
+                            </Border.Shadow>
+                            <controls:ToiletCard HeightRequest="550" />
+                        </Border>
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+            </gcarousel:GalleryCarousel>
 <!-- Карусель с проблемным битмапом -->
             <CarouselView
-                IsVisible="True"
-             
-                IndicatorView="indicatorView"
+             IsVisible="True"
                            VerticalOptions="Center"
                            x:Name="CarouselCards"
                            ItemsSource="{Binding ActivePinList}">
                 <CarouselView.ItemTemplate>
                     <DataTemplate x:DataType="model:Toilet">
-                        <Grid>
-                            <Border 
+                        <Border 
                                   Margin="15"
+                                HeightRequest="550"
                                   Stroke="Transparent"
                                   StrokeShape="RoundRectangle 35">
-                            <controls:ToiletCard HeightRequest="550" BindingContext="{Binding .}" />
-                            </Border>
-                        </Grid>
+                            <controls:ToiletCard />
+                        </Border>
                     </DataTemplate>
                 </CarouselView.ItemTemplate>
 
             </CarouselView>
+            <!--indicator view
             <IndicatorView x:Name="indicatorView" IndicatorSize="18" 
                 IsVisible="True"
-                VerticalOptions="Center" HorizontalOptions="Center"/>
-
-
-            <!-- Коллекция без карусели 
+                VerticalOptions="Center" HorizontalOptions="Center"/> -->
+            <!-- Коллекция без карусели
                 <CollectionView 
                     IsVisible="True"
                     x:Name="CarouselCards"
@@ -65,12 +82,13 @@
         Background="Transparent"
         Stroke="Transparent"
         StrokeShape="RoundRectangle 35">
-                                <controls:ToiletCard HeightRequest="550" WidthRequest="370" BindingContext="{Binding .}" Margin="5" />
+                                <controls:ToiletCard HeightRequest="550" WidthRequest="370" BindableLayout.ItemTemplate="{Binding .}" Margin="5" />
                             </Border>
                         </ScrollView>
                         </DataTemplate>
                     </CollectionView.ItemTemplate>
-                </CollectionView>  -->
+                </CollectionView> -->
+            
 <!--
                 <CollectionView ItemsSource="{Binding ActivePinList}"
                             x:Name="ListCards">
