@@ -14,7 +14,7 @@
     <Grid>
         <Grid
                   ZIndex="1" Background="#99000000">
-            <!-- ВЫКИНУТЬ В VM где controls -->
+            <!-- ВЫКИНУТЬ В VM где controls 
             <HorizontalStackLayout  VerticalOptions="Start" HorizontalOptions="EndAndExpand"
                                     Margin="20">
                 <ImageButton WidthRequest="60" HeightRequest="60"  
@@ -30,7 +30,7 @@
                                     AncestorType={x:Type vm:PinManagerViewModel}},
                                     Path=DeleteToiletCommand}"
                          Source="https://cdn-icons-png.flaticon.com/512/5590/5590798.png"/>
-            </HorizontalStackLayout>
+            </HorizontalStackLayout> -->
 
             <StackLayout VerticalOptions="End" Margin="20">
                 <Label

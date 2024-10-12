@@ -10,9 +10,9 @@
              xmlns:converters="clr-namespace:MFASeeker.Converters"
              x:DataType="vm:PinManagerViewModel"
              Title="PinManagerPage">
-
-    <ScrollView Orientation="Vertical">
-        <StackLayout>
+    <Grid>
+        <ScrollView Orientation="Vertical">
+            <StackLayout>
                 <Grid>
                     <Button Background="DarkCyan" 
                         TextColor="White" Text="Обновить" 
@@ -24,45 +24,67 @@
                              HorizontalOptions="End"
                              Clicked="ImageButton_Clicked"/>
                 </Grid>
-            <gcarousel:GalleryCarousel 
-                IsVisible="True"
-                BindableLayout.ItemsSource="{Binding ActivePinList}">
-                <BindableLayout.ItemTemplate>
-                    <DataTemplate>
+                <Grid>
+                    <gcarousel:GalleryCarousel 
+                        IsVisible="True"
+                        ActiveItem="1"
+                        BindableLayout.ItemsSource="{Binding ActivePinList}">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate>
+
+                    <Grid WidthRequest="350" HeightRequest="550">
                         <Border 
-                          WidthRequest="350"
-                          HeightRequest="550"
-                          Margin="0,10,0,0"
-                          Stroke="Transparent"
-                          StrokeShape="RoundRectangle 35">
+                        Margin="0,10,0,0"
+                        Stroke="Transparent"
+                        StrokeShape="RoundRectangle 35">
                             <Border.Shadow>
                                 <Shadow Brush="Black" Offset="0,5" Radius="5" Opacity="0.2" />
                             </Border.Shadow>
                             <controls:ToiletCard HeightRequest="550" />
-                        </Border>
-                    </DataTemplate>
-                </BindableLayout.ItemTemplate>
-            </gcarousel:GalleryCarousel>
-<!-- Карусель с проблемным битмапом -->
-            <CarouselView
-             IsVisible="True"
+                    </Border>
+                    </Grid>
+                </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </gcarousel:GalleryCarousel>
+                </Grid>
+                    <!-- Карусель с проблемным битмапом -->
+                <Grid>
+                    <CarouselView
+                           IsVisible="True"
                            VerticalOptions="Center"
                            x:Name="CarouselCards"
                            ItemsSource="{Binding ActivePinList}">
                 <CarouselView.ItemTemplate>
                     <DataTemplate x:DataType="model:Toilet">
-                        <Border 
+                        <Grid HeightRequest="550">
+                            <HorizontalStackLayout ZIndex="1" VerticalOptions="Start" HorizontalOptions="EndAndExpand" Margin="20">
+                                
+                                <ImageButton WidthRequest="60" HeightRequest="60"  
+                                    CornerRadius="30"
+                                             
+                                    Source="https://cdn-icons-png.flaticon.com/512/2919/2919592.png"/>
+                                <ImageButton WidthRequest="60" HeightRequest="60" 
+                                    Margin="10,0,0,0"
+                                    CornerRadius="30"
+                                    CommandParameter="{Binding .}"
+                                    Command="{Binding Source={x:RelativeSource 
+                                               AncestorType={x:Type vm:PinManagerViewModel}},
+                                               Path=DeleteToiletCommand}"
+                                    Source="https://cdn-icons-png.flaticon.com/512/5590/5590798.png"/>
+                            </HorizontalStackLayout>
+                            <Border 
                                   Margin="15"
-                                HeightRequest="550"
                                   Stroke="Transparent"
                                   StrokeShape="RoundRectangle 35">
-                            <controls:ToiletCard />
-                        </Border>
+                                <controls:ToiletCard />
+                            </Border>
+                        </Grid>
                     </DataTemplate>
                 </CarouselView.ItemTemplate>
 
             </CarouselView>
-            <!--indicator view
+                </Grid>
+                <!--indicator view
             <IndicatorView x:Name="indicatorView" IndicatorSize="18" 
                 IsVisible="True"
                 VerticalOptions="Center" HorizontalOptions="Center"/> -->
@@ -131,5 +153,6 @@
                     </CollectionView.ItemTemplate>
                 </CollectionView> -->
             </StackLayout>
-    </ScrollView>
+        </ScrollView>
+    </Grid>
 </ContentPage>
