@@ -16,6 +16,7 @@ namespace MFASeeker.Converters
             LocalImageService imageService = new();
             if (value is ImageFile imageFile)
             {
+                return imageFile?.Image;
                 //ImageSource? temp = ImageSource.FromStream(() => imageService.ByteArrayToStream(
                 //                                                 imageService.StringToByteBase64(imageFile.ByteBase64)));
                 //return temp;

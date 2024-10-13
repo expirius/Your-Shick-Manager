@@ -109,7 +109,7 @@ public partial class SearchViewModel : ObservableObject
             //Попап с полями новой точки
             var popup = new NewPinPopup
             {
-                BindingContext = this
+                BindingContext = NewToilet,
             };
             object? result = await Application.Current.MainPage.ShowPopupAsync(popup);
             if (result is bool isConfirmed && isConfirmed)

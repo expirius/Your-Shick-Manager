@@ -8,16 +8,16 @@
              xmlns:vm="clr-namespace:MFASeeker.ViewModel"
              x:Class="MFASeeker.View.NewPinPopup" 
              Color="Transparent">
-    <Frame x:DataType="vm:SearchViewModel" CornerRadius="40" BackgroundColor="Black">
-        <VerticalStackLayout>
+    <Frame CornerRadius="40" BackgroundColor="Black">
+        <VerticalStackLayout x:DataType="model:Toilet">
             <Label Text="Имя" FontSize="Medium" HorizontalOptions="Center"/>
-            <Entry Placeholder="Название метки" Text="{Binding NewToilet.Name}" />
+            <Entry Placeholder="Название метки" Text="{Binding Name}" />
 
             <Label Text="Рейтинг" FontSize="Medium" HorizontalOptions="Center"/>
-            <controls_buttons:StarSelector SelectedStar="{Binding NewToilet.Rating}"/>
+            <controls_buttons:StarSelector SelectedStar="{Binding Rating}"/>
 
             <Label Text="Описание" FontSize="Medium" HorizontalOptions="Center"/>
-            <Entry Placeholder="Описание" Text="{Binding NewToilet.Description}"/>
+            <Entry Placeholder="Описание" Text="{Binding Description}"/>
 
             <Label Text="Фотографии" FontSize="Medium" HorizontalOptions="Center" />
             <Grid>
@@ -31,11 +31,10 @@
                         Margin="0,0,2,0"
                     WidthRequest="75"
                     HorizontalOptions="Start"
-                    x:DataType="vm:SearchViewModel" 
-                    Command="{Binding AddImageCommand}"/>
+                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:SearchViewModel}}, Path=AddImageCommand}"/>
                 <CollectionView Grid.Column="1"
      ItemsLayout="HorizontalList"
-     ItemsSource="{Binding NewToilet.Images}">
+     ItemsSource="{Binding Images}">
                     <CollectionView.ItemTemplate>
                         <DataTemplate x:DataType="model:ImageFile">
                             <Border HeightRequest="110" WidthRequest="110" StrokeShape="RoundRectangle 10,10,10,10">

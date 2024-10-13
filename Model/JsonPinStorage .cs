@@ -54,7 +54,7 @@ public class JsonPinStorage : IPinStorage
     public async Task DeleteMarkerAsync(Toilet marker)
     {
         var toiletsJson = await GetMarkersAsync();
-        var markerToDelete = toiletsJson.FirstOrDefault(t => t.Id == marker.Id);
+        var markerToDelete = toiletsJson.FirstOrDefault(t => t.Guid == marker.Guid);
         if (markerToDelete != null)
         {
             toiletsJson.Remove(markerToDelete);
@@ -69,6 +69,23 @@ public class JsonPinStorage : IPinStorage
         if (markerToDelete != null)
         {
             toiletsJson.Remove(markerToDelete);
+            var json = JsonSerializer.Serialize(toiletsJson);
+            await File.WriteAllTextAsync(filePath, json);
+        }
+    }
+    public async Task UpdateMarker(Toilet toilet)
+    {
+        var toiletsJson = await GetMarkersAsync();
+        var markerToUpdate = toiletsJson.FirstOrDefault(t => t.Guid == toilet.Guid);
+        if (markerToUpdate != null)
+        {
+            // Обновляем поля существующего маркера
+            markerToUpdate.Name = toilet.Name;
+            // markerToUpdate.Location = toilet.Location; в будущем и локацию
+            markerToUpdate.Rating = toilet.Rating;
+            markerToUpdate.Images = toilet.Images;
+            markerToUpdate.Description = toilet.Description;
+
             var json = JsonSerializer.Serialize(toiletsJson);
             await File.WriteAllTextAsync(filePath, json);
         }

@@ -12,26 +12,7 @@
              x:DataType="model:Toilet"
              x:Class="MFASeeker.View.Controls.ToiletCard">
     <Grid>
-        <Grid
-                  ZIndex="1" Background="#99000000">
-            <!-- ВЫКИНУТЬ В VM где controls 
-            <HorizontalStackLayout  VerticalOptions="Start" HorizontalOptions="EndAndExpand"
-                                    Margin="20">
-                <ImageButton WidthRequest="60" HeightRequest="60"  
-                         CornerRadius="30"
-                         Padding="3"
-                         Source="https://cdn-icons-png.flaticon.com/512/2919/2919592.png"/>
-                <ImageButton WidthRequest="60" HeightRequest="60" 
-                         Margin="10,0,0,0"
-                         Padding="3"
-                         CornerRadius="30"
-                         CommandParameter="{Binding .}"
-                         Command="{Binding Source={x:RelativeSource 
-                                    AncestorType={x:Type vm:PinManagerViewModel}},
-                                    Path=DeleteToiletCommand}"
-                         Source="https://cdn-icons-png.flaticon.com/512/5590/5590798.png"/>
-            </HorizontalStackLayout> -->
-
+        <Grid ZIndex="1" Background="#99000000">
             <StackLayout VerticalOptions="End" Margin="20">
                 <Label
                         FontAttributes="Bold"
@@ -55,10 +36,30 @@
                 <buttons:StarSelector SelectedStar="{Binding Rating}" IsEnabled="False" />
             </StackLayout>
         </Grid>
+        <!-- УДАЛИТЬ КНОПКИ ПОТОМ-->
+        <HorizontalStackLayout ZIndex="1" VerticalOptions="Start" HorizontalOptions="EndAndExpand" Margin="20">
 
+            <ImageButton WidthRequest="60" HeightRequest="60"  
+                             CornerRadius="30"
+                             Padding="5"
+                             CommandParameter="{Binding .}"
+                             Command="{Binding Source={x:RelativeSource 
+     AncestorType={x:Type vm:PinManagerViewModel}},
+     Path=EditToiletCommand}"
+                             Source="https://cdn-icons-png.flaticon.com/512/10336/10336582.png"/>
+            <ImageButton WidthRequest="60" HeightRequest="60" 
+                             Margin="10,0,0,0"
+                             Padding="5"
+                             CornerRadius="30"
+                             CommandParameter="{Binding .}"
+                             Command="{Binding Source={x:RelativeSource 
+                                        AncestorType={x:Type vm:PinManagerViewModel}},
+                                        Path=DeleteToiletCommand}"
+                             Source="https://cdn-icons-png.flaticon.com/512/9790/9790368.png"/>
+        </HorizontalStackLayout>
         <!-- Верхняя картинка карусели -->
         <ffimageloading:CachedImage LoadingPlaceholder="toilet_undefined.png" 
-                                    ErrorPlaceholder="toilet_undefined.png"
+                                    ErrorPlaceholder="toilet_undefined.png" 
                                     Aspect="AspectFill"
                                     Source="{Binding Images, Converter={converters:ImageConverter}}">
             <ffimageloading:CachedImage.Transformations>

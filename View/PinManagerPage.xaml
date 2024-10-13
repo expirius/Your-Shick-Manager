@@ -24,6 +24,7 @@
                              HorizontalOptions="End"
                              Clicked="ImageButton_Clicked"/>
                 </Grid>
+                <!--
                 <Grid>
                     <gcarousel:GalleryCarousel 
                         IsVisible="True"
@@ -46,10 +47,11 @@
                 </DataTemplate>
                         </BindableLayout.ItemTemplate>
                     </gcarousel:GalleryCarousel>
-                </Grid>
+                </Grid> -->
                     <!-- Карусель с проблемным битмапом -->
                 <Grid>
                     <CarouselView
+                           EmptyView="Нет доступных туалетов"
                            IsVisible="True"
                            VerticalOptions="Center"
                            x:Name="CarouselCards"
@@ -57,21 +59,7 @@
                 <CarouselView.ItemTemplate>
                     <DataTemplate x:DataType="model:Toilet">
                         <Grid HeightRequest="550">
-                            <HorizontalStackLayout ZIndex="1" VerticalOptions="Start" HorizontalOptions="EndAndExpand" Margin="20">
-                                
-                                <ImageButton WidthRequest="60" HeightRequest="60"  
-                                    CornerRadius="30"
-                                             
-                                    Source="https://cdn-icons-png.flaticon.com/512/2919/2919592.png"/>
-                                <ImageButton WidthRequest="60" HeightRequest="60" 
-                                    Margin="10,0,0,0"
-                                    CornerRadius="30"
-                                    CommandParameter="{Binding .}"
-                                    Command="{Binding Source={x:RelativeSource 
-                                               AncestorType={x:Type vm:PinManagerViewModel}},
-                                               Path=DeleteToiletCommand}"
-                                    Source="https://cdn-icons-png.flaticon.com/512/5590/5590798.png"/>
-                            </HorizontalStackLayout>
+    
                             <Border 
                                   Margin="15"
                                   Stroke="Transparent"
