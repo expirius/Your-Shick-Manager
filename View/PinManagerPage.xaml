@@ -5,13 +5,14 @@
              xmlns:controls="clr-namespace:MFASeeker.View.Controls"
              xmlns:buttons="clr-namespace:MFASeeker.View.Controls.Buttons"
              xmlns:vm="clr-namespace:MFASeeker.ViewModel"
+             xmlns:gcarousel="clr-namespace:GalleryCarousel;assembly=GalleryCarousel"
              xmlns:model="clr-namespace:MFASeeker.Model"
-             x:DataType="vm:PinManagerViewModel"
              xmlns:converters="clr-namespace:MFASeeker.Converters"
+             x:DataType="vm:PinManagerViewModel"
              Title="PinManagerPage">
-
-    <ScrollView Orientation="Vertical">
-        <StackLayout>
+    <Grid>
+        <ScrollView Orientation="Vertical">
+            <StackLayout>
                 <Grid>
                     <Button Background="DarkCyan" 
                         TextColor="White" Text="Обновить" 
@@ -23,38 +24,81 @@
                              HorizontalOptions="End"
                              Clicked="ImageButton_Clicked"/>
                 </Grid>
+                <!--
+                <Grid>
+                    <gcarousel:GalleryCarousel 
+                        IsVisible="True"
+                        ActiveItem="1"
+                        BindableLayout.ItemsSource="{Binding ActivePinList}">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate>
 
-                <CarouselView
-                          x:DataType="vm:PinManagerViewModel" 
+                    <Grid WidthRequest="350" HeightRequest="550">
+                        <Border 
+                        Margin="0,10,0,0"
+                        Stroke="Transparent"
+                        StrokeShape="RoundRectangle 35">
+                            <Border.Shadow>
+                                <Shadow Brush="Black" Offset="0,5" Radius="5" Opacity="0.2" />
+                            </Border.Shadow>
+                            <controls:ToiletCard HeightRequest="550" />
+                    </Border>
+                    </Grid>
+                </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </gcarousel:GalleryCarousel>
+                </Grid> -->
+                    <!-- Карусель с проблемным битмапом -->
+                <Grid>
+                    <CarouselView
+                           EmptyView="Нет доступных туалетов"
+                           IsVisible="True"
+                           VerticalOptions="Center"
                            x:Name="CarouselCards"
-                           IndicatorView="indicatorView"
-                           
                            ItemsSource="{Binding ActivePinList}">
-                    <CarouselView.ItemTemplate>
-                        <DataTemplate x:DataType="model:Toilet" >
-                            <controls:ToiletCard Toilet="{Binding .}" Margin="5" />
-                        </DataTemplate>
-                    </CarouselView.ItemTemplate>
+                <CarouselView.ItemTemplate>
+                    <DataTemplate x:DataType="model:Toilet">
+                        <Grid HeightRequest="550">
+    
+                            <Border 
+                                  Margin="15"
+                                  Stroke="Transparent"
+                                  StrokeShape="RoundRectangle 35">
+                                <controls:ToiletCard />
+                            </Border>
+                        </Grid>
+                    </DataTemplate>
+                </CarouselView.ItemTemplate>
 
-                </CarouselView>
-                <IndicatorView x:Name="indicatorView" IndicatorSize="18" 
-                           IsVisible="{Binding Path=IsVisible, Source={x:Reference CarouselCards}}"
-                           VerticalOptions="Center" HorizontalOptions="Center"/>
-
-                <CollectionView IsVisible="False" x:DataType="vm:PinManagerViewModel"
+            </CarouselView>
+                </Grid>
+                <!--indicator view
+            <IndicatorView x:Name="indicatorView" IndicatorSize="18" 
+                IsVisible="True"
+                VerticalOptions="Center" HorizontalOptions="Center"/> -->
+            <!-- Коллекция без карусели
+                <CollectionView 
+                    IsVisible="True"
+                    x:Name="CarouselCards"
+                    x:DataType="vm:PinManagerViewModel"
                 ItemsLayout="HorizontalList"  
                 ItemsSource="{Binding ActivePinList}">
                     <CollectionView.ItemTemplate>
                         <DataTemplate x:DataType="model:Toilet">
                             <ScrollView Orientation="Horizontal">
-                                <HorizontalStackLayout>
-                                    <controls:ToiletCard Toilet="{Binding .}" WidthRequest="350"/>
-                                </HorizontalStackLayout>
-                            </ScrollView>
+                            <Border 
+        Margin="5"
+        Background="Transparent"
+        Stroke="Transparent"
+        StrokeShape="RoundRectangle 35">
+                                <controls:ToiletCard HeightRequest="550" WidthRequest="370" BindableLayout.ItemTemplate="{Binding .}" Margin="5" />
+                            </Border>
+                        </ScrollView>
                         </DataTemplate>
                     </CollectionView.ItemTemplate>
-                </CollectionView>
-
+                </CollectionView> -->
+            
+<!--
                 <CollectionView ItemsSource="{Binding ActivePinList}"
                             x:Name="ListCards">
 
@@ -72,16 +116,20 @@
                                 </SwipeView.RightItems>
                                 <Frame Margin="10" Background="DarkCyan" x:DataType="model:Toilet" >
                                     <StackLayout Orientation="Horizontal">
-                                        <!-- для теста-->
-                                        <Border StrokeShape="RoundRectangle 0,0,80,80"
+                               
+                                        <Border StrokeShape="RoundRectangle 10,10,10,10"
                                            Margin="0,0,20,0">
-                                            <Image Aspect="Fill" Source="toilet_undefined.png" HeightRequest="70" WidthRequest="70" />
+                              
+                                            <controls:ImageBase64 
+                                                HeightRequest="90" WidthRequest="90"
+                                                Aspect="AspectFill"
+                                                Source="{Binding Images[0].ByteBase64}"/>
+                                         
+                                            <Image Aspect="AspectFill"
+                                                   Source="{Binding Images, Converter={converters:ImageConverter}}" 
+                                                   HeightRequest="90" WidthRequest="90" /> 
                                         </Border>
-                                        <!-- ВЕРНУТЬ К ПРИВЯЗКЕ!
-                                    <Image HeightRequest="70" WidthRequest="70" 
-                                   Source="{Binding Rating, Converter={converters:RaitingPNGConverter}}" />
--->
-                                        <StackLayout Orientation="Vertical" HeightRequest="70">
+                                        <StackLayout VerticalOptions="Center" Orientation="Vertical" HeightRequest="70">
                                             <Label Text="{Binding Name}"/>
                                             <Label Text="{Binding Location, Converter={converters:GeoCodingConverter} }"/>
                                             <Label Text="{Binding CreatedDate, StringFormat='{0:MM/dd/yyyy HH:mm}'}"/>
@@ -91,7 +139,8 @@
                             </SwipeView>
                         </DataTemplate>
                     </CollectionView.ItemTemplate>
-                </CollectionView>
+                </CollectionView> -->
             </StackLayout>
-    </ScrollView>
+        </ScrollView>
+    </Grid>
 </ContentPage>

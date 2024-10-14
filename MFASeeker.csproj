@@ -103,6 +103,8 @@
 	<ItemGroup>
 		<PackageReference Include="CommunityToolkit.Maui" Version="9.0.3" />
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
+		<PackageReference Include="FFImageLoading.Maui" Version="1.2.7" />
+		<PackageReference Include="GalleryCarousel" Version="0.1.0" />
 		<PackageReference Include="Mapsui.Maui" Version="4.1.5" />
 		<PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
 		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="$(MauiVersion)" />

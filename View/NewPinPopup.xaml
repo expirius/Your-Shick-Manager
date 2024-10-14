@@ -3,19 +3,47 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:controls_buttons="clr-namespace:MFASeeker.View.Controls.Buttons" 
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:converters="clr-namespace:MFASeeker.Converters"
+             xmlns:model="clr-namespace:MFASeeker.Model"
+             xmlns:vm="clr-namespace:MFASeeker.ViewModel"
              x:Class="MFASeeker.View.NewPinPopup" 
-               Color="Transparent">
+             Color="Transparent">
     <Frame CornerRadius="40" BackgroundColor="Black">
-        <VerticalStackLayout>
-        <Label Text="Имя" FontSize="Medium" HorizontalOptions="Center"/>
-        <Entry Placeholder="Название метки" Text="{Binding NewToilet.Name}" />
+        <VerticalStackLayout x:DataType="model:Toilet">
+            <Label Text="Имя" FontSize="Medium" HorizontalOptions="Center"/>
+            <Entry Placeholder="Название метки" Text="{Binding Name}" />
 
-        <Label Text="Рейтинг" FontSize="Medium" HorizontalOptions="Center"/>
-        <controls_buttons:StarSelector SelectedStar="{Binding NewToilet.Rating}"/>
+            <Label Text="Рейтинг" FontSize="Medium" HorizontalOptions="Center"/>
+            <controls_buttons:StarSelector SelectedStar="{Binding Rating}"/>
 
-        <Label Text="Описание" FontSize="Medium" HorizontalOptions="Center"/>
-        <Entry Placeholder="Описание" Text="{Binding NewToilet.Description}"/>
+            <Label Text="Описание" FontSize="Medium" HorizontalOptions="Center"/>
+            <Entry Placeholder="Описание" Text="{Binding Description}"/>
 
+            <Label Text="Фотографии" FontSize="Medium" HorizontalOptions="Center" />
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Button Text="+" 
+                        FontSize="Large"
+                        Grid.Column="0"
+                        Margin="0,0,2,0"
+                    WidthRequest="75"
+                    HorizontalOptions="Start"
+                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:SearchViewModel}}, Path=AddImageCommand}"/>
+                <CollectionView Grid.Column="1"
+     ItemsLayout="HorizontalList"
+     ItemsSource="{Binding Images}">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="model:ImageFile">
+                            <Border HeightRequest="110" WidthRequest="110" StrokeShape="RoundRectangle 10,10,10,10">
+                                <Image Aspect="AspectFill" Source="{Binding ., Converter={converters:ImageConverter}}"/>
+                            </Border>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </Grid>
             <HorizontalStackLayout HorizontalOptions="Center">
                 <Button Text="Подтвердить" 
                         Clicked="OnYesButtonClicked" 

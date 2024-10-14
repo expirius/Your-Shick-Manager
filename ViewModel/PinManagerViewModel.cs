@@ -8,9 +8,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using CommunityToolkit.Maui.Core.Extensions;
+using CommunityToolkit.Maui.Views;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using MFASeeker.Model;
+using MFASeeker.View;
 
 namespace MFASeeker.ViewModel
 {
@@ -25,11 +27,12 @@ namespace MFASeeker.ViewModel
         private readonly JsonPinStorage jsonPinStorage = new();
         [ObservableProperty]
         private ObservableCollection<Toilet>? activePinList;
+        [ObservableProperty]
+        private Toilet? selectedToilet;
 
         public PinManagerViewModel()
         {
             ActivePinList = [];
-            _ = RefreshToilets();
         }
 
         [RelayCommand]
@@ -38,8 +41,6 @@ namespace MFASeeker.ViewModel
             ActivePinList = (await jsonPinStorage.GetMarkersAsync())
                 .OrderByDescending(toilet => toilet.CreatedDate)
                 .ToObservableCollection();
-
-            ToiletsUpdated?.Invoke(ActivePinList);
         }
         [RelayCommand]
         private async Task AddToilet(Toilet toilet)
@@ -65,9 +66,20 @@ namespace MFASeeker.ViewModel
             }
         }
         [RelayCommand]
-        private void EditToilet()
+        private async void EditToilet(object? value)
         {
-
+            if (value is Toilet toilet)
+            {
+                var popup = new NewPinPopup
+                {
+                    BindingContext = value
+                };
+                object? result = await Application.Current.MainPage.ShowPopupAsync(popup);
+                if (result is bool isConfirmed)
+                {
+                    await jsonPinStorage.UpdateMarker((Toilet)value);
+                }
+            }
         }
     }
 } 

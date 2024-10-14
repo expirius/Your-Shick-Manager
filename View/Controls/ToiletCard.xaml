@@ -4,49 +4,67 @@
              xmlns:model ="clr-namespace:MFASeeker.Model"
              xmlns:converters="clr-namespace:MFASeeker.Converters"
              xmlns:effects ="clr-namespace:MFASeeker.View.Effects"
-             xmlns:controls="clr-namespace:MFASeeker.View.Controls.Buttons"
-             x:Class="MFASeeker.View.Controls.ToiletCard"
-             x:DataType="model:Toilet">
-    <Border 
-        Margin="5"
-        Background="Transparent"
-        Stroke="Transparent"
-        StrokeShape="RoundRectangle 15"
-                ZIndex="1" 
-                VerticalOptions="End">
-        <Grid>
-            <Grid
-                  ZIndex="1" Background="#99000000">
-                <StackLayout VerticalOptions="End" Margin="20">
-                    <Label
+             xmlns:fftransformations="clr-namespace:FFImageLoading.Transformations;assembly=FFImageLoading.Maui"
+             xmlns:ffimageloading="clr-namespace:FFImageLoading.Maui;assembly=FFImageLoading.Maui"
+             xmlns:controls="clr-namespace:MFASeeker.View.Controls"
+             xmlns:buttons="clr-namespace:MFASeeker.View.Controls.Buttons"
+             xmlns:vm="clr-namespace:MFASeeker.ViewModel"
+             x:DataType="model:Toilet"
+             x:Class="MFASeeker.View.Controls.ToiletCard">
+    <Grid>
+        <Grid ZIndex="1" Background="#99000000">
+            <StackLayout VerticalOptions="End" Margin="20">
+                <Label
                         FontAttributes="Bold"
                         MaxLines="2"
                         LineBreakMode="TailTruncation"
                         FontSize="Title"
                         Text="{Binding Name}" />
-                    <Label FontSize="Subtitle" Text="{Binding Location,Converter={converters:GeoCodingConverter}}" />
-                    
-                    <Label MaxLines="4" LineBreakMode="TailTruncation" FontSize="Body" Text="{Binding Description}"/>
+                <Label FontSize="Subtitle" Text="{Binding Location,Converter={converters:GeoCodingConverter}}" />
 
-                    <HorizontalStackLayout>
-                        <Label TextColor="Cyan" FontSize="Body" Text="Создан " />
-                        <Label TextColor="Cyan" FontSize="Body" Text="{Binding CreatedDate}" />
-                    </HorizontalStackLayout>
-                    
-                    <HorizontalStackLayout>
-                        <Label TextColor="Cyan" FontSize="Body" Text="До точки " />
-                        <Label TextColor="Cyan" FontSize="Body" Text="43 мин - 232 м"/>
-                    </HorizontalStackLayout>
-                    <controls:StarSelector SelectedStar="{Binding Rating}" IsEnabled="False" />
-                </StackLayout>
-            </Grid>
+                <Label MaxLines="4" LineBreakMode="TailTruncation" FontSize="Body" Text="{Binding Description}"/>
 
-            <!-- Верхняя картинка карусели -->
-            <Image Source="toilet_undefined.png">
-                <Image.Behaviors>
-                    <effects:BlurBehavior Radius="30"/>
-                </Image.Behaviors>
-            </Image>
+                <HorizontalStackLayout>
+                    <Label TextColor="Cyan" FontSize="Body" Text="Создан " />
+                    <Label TextColor="Cyan" FontSize="Body" Text="{Binding CreatedDate}" />
+                </HorizontalStackLayout>
+
+                <HorizontalStackLayout>
+                    <Label TextColor="Cyan" FontSize="Body" Text="До точки " />
+                    <Label TextColor="Cyan" FontSize="Body" Text="43 мин - 232 м"/>
+                </HorizontalStackLayout>
+                <buttons:StarSelector SelectedStar="{Binding Rating}" IsEnabled="False" />
+            </StackLayout>
         </Grid>
-    </Border>
+        <!-- УДАЛИТЬ КНОПКИ ПОТОМ-->
+        <HorizontalStackLayout ZIndex="1" VerticalOptions="Start" HorizontalOptions="EndAndExpand" Margin="20">
+
+            <ImageButton WidthRequest="60" HeightRequest="60"  
+                             CornerRadius="30"
+                             Padding="5"
+                             CommandParameter="{Binding .}"
+                             Command="{Binding Source={x:RelativeSource 
+     AncestorType={x:Type vm:PinManagerViewModel}},
+     Path=EditToiletCommand}"
+                             Source="https://cdn-icons-png.flaticon.com/512/10336/10336582.png"/>
+            <ImageButton WidthRequest="60" HeightRequest="60" 
+                             Margin="10,0,0,0"
+                             Padding="5"
+                             CornerRadius="30"
+                             CommandParameter="{Binding .}"
+                             Command="{Binding Source={x:RelativeSource 
+                                        AncestorType={x:Type vm:PinManagerViewModel}},
+                                        Path=DeleteToiletCommand}"
+                             Source="https://cdn-icons-png.flaticon.com/512/9790/9790368.png"/>
+        </HorizontalStackLayout>
+        <!-- Верхняя картинка карусели -->
+        <ffimageloading:CachedImage LoadingPlaceholder="toilet_undefined.png" 
+                                    ErrorPlaceholder="toilet_undefined.png" 
+                                    Aspect="AspectFill"
+                                    Source="{Binding Images, Converter={converters:ImageConverter}}">
+            <ffimageloading:CachedImage.Transformations>
+                <fftransformations:BlurredTransformation Radius="4" />
+            </ffimageloading:CachedImage.Transformations>
+        </ffimageloading:CachedImage>
+    </Grid>
 </ContentView>
