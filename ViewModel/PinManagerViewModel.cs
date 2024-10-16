@@ -1,18 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Input;
-using CommunityToolkit.Maui.Core.Extensions;
+﻿using CommunityToolkit.Maui.Core.Extensions;
 using CommunityToolkit.Maui.Views;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using MFASeeker.Model;
 using MFASeeker.View;
+using System.Collections.ObjectModel;
 
 namespace MFASeeker.ViewModel
 {
@@ -33,6 +25,7 @@ namespace MFASeeker.ViewModel
         public PinManagerViewModel()
         {
             ActivePinList = [];
+            _ = RefreshToilets();
         }
 
         [RelayCommand]
@@ -46,9 +39,10 @@ namespace MFASeeker.ViewModel
         [RelayCommand]
         private async Task AddToilet(Toilet toilet)
         {
+            ActivePinList?.Add(toilet);
             await jsonPinStorage.SaveMarkerAsync(toilet);
-            await RefreshToilets();
 
+            ToiletsUpdated?.Invoke(ActivePinList);
             PinAdded?.Invoke(toilet);
         }
         [RelayCommand]
@@ -58,30 +52,33 @@ namespace MFASeeker.ViewModel
             {
                 // В принципе можно и весь объект передать, а смысл? 
                 //await jsonPinStorage.DeleteMarkerAsync(marker: toilet);
-                await jsonPinStorage.DeleteMarkerAsync(guid: toilet.Guid);
-
-                // Обновляем активный лист
-                await RefreshToilets();
-                // Уведомляем об удалении
-                PinDeleted?.Invoke(toilet);
+                ActivePinList?.Remove(toilet);  // Удаляем из локальной коллекции
+                await jsonPinStorage.DeleteMarkerAsync(guid: toilet.Guid); // Асинхронно удаляем из хранилища
+                PinDeleted?.Invoke(toilet); // Уведомляем об удалении
             }
         }
         [RelayCommand]
-        private async void EditToilet(object? value)
+        private async Task EditToilet(object? value)
         {
             if (value is Toilet toilet)
             {
+
+                Toilet cloneToilet = (Toilet)toilet.Clone();
                 var popup = new NewPinPopup
                 {
-                    BindingContext = value
+                    BindingContext = cloneToilet
                 };
                 object? result = await Application.Current.MainPage.ShowPopupAsync(popup);
                 if (result is bool isConfirmed)
                 {
-                    await jsonPinStorage.UpdateMarker((Toilet)value);
-                    await RefreshToilets();
-                    //PinDeleted?.Invoke((Toilet)value);
-                    //PinAdded?.Invoke((Toilet)value);
+                    Toilet? item = ActivePinList?.FirstOrDefault(t => t.Guid == toilet.Guid);
+                    if (item != null && ActivePinList != null)
+                    {
+                        int index = ActivePinList.IndexOf(item);
+                        ActivePinList[index] = cloneToilet;
+                    }
+                    await jsonPinStorage.UpdateMarker(toilet);
+                    ToiletsUpdated?.Invoke(ActivePinList);
                 }
             }
         }
