@@ -178,13 +178,10 @@ public partial class SearchViewModel : ObservableObject
     // А ИЗ PINMANAGER'A. Например: RefreshToiletsCommand()
     public void OnToiletsUpdated(ObservableCollection<Toilet> toilets)
     {
-        if (pointFeatures != null)
-        {
-            pointFeatures.Clear();
-            var tmp = MapPinManager.GetFeatures(toilets.AsEnumerable());
-            pointFeatures.AddRange(tmp);
-            pointFeatures?.DataHasChanged();
-        }
+        pointFeatures?.Clear();
+        var tmp = MapPinManager.GetFeatures(toilets.AsEnumerable());
+        pointFeatures?.AddRange(tmp);
+        pointFeatures?.DataHasChanged();
     }
     private async void OnLocationUpdate(Location location)
     {
