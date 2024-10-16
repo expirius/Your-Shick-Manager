@@ -19,4 +19,9 @@ public partial class NewPinPopup : Popup
     {
         Close(false);
     }
+
+    private void OnAddImageClicked(object sender, EventArgs e)
+    {
+
+    }
 }

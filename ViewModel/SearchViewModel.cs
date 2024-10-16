@@ -52,26 +52,12 @@ public partial class SearchViewModel : ObservableObject
         pinManagerVM = pinMngrVM;
         pinManagerVM.ToiletsUpdated += OnToiletsUpdated;
 
+        pinManagerVM.RefreshToiletsCommand.Execute(null);
+
         LocationCheckBoxIsChecked = true;
         ChangeSpectateModeCommand.Execute(null);
 
         InitializeAsync();
-    }
-    [RelayCommand]
-    private async Task AddImage()
-    {
-        var localImageService = new LocalImageService();
-        var fileResult = await localImageService.TakePhoto();
-
-        if (fileResult != null)
-        {
-            ImageFile? imageFile = await localImageService.Upload(fileResult);
-            if (imageFile != null)
-            {
-                NewToilet?.Images.Add(imageFile);
-                Console.WriteLine("Image added: " + imageFile.ByteBase64);
-            }
-        }
     }
     // Метод для обновления состояния CheckBox
     [RelayCommand]
@@ -97,6 +83,8 @@ public partial class SearchViewModel : ObservableObject
         // pointFeatures.AddRange(features);
         pointFeatures = MapPinManager.CreatePointLayer("AllToiletsLayer", true);
         SearchMapControl.Map.Layers.Add(pointFeatures);
+
+        pinManagerVM?.RefreshToiletsCommand.Execute(null);
     }
     private async void OnMapLongTaped(object? sender, Mapsui.UI.TappedEventArgs e)
     {
@@ -109,7 +97,7 @@ public partial class SearchViewModel : ObservableObject
             //Попап с полями новой точки
             var popup = new NewPinPopup
             {
-                BindingContext = NewToilet,
+                BindingContext = pinManagerVM?.SelectedToilet, // тут исправить (реверт коммит если что)
             };
             object? result = await Application.Current.MainPage.ShowPopupAsync(popup);
             if (result is bool isConfirmed && isConfirmed)
@@ -122,10 +110,6 @@ public partial class SearchViewModel : ObservableObject
                     Longitude = SphericalMercator.ToLonLat(worldPosition).X,
                     Latitude = SphericalMercator.ToLonLat(worldPosition).Y
                 };
-
-                // Добавляем метку на карту
-                //pointFeatures?.Add(MapPinManager.GetFeature(NewToilet));
-                //pointFeatures?.DataHasChanged();
 
                 // Отдаем в pinManager
                 pinManagerVM?.AddToiletCommand.Execute(NewToilet);

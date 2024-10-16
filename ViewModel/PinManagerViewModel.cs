@@ -3,6 +3,7 @@ using CommunityToolkit.Maui.Views;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using MFASeeker.Model;
+using MFASeeker.Services;
 using MFASeeker.View;
 using System.Collections.ObjectModel;
 
@@ -21,9 +22,12 @@ namespace MFASeeker.ViewModel
         private ObservableCollection<Toilet>? activePinList;
         [ObservableProperty]
         private Toilet? selectedToilet;
+        [ObservableProperty]
+        private int editToiletIndex;
 
         public PinManagerViewModel()
         {
+            
             ActivePinList = [];
             _ = RefreshToilets();
         }
@@ -60,25 +64,47 @@ namespace MFASeeker.ViewModel
         [RelayCommand]
         private async Task EditToilet(object? value)
         {
-            if (value is Toilet toilet)
+            if (value is Toilet toilet && ActivePinList != null)
             {
-
-                Toilet cloneToilet = (Toilet)toilet.Clone();
+                //Toilet cloneToilet = (Toilet)toilet.Clone();
+                SelectedToilet = (Toilet)toilet.Clone();
                 var popup = new NewPinPopup
                 {
-                    BindingContext = cloneToilet
+                    BindingContext = SelectedToilet
                 };
                 object? result = await Application.Current.MainPage.ShowPopupAsync(popup);
-                if (result is bool isConfirmed)
+                // если нажал подтвердить в popup
+                if (result is bool isConfirmed && isConfirmed)
                 {
+                    // обновление в интерфейсе
                     Toilet? item = ActivePinList?.FirstOrDefault(t => t.Guid == toilet.Guid);
-                    if (item != null && ActivePinList != null)
+                    if (item != null)
                     {
+                        // Берем индекс
                         int index = ActivePinList.IndexOf(item);
-                        ActivePinList[index] = cloneToilet;
+                        ActivePinList[index] = SelectedToilet;
+                        EditToiletIndex = index;
+
+                        ToiletsUpdated?.Invoke(ActivePinList);
                     }
-                    await jsonPinStorage.UpdateMarker(toilet);
-                    ToiletsUpdated?.Invoke(ActivePinList);
+                    // обновление в памяти
+                    await jsonPinStorage.UpdateMarker(SelectedToilet);
+                }
+            }
+        }
+        [RelayCommand]
+        private async Task AddImage()
+        {
+            var localImageService = new LocalImageService();
+            var fileResult = await localImageService.TakePhoto();
+
+            if (fileResult != null)
+            {
+                ImageFile? imageFile = await localImageService.Upload(fileResult);
+                if (imageFile != null)
+                {
+                    SelectedToilet?.Images.Add(imageFile);
+                    Console.WriteLine("Image added: " + imageFile.FileName);
                 }
             }
         }
