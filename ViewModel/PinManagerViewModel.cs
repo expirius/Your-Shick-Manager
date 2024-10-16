@@ -92,21 +92,5 @@ namespace MFASeeker.ViewModel
                 }
             }
         }
-        [RelayCommand]
-        private async Task AddImage()
-        {
-            var localImageService = new LocalImageService();
-            var fileResult = await localImageService.TakePhoto();
-
-            if (fileResult != null)
-            {
-                ImageFile? imageFile = await localImageService.Upload(fileResult);
-                if (imageFile != null)
-                {
-                    SelectedToilet?.Images.Add(imageFile);
-                    Console.WriteLine("Image added: " + imageFile.FileName);
-                }
-            }
-        }
     }
 } 

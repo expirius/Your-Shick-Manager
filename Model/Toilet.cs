@@ -1,15 +1,18 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using MFASeeker.Services;
 using System.Collections.ObjectModel;
+
 namespace MFASeeker.Model
 {
     public partial class Toilet : ICloneable
     {
-        public int Id {  get; set; }
+        public int Id { get; set; }
         public string Guid { get; set; }
-        public string? Name {  get; set; }
+        public string? Name { get; set; }
         public Location? Location { get; set; }
-        public string? Description {  get; set; }
-        public double Rating {  get; set; }
+        public string? Description { get; set; }
+        public double Rating { get; set; }
         public ObservableCollection<ImageFile> Images { get; set; }
 
         public Toilet()
@@ -40,10 +43,25 @@ namespace MFASeeker.Model
         {
             return System.Guid.NewGuid().ToString().GetHashCode().ToString("x");
         }
-
         public object Clone()
         {
             return this.MemberwiseClone();
+        }
+        [RelayCommand]
+        private async Task AddImageAsync()
+        {
+            var localImageService = new LocalImageService();
+            var fileResult = await localImageService.TakePhoto();
+
+            if (fileResult != null)
+            {
+                ImageFile? imageFile = await localImageService.Upload(fileResult);
+                if (imageFile != null)
+                {
+                    this.Images.Add(imageFile);
+                    Console.WriteLine("Image added: " + imageFile.FileName);
+                }
+            }
         }
     }
 }

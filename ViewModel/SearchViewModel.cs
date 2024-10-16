@@ -94,10 +94,11 @@ public partial class SearchViewModel : ObservableObject
             // Блокирую управление картой и центрирование на метку пользователя
             MapManager.DisableCentredUser();
             mapControl.IsEnabled = false;
+
             //Попап с полями новой точки
             var popup = new NewPinPopup
             {
-                BindingContext = pinManagerVM?.SelectedToilet, // тут исправить (реверт коммит если что)
+                BindingContext = NewToilet,
             };
             object? result = await Application.Current.MainPage.ShowPopupAsync(popup);
             if (result is bool isConfirmed && isConfirmed)
