@@ -2,7 +2,7 @@
 using System.Collections.ObjectModel;
 namespace MFASeeker.Model
 {
-    public partial class Toilet
+    public partial class Toilet : ICloneable
     {
         public int Id {  get; set; }
         public string Guid { get; set; }
@@ -39,6 +39,11 @@ namespace MFASeeker.Model
         private string CreateGuid()
         {
             return System.Guid.NewGuid().ToString().GetHashCode().ToString("x");
+        }
+
+        public object Clone()
+        {
+            return this.MemberwiseClone();
         }
     }
 }
