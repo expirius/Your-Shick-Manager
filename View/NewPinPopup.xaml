@@ -6,10 +6,11 @@
              xmlns:converters="clr-namespace:MFASeeker.Converters"
              xmlns:model="clr-namespace:MFASeeker.Model"
              xmlns:vm="clr-namespace:MFASeeker.ViewModel"
-             x:Class="MFASeeker.View.NewPinPopup" 
+             x:Class="MFASeeker.View.NewPinPopup"
+             x:DataType="model:Toilet"
              Color="Transparent">
     <Frame CornerRadius="40" BackgroundColor="Black">
-        <VerticalStackLayout x:DataType="model:Toilet">
+        <VerticalStackLayout>
             <Label Text="Имя" FontSize="Medium" HorizontalOptions="Center"/>
             <Entry Placeholder="Название метки" Text="{Binding Name}" />
 
@@ -29,9 +30,9 @@
                         FontSize="Large"
                         Grid.Column="0"
                         Margin="0,0,2,0"
-                    WidthRequest="75"
-                    HorizontalOptions="Start"
-                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:SearchViewModel}}, Path=AddImageCommand}"/>
+                        WidthRequest="75"
+                        HorizontalOptions="Start"
+                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:SearchViewModel}}, Path=AddImageCommand}"/>
                 <CollectionView Grid.Column="1"
      ItemsLayout="HorizontalList"
      ItemsSource="{Binding Images}">
