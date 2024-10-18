@@ -92,5 +92,17 @@ namespace MFASeeker.ViewModel
                 }
             }
         }
+        [RelayCommand]
+        private async Task ShowQR(object? value)
+        {
+            if (value is Toilet toilet) 
+            {
+                var popup = new ToiletQRpopup
+                {
+                    BindingContext = ToiletQRService.GenerateQRCode(toilet)
+                };
+                object? result = await Application.Current.MainPage.ShowPopupAsync(popup);
+            }
+        }
     }
 } 

@@ -56,6 +56,15 @@
                                         AncestorType={x:Type vm:PinManagerViewModel}},
                                         Path=DeleteToiletCommand}"
                              Source="https://cdn-icons-png.flaticon.com/512/9790/9790368.png"/>
+            <ImageButton WidthRequest="60" HeightRequest="60"
+                         CornerRadius="30"
+                         Margin="10,0,0,0"
+                         Source="https://cdn-icons-png.flaticon.com/512/9417/9417600.png"
+                         Padding="5"
+                         CommandParameter="{Binding .}"
+                         Command="{Binding Source={x:RelativeSource 
+           AncestorType={x:Type vm:PinManagerViewModel}},
+           Path=ShowQRCommand}"/>
         </HorizontalStackLayout>
         <!-- Верхняя картинка карусели -->
         <ffimageloading:CachedImage LoadingPlaceholder="toilet_undefined.png" 

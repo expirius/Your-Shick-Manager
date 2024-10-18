@@ -47,6 +47,9 @@ namespace MFASeeker.Model
         {
             return this.MemberwiseClone();
         }
+        // На самом деле так делать ужасно, нужно хотя бы избавиться от 
+        // localimageservice и сделать только присваивание. Иначе это связаннасть всё попортит((((
+        // Т.к. привязывается к view (или нет, ХЗ)
         [RelayCommand]
         private async Task AddImageAsync()
         {

@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MFASeeker.Services
+namespace MFASeeker.Model
 {
-    public class QRGenerator
+    public class ToiletQR : Toilet
     {
+        public ImageFile QRCode { get; set; }
     }
 }
