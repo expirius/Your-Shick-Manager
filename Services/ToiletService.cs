@@ -1,38 +1,40 @@
-﻿namespace MFASeeker.Services
+﻿using MFASeeker.Model;
+
+namespace MFASeeker.Services
 {
     interface IToiletService
     {
         // CRUD
-        void AddToilet(); // C
-        void GetToiletById(); // R 
-        void GetToilets();
-        void RemoveToilet(); // D
-        void UpdateToilet(); // U
+        Task<Toilet> GetToiletById(int id);
+        Task<IEnumerable<Toilet>> GetAllToilets();
+        Task AddToilet(Toilet toilet);
+        Task UpdateToilet(Toilet toilet);
+        Task DeleteToilet(int id);
 
     }
     class ToiletService : IToiletService
     {
-        public void AddToilet()
+        public Task AddToilet(Toilet toilet)
         {
             throw new NotImplementedException();
         }
 
-        public void GetToiletById()
+        public Task DeleteToilet(int id)
         {
             throw new NotImplementedException();
         }
 
-        public void GetToilets()
+        public Task<IEnumerable<Toilet>> GetAllToilets()
         {
             throw new NotImplementedException();
         }
 
-        public void RemoveToilet()
+        public Task<Toilet> GetToiletById(int id)
         {
             throw new NotImplementedException();
         }
 
-        public void UpdateToilet()
+        public Task UpdateToilet(Toilet toilet)
         {
             throw new NotImplementedException();
         }

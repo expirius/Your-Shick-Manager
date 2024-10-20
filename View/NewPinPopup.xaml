@@ -4,21 +4,20 @@
              xmlns:controls_buttons="clr-namespace:MFASeeker.View.Controls.Buttons" 
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              xmlns:converters="clr-namespace:MFASeeker.Converters"
-             xmlns:model="clr-namespace:MFASeeker.Model"
              xmlns:vm="clr-namespace:MFASeeker.ViewModel"
              x:Class="MFASeeker.View.NewPinPopup"
-             x:DataType="model:Toilet"
+             x:DataType="vm:ToiletViewModel"
              Color="Transparent">
     <Frame CornerRadius="40" BackgroundColor="Black">
         <VerticalStackLayout>
             <Label Text="Имя" FontSize="Medium" HorizontalOptions="Center"/>
-            <Entry Placeholder="Название метки" Text="{Binding Name}" />
+            <Entry Placeholder="Название метки" Text="{Binding Toilet.Name}" />
 
             <Label Text="Рейтинг" FontSize="Medium" HorizontalOptions="Center"/>
-            <controls_buttons:StarSelector SelectedStar="{Binding Rating}"/>
+            <controls_buttons:StarSelector SelectedStar="{Binding Toilet.Rating}"/>
 
             <Label Text="Описание" FontSize="Medium" HorizontalOptions="Center"/>
-            <Entry Placeholder="Описание" Text="{Binding Description}"/>
+            <Entry Placeholder="Описание" Text="{Binding Toilet.Description}"/>
 
             <Label Text="Фотографии" FontSize="Medium" HorizontalOptions="Center" />
             <Grid>
@@ -35,9 +34,9 @@
                         Command="{Binding AddImageCommand}"/>
                 <CollectionView Grid.Column="1"
      ItemsLayout="HorizontalList"
-     ItemsSource="{Binding Images}">
+     ItemsSource="{Binding Toilet.Images}">
                     <CollectionView.ItemTemplate>
-                        <DataTemplate x:DataType="model:ImageFile">
+                        <DataTemplate x:DataType="vm:ImageFileViewModel">
                             <Border HeightRequest="110" WidthRequest="110" StrokeShape="RoundRectangle 10,10,10,10">
                                 <Image Aspect="AspectFill" Source="{Binding ., Converter={converters:ImageConverter}}"/>
                             </Border>

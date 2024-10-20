@@ -1,5 +1,4 @@
-﻿using CommunityToolkit.Maui.Core;
-using CommunityToolkit.Maui.Views;
+﻿using CommunityToolkit.Maui.Views;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Mapsui;
@@ -13,9 +12,6 @@ using MFASeeker.Model;
 using MFASeeker.Services;
 using MFASeeker.View;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Diagnostics;
-
 namespace MFASeeker.ViewModel;
 
 public partial class SearchViewModel : ObservableObject
@@ -26,7 +22,7 @@ public partial class SearchViewModel : ObservableObject
     private static CalloutStyle? _activeCalloutStyle;
 
     [ObservableProperty]
-    private Toilet? newToilet = new();
+    private ToiletViewModel? newToiletVM = new(new());
 
     [ObservableProperty]
     private MapControl searchMapControl;
@@ -90,7 +86,6 @@ public partial class SearchViewModel : ObservableObject
     {
         if (sender is not MapControl mapControl) return;
         {
-
             // Блокирую управление картой и центрирование на метку пользователя
             MapManager.DisableCentredUser();
             mapControl.IsEnabled = false;
@@ -98,24 +93,24 @@ public partial class SearchViewModel : ObservableObject
             //Попап с полями новой точки
             var popup = new NewPinPopup
             {
-                BindingContext = NewToilet,
+                BindingContext = NewToiletVM,
             };
             object? result = await Application.Current.MainPage.ShowPopupAsync(popup);
             if (result is bool isConfirmed && isConfirmed)
             {
-                if (NewToilet == null) return;
+                if (NewToiletVM == null) return;
 
                 var worldPosition = mapControl.Map.Navigator.Viewport.ScreenToWorld(e.ScreenPosition);
-                NewToilet.Location = new()
+                NewToiletVM.Toilet.Location = new()
                 {
                     Longitude = SphericalMercator.ToLonLat(worldPosition).X,
                     Latitude = SphericalMercator.ToLonLat(worldPosition).Y
                 };
 
                 // Отдаем в pinManager
-                pinManagerVM?.AddToiletCommand.Execute(NewToilet);
+                pinManagerVM?.AddToiletCommand.Execute(NewToiletVM);
                 // сбрасываю данные туалета VM (но лучше сделать метод .Clear();
-                NewToilet = new();
+                NewToiletVM = new(new());
             }
             // Возобновляем центрирование и управление картой
             mapControl.IsEnabled = true;
@@ -161,12 +156,13 @@ public partial class SearchViewModel : ObservableObject
     // Обновление меток
     // МЕТКИ ДОЛЖНЫ БУДУТ ОБНОВЛЯТЬСЯ УЖЕ НЕ ИЗ ПАМЯТИ
     // А ИЗ PINMANAGER'A. Например: RefreshToiletsCommand()
-    public void OnToiletsUpdated(ObservableCollection<Toilet> toilets)
+    public void OnToiletsUpdated(ObservableCollection<ToiletViewModel> toiletsVM)
     {
-        pointFeatures?.Clear();
-        var tmp = MapPinManager.GetFeatures(toilets.AsEnumerable());
-        pointFeatures?.AddRange(tmp);
-        pointFeatures?.DataHasChanged();
+        var toiletsTemp = toiletsVM.Select(toilet => toilet.Toilet); // преобразую в enum обычного toilet
+        pointFeatures?.Clear(); // очищаю точки на карте
+        var tmp = MapPinManager.GetFeatures(toiletsTemp); // получаю отрисовки точек по всей карте
+        pointFeatures?.AddRange(tmp); // добавляю их на карту
+        pointFeatures?.DataHasChanged(); // уведомляю об изменении
     }
     private async void OnLocationUpdate(Location location)
     {

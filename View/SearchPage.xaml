@@ -66,7 +66,7 @@
         <!-- TEST LABELS -->
         <VerticalStackLayout Grid.Row="1" Grid.RowSpan="2"
                              VerticalOptions="End">
-            <Label Text="{Binding NewToilet.Rating, StringFormat='Selected Star = {0}'}"
+            <Label Text="{Binding NewToiletVM.Toilet.Rating, StringFormat='Selected Star = {0}'}"
                    FontSize="15"/>
             <Label Text="{Binding CurrentStateText, StringFormat='Checkbox is - {0}'}"
                    FontSize="15"/>

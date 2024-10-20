@@ -11,17 +11,17 @@ namespace MFASeeker.ViewModel
 {
     public partial class PinManagerViewModel : ObservableObject
     {
-        public event Action<Toilet>? PinDeleted;
-        public event Action<Toilet>? PinAdded;
+        public event Action<ToiletViewModel>? PinDeleted;
+        public event Action<ToiletViewModel>? PinAdded;
         // НЕОБХОДИМО РЕАЛИЗОВАТЬ, ДЛЯ ТОГО ЧТОБЫ В VM отрисовывались обновления и наоборот
         // БЕЗ СВЯЗАННОСТИ КОДА
-        public event Action<ObservableCollection<Toilet>>? ToiletsUpdated;
+        public event Action<ObservableCollection<ToiletViewModel>>? ToiletsUpdated;
 
         private readonly JsonPinStorage jsonPinStorage = new();
         [ObservableProperty]
-        private ObservableCollection<Toilet>? activePinList;
+        private ObservableCollection<ToiletViewModel>? activePinList;
         [ObservableProperty]
-        private Toilet? selectedToilet;
+        private ToiletViewModel? selectedToiletVM;
         [ObservableProperty]
         private int editToiletIndex;
 
@@ -35,16 +35,16 @@ namespace MFASeeker.ViewModel
         [RelayCommand]
         private async Task RefreshToilets()
         {
-            ActivePinList = (await jsonPinStorage.GetMarkersAsync())
-                .OrderByDescending(toilet => toilet.CreatedDate)
-                .ToObservableCollection();
+            var temp = (await jsonPinStorage.GetMarkersAsync());
+            ActivePinList = new ObservableCollection<ToiletViewModel>(temp.Select(t => new ToiletViewModel(t)));
             ToiletsUpdated?.Invoke(ActivePinList);
         }
         [RelayCommand]
-        private async Task AddToilet(Toilet toilet)
+        private async Task AddToilet(ToiletViewModel toilet)
         {
+            if (toilet.Toilet == null) return;
             ActivePinList?.Add(toilet);
-            await jsonPinStorage.SaveMarkerAsync(toilet);
+            await jsonPinStorage.SaveMarkerAsync(toilet.Toilet);
 
             ToiletsUpdated?.Invoke(ActivePinList);
             PinAdded?.Invoke(toilet);
@@ -52,54 +52,54 @@ namespace MFASeeker.ViewModel
         [RelayCommand]
         private async Task DeleteToilet(object? value)
         {
-            if (value is Toilet toilet)
+            if (value is ToiletViewModel toiletVM)
             {
                 // В принципе можно и весь объект передать, а смысл? 
                 //await jsonPinStorage.DeleteMarkerAsync(marker: toilet);
-                ActivePinList?.Remove(toilet);  // Удаляем из локальной коллекции
-                await jsonPinStorage.DeleteMarkerAsync(guid: toilet.Guid); // Асинхронно удаляем из хранилища
-                PinDeleted?.Invoke(toilet); // Уведомляем об удалении
+                ActivePinList?.Remove(toiletVM);  // Удаляем из локальной коллекции
+                await jsonPinStorage.DeleteMarkerAsync(guid: toiletVM.Toilet.Guid); // Асинхронно удаляем из хранилища
+                PinDeleted?.Invoke(toiletVM); // Уведомляем об удалении
             }
         }
         [RelayCommand]
         private async Task EditToilet(object? value)
         {
-            if (value is Toilet toilet && ActivePinList != null)
+            if (value is ToiletViewModel toilet && ActivePinList != null)
             {
                 //Toilet cloneToilet = (Toilet)toilet.Clone();
-                SelectedToilet = (Toilet)toilet.Clone();
+                SelectedToiletVM = toilet; //(ToiletViewModel) [...] .Toilet.Clone 
                 var popup = new NewPinPopup
                 {
-                    BindingContext = SelectedToilet
+                    BindingContext = SelectedToiletVM
                 };
                 object? result = await Application.Current.MainPage.ShowPopupAsync(popup);
                 // если нажал подтвердить в popup
                 if (result is bool isConfirmed && isConfirmed)
                 {
                     // обновление в интерфейсе
-                    Toilet? item = ActivePinList?.FirstOrDefault(t => t.Guid == toilet.Guid);
+                    ToiletViewModel? item = ActivePinList?.FirstOrDefault(t => t.Toilet.Guid == toilet.Toilet.Guid);
                     if (item != null)
                     {
                         // Берем индекс
                         int index = ActivePinList.IndexOf(item);
-                        ActivePinList[index] = SelectedToilet;
+                        ActivePinList[index] = SelectedToiletVM;
                         EditToiletIndex = index;
 
                         ToiletsUpdated?.Invoke(ActivePinList);
                     }
                     // обновление в памяти
-                    await jsonPinStorage.UpdateMarker(SelectedToilet);
+                    await jsonPinStorage.UpdateMarker(SelectedToiletVM.Toilet);
                 }
             }
         }
         [RelayCommand]
         private async Task ShowQR(object? value)
         {
-            if (value is Toilet toilet) 
+            if (value is ToiletViewModel toilet) 
             {
                 var popup = new ToiletQRpopup
                 {
-                    BindingContext = ToiletQRService.GenerateQRCode(toilet)
+                    BindingContext = ToiletQRService.GenerateQRCode(toilet.Toilet)
                 };
                 object? result = await Application.Current.MainPage.ShowPopupAsync(popup);
             }
