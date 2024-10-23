@@ -1,4 +1,5 @@
-﻿using MFASeeker.Model;
+﻿using Entities;
+using MFASeeker.Model;
 using QRCoder;
 using System.Text.Json;
 

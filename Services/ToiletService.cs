@@ -1,4 +1,5 @@
 ﻿using MFASeeker.Model;
+using Entities;
 
 namespace MFASeeker.Services
 {

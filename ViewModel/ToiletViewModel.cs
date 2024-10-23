@@ -1,11 +1,8 @@
-﻿using CommunityToolkit.Maui.Core.Extensions;
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using FFImageLoading;
-using MFASeeker.Model;
+using Entities;
 using MFASeeker.Services;
 using System.Collections.ObjectModel;
-using System.Threading.Tasks;
 
 namespace MFASeeker.ViewModel
 {

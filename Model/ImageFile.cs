@@ -8,12 +8,15 @@ using System.Threading.Tasks;
 
 namespace MFASeeker.Model
 {
+    /*
     public class ImageFile
     {
         public required string ByteBase64 { get; set; }
         public required string ContentType { get; set; }
         public required string FileName { get; set; }
         private string? CachePath {  get; set; }
+
+
         //public ImageSource FirstImage => GetImageSource();
         //// Возвращаем изображение из файла, хранящегося в памяти
         //private string GetImageCachePath()
@@ -37,5 +40,5 @@ namespace MFASeeker.Model
         //    CachePath = GetImageCachePath();
         //    return ImageSource.FromFile(CachePath);
         //}
-    }
+    } */
 }

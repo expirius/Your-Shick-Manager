@@ -113,6 +113,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <ProjectReference Include="..\Entities\Entities.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
 	  <Compile Update="View\Controls\Buttons\ImageCheckBox.xaml.cs">
 	    <DependentUpon>ImageCheckBox.xaml</DependentUpon>
 	  </Compile>

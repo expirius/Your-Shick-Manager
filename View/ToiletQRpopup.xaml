@@ -5,9 +5,7 @@
              xmlns:fftransformations="clr-namespace:FFImageLoading.Transformations;assembly=FFImageLoading.Maui"
              xmlns:ffimageloading="clr-namespace:FFImageLoading.Maui;assembly=FFImageLoading.Maui"
              x:Class="MFASeeker.View.ToiletQRpopup"
-             xmlns:converters="clr-namespace:MFASeeker.Converters"
-             xmlns:model="clr-namespace:MFASeeker.Model"
-             x:DataType="model:ImageFile">
+             xmlns:converters="clr-namespace:MFASeeker.Converters">
     <VerticalStackLayout>
         <ffimageloading:CachedImage 
             Aspect="AspectFill"
