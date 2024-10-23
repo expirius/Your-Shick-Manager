@@ -31,14 +31,14 @@
                         Margin="0,0,2,0"
                         WidthRequest="75"
                         HorizontalOptions="Start"
-                        Command="{Binding AddImageCommand}"/>
+                        Command="{Binding AddLocalImageCommand}"/>
                 <CollectionView Grid.Column="1"
      ItemsLayout="HorizontalList"
-     ItemsSource="{Binding Toilet.Images}">
+     ItemsSource="{Binding ImageSources}">
                     <CollectionView.ItemTemplate>
-                        <DataTemplate x:DataType="vm:ImageFileViewModel">
+                        <DataTemplate>
                             <Border HeightRequest="110" WidthRequest="110" StrokeShape="RoundRectangle 10,10,10,10">
-                                <Image Aspect="AspectFill" Source="{Binding ., Converter={converters:ImageConverter}}"/>
+                                <Image Aspect="AspectFill" Source="{Binding .}"/>
                             </Border>
                         </DataTemplate>
                     </CollectionView.ItemTemplate>

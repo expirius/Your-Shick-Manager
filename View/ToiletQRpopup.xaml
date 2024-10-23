@@ -5,8 +5,8 @@
              xmlns:fftransformations="clr-namespace:FFImageLoading.Transformations;assembly=FFImageLoading.Maui"
              xmlns:ffimageloading="clr-namespace:FFImageLoading.Maui;assembly=FFImageLoading.Maui"
              x:Class="MFASeeker.View.ToiletQRpopup"
+             xmlns:converters="clr-namespace:MFASeeker.Converters"
              xmlns:model="clr-namespace:MFASeeker.Model"
-               xmlns:converters="clr-namespace:MFASeeker.Converters"
              x:DataType="model:ImageFile">
     <VerticalStackLayout>
         <ffimageloading:CachedImage 
@@ -14,12 +14,9 @@
             Source="{Binding ., Converter={converters:ImageConverter}}"/>
 
         <HorizontalStackLayout HorizontalOptions="Center">
-            <Button Text="Подтвердить" 
+            <Button Text="OK" 
                         Clicked="OnYesButtonClicked" 
                         Margin="0,0,10,0"/>
-            <Button Text="Отмена" 
-                        Clicked="OnCancelButtonClicked" 
-                        Margin="10, 0,0,0"/>
         </HorizontalStackLayout>
     </VerticalStackLayout>
 </toolkit:Popup>

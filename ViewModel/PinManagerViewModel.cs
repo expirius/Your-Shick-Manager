@@ -27,7 +27,6 @@ namespace MFASeeker.ViewModel
 
         public PinManagerViewModel()
         {
-            
             ActivePinList = [];
             _ = RefreshToilets();
         }
@@ -35,19 +34,22 @@ namespace MFASeeker.ViewModel
         [RelayCommand]
         private async Task RefreshToilets()
         {
-            var temp = (await jsonPinStorage.GetMarkersAsync());
-            ActivePinList = new ObservableCollection<ToiletViewModel>(temp.Select(t => new ToiletViewModel(t)));
-            ToiletsUpdated?.Invoke(ActivePinList);
+            await Task.Run(async () =>
+            {
+                var temp = (await jsonPinStorage.GetMarkersAsync());
+                ActivePinList = new ObservableCollection<ToiletViewModel>(temp.Select(t => new ToiletViewModel(t)));
+                ToiletsUpdated?.Invoke(ActivePinList);
+            });
         }
         [RelayCommand]
-        private async Task AddToilet(ToiletViewModel toilet)
+        private async Task AddToilet(ToiletViewModel toiletVM)
         {
-            if (toilet.Toilet == null) return;
-            ActivePinList?.Add(toilet);
-            await jsonPinStorage.SaveMarkerAsync(toilet.Toilet);
+            if (toiletVM.Toilet == null) return;
+            ActivePinList?.Add(toiletVM);
+            await jsonPinStorage.SaveMarkerAsync(toiletVM.Toilet);
 
             ToiletsUpdated?.Invoke(ActivePinList);
-            PinAdded?.Invoke(toilet);
+            PinAdded?.Invoke(toiletVM);
         }
         [RelayCommand]
         private async Task DeleteToilet(object? value)
@@ -64,20 +66,21 @@ namespace MFASeeker.ViewModel
         [RelayCommand]
         private async Task EditToilet(object? value)
         {
-            if (value is ToiletViewModel toilet && ActivePinList != null)
+            if (value is ToiletViewModel toiletVM && ActivePinList != null)
             {
-                //Toilet cloneToilet = (Toilet)toilet.Clone();
-                SelectedToiletVM = toilet; //(ToiletViewModel) [...] .Toilet.Clone 
+                ToiletViewModel cloneToilet = (ToiletViewModel)toiletVM.Clone();
+                SelectedToiletVM = cloneToilet; //(ToiletViewModel) [...] .Toilet.Clone 
                 var popup = new NewPinPopup
                 {
-                    BindingContext = SelectedToiletVM
+                    BindingContext = toiletVM
                 };
                 object? result = await Application.Current.MainPage.ShowPopupAsync(popup);
                 // если нажал подтвердить в popup
                 if (result is bool isConfirmed && isConfirmed)
                 {
                     // обновление в интерфейсе
-                    ToiletViewModel? item = ActivePinList?.FirstOrDefault(t => t.Toilet.Guid == toilet.Toilet.Guid);
+                    ToiletViewModel? item = ActivePinList?.FirstOrDefault(t => t.Toilet.Guid == toiletVM.Toilet.Guid);
+
                     if (item != null)
                     {
                         // Берем индекс

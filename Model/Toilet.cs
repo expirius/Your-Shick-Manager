@@ -16,8 +16,7 @@ namespace MFASeeker.Model
         public string? UserName { get; set; }
         public string? UserId { get; set; }
         public DateTime CreatedDate { get; set; }
-        public ObservableCollection<ImageFile> Images { get; set; }
-        public List<string?> ImagesLink { get; set; } = [];
+        public ObservableCollection<ImageFile> Images { get; set; } // удалить после разработки photos
 
         public Toilet()
         {
@@ -29,7 +28,7 @@ namespace MFASeeker.Model
             Description = "";
             CreatedDate = DateTime.Now;
             UserName = DeviceInfo.Current.Name;
-            Images = [];
+            Images = []; // удалить после разработки photos
         }
 
         public string GetInfo()

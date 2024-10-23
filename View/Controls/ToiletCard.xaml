@@ -69,7 +69,7 @@
         <ffimageloading:CachedImage LoadingPlaceholder="toilet_undefined.png" 
                                     ErrorPlaceholder="toilet_undefined.png" 
                                     Aspect="AspectFill"
-                                    Source="{Binding Toilet.Images, Converter={converters:ImageConverter}}">
+                                    Source="{Binding ImagePreviewSource}">
             <ffimageloading:CachedImage.Transformations>
                 <fftransformations:BlurredTransformation Radius="4" />
             </ffimageloading:CachedImage.Transformations>
