@@ -54,17 +54,20 @@
                            EmptyView="Нет доступных туалетов"
                            IsVisible="True"
                            VerticalOptions="Center"
+                           Position="{Binding EditToiletIndex}"
                            x:Name="CarouselCards"
                            ItemsSource="{Binding ActivePinList}">
                 <CarouselView.ItemTemplate>
-                    <DataTemplate x:DataType="model:Toilet">
+                    <DataTemplate>
                         <Grid HeightRequest="550">
     
                             <Border 
                                   Margin="15"
                                   Stroke="Transparent"
                                   StrokeShape="RoundRectangle 35">
-                                <controls:ToiletCard />
+                                        <Grid>
+                                            <controls:ToiletCard BindingContext="{Binding .}" />
+                                        </Grid>
                             </Border>
                         </Grid>
                     </DataTemplate>

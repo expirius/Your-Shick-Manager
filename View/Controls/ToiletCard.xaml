@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:model ="clr-namespace:MFASeeker.Model"
              xmlns:converters="clr-namespace:MFASeeker.Converters"
              xmlns:effects ="clr-namespace:MFASeeker.View.Effects"
              xmlns:fftransformations="clr-namespace:FFImageLoading.Transformations;assembly=FFImageLoading.Maui"
@@ -9,7 +8,7 @@
              xmlns:controls="clr-namespace:MFASeeker.View.Controls"
              xmlns:buttons="clr-namespace:MFASeeker.View.Controls.Buttons"
              xmlns:vm="clr-namespace:MFASeeker.ViewModel"
-             x:DataType="model:Toilet"
+             x:DataType="vm:ToiletViewModel"
              x:Class="MFASeeker.View.Controls.ToiletCard">
     <Grid>
         <Grid ZIndex="1" Background="#99000000">
@@ -19,21 +18,21 @@
                         MaxLines="2"
                         LineBreakMode="TailTruncation"
                         FontSize="Title"
-                        Text="{Binding Name}" />
-                <Label FontSize="Subtitle" Text="{Binding Location,Converter={converters:GeoCodingConverter}}" />
+                        Text="{Binding Toilet.Name}" />
+                <Label FontSize="Subtitle" Text="{Binding Toilet.Location,Converter={converters:GeoCodingConverter}}" />
 
-                <Label MaxLines="4" LineBreakMode="TailTruncation" FontSize="Body" Text="{Binding Description}"/>
+                <Label MaxLines="4" LineBreakMode="TailTruncation" FontSize="Body" Text="{Binding Toilet.Description}"/>
 
                 <HorizontalStackLayout>
                     <Label TextColor="Cyan" FontSize="Body" Text="Создан " />
-                    <Label TextColor="Cyan" FontSize="Body" Text="{Binding CreatedDate}" />
+                    <Label TextColor="Cyan" FontSize="Body" Text="{Binding Toilet.CreatedDate}" />
                 </HorizontalStackLayout>
 
                 <HorizontalStackLayout>
                     <Label TextColor="Cyan" FontSize="Body" Text="До точки " />
                     <Label TextColor="Cyan" FontSize="Body" Text="43 мин - 232 м"/>
                 </HorizontalStackLayout>
-                <buttons:StarSelector SelectedStar="{Binding Rating}" IsEnabled="False" />
+                <buttons:StarSelector SelectedStar="{Binding Toilet.Rating}" IsEnabled="False" />
             </StackLayout>
         </Grid>
         <!-- УДАЛИТЬ КНОПКИ ПОТОМ-->
@@ -56,12 +55,21 @@
                                         AncestorType={x:Type vm:PinManagerViewModel}},
                                         Path=DeleteToiletCommand}"
                              Source="https://cdn-icons-png.flaticon.com/512/9790/9790368.png"/>
+            <ImageButton WidthRequest="60" HeightRequest="60"
+                         CornerRadius="30"
+                         Margin="10,0,0,0"
+                         Source="https://cdn-icons-png.flaticon.com/512/9417/9417600.png"
+                         Padding="5"
+                         CommandParameter="{Binding .}"
+                         Command="{Binding Source={x:RelativeSource 
+           AncestorType={x:Type vm:PinManagerViewModel}},
+           Path=ShowQRCommand}"/>
         </HorizontalStackLayout>
         <!-- Верхняя картинка карусели -->
         <ffimageloading:CachedImage LoadingPlaceholder="toilet_undefined.png" 
                                     ErrorPlaceholder="toilet_undefined.png" 
                                     Aspect="AspectFill"
-                                    Source="{Binding Images, Converter={converters:ImageConverter}}">
+                                    Source="{Binding ImagePreviewSource}">
             <ffimageloading:CachedImage.Transformations>
                 <fftransformations:BlurredTransformation Radius="4" />
             </ffimageloading:CachedImage.Transformations>

@@ -1,15 +1,13 @@
 using CommunityToolkit.Maui.Views;
-using MFASeeker.ViewModel;
 
 namespace MFASeeker.View;
 
-public partial class NewPinPopup : Popup
+public partial class ToiletQRpopup : Popup
 {
-    public NewPinPopup()
-    {
-        InitializeComponent();
-    }
-
+	public ToiletQRpopup()
+	{
+		InitializeComponent();
+	}
     void OnYesButtonClicked(object sender, EventArgs e)
     {
         Close(true);
@@ -18,10 +16,5 @@ public partial class NewPinPopup : Popup
     void OnCancelButtonClicked(object sender, EventArgs e)
     {
         Close(false);
-    }
-
-    private void OnAddImageClicked(object sender, EventArgs e)
-    {
-
     }
 }

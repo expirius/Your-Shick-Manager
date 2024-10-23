@@ -1,16 +1,22 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using MFASeeker.Services;
 using System.Collections.ObjectModel;
+
 namespace MFASeeker.Model
 {
     public partial class Toilet
     {
-        public int Id {  get; set; }
+        public int Id { get; set; }
         public string Guid { get; set; }
-        public string? Name {  get; set; }
+        public string? Name { get; set; }
         public Location? Location { get; set; }
-        public string? Description {  get; set; }
-        public double Rating {  get; set; }
-        public ObservableCollection<ImageFile> Images { get; set; }
+        public string? Description { get; set; }
+        public double Rating { get; set; }
+        public string? UserName { get; set; }
+        public string? UserId { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public ObservableCollection<ImageFile> Images { get; set; } // удалить после разработки photos
 
         public Toilet()
         {
@@ -22,11 +28,8 @@ namespace MFASeeker.Model
             Description = "";
             CreatedDate = DateTime.Now;
             UserName = DeviceInfo.Current.Name;
-            Images = [];
+            Images = []; // удалить после разработки photos
         }
-        public string? UserName { get; set; }
-        public string? UserId { get; set; }
-        public DateTime CreatedDate { get; set; }
 
         public string GetInfo()
         {
@@ -40,5 +43,6 @@ namespace MFASeeker.Model
         {
             return System.Guid.NewGuid().ToString().GetHashCode().ToString("x");
         }
+
     }
 }
