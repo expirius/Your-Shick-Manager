@@ -1,4 +1,5 @@
-﻿namespace MFASeeker.Model
+using Entities;
+namespace MFASeeker.Model
 {
     public interface IPinStorage
     {

@@ -1,15 +1,13 @@
-﻿using Mapsui;
 using Mapsui.Extensions;
 using Mapsui.Layers;
 using Mapsui.Projections;
-using Mapsui.Providers;
 using Mapsui.Styles;
-using Color = Mapsui.Styles.Color;
 using Mapsui.Utilities;
-using Exception = System.Exception;
-using System.Text;
-using System.Text.Json;
 using MFASeeker.Services;
+using Entities;
+using System.Text;
+using Color = Mapsui.Styles.Color;
+using Exception = System.Exception;
 
 namespace MFASeeker.Model
 {

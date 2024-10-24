@@ -1,9 +1,8 @@
-﻿using FFImageLoading;
-using MFASeeker.Model;
 using MFASeeker.Services;
-using MFASeeker.ViewModel;
 using System.Collections.ObjectModel;
 using System.Globalization;
+using Entities;
+
 
 namespace MFASeeker.Converters
 {

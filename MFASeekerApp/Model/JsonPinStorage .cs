@@ -1,5 +1,5 @@
 ﻿using System.Text.Json;
-
+using Entities;
 namespace MFASeeker.Model;
 
 // Всё это дело лучше увести в static 
