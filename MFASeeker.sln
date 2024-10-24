@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.8.34330.188
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MFASeekerApp", "MFASeeker\MFASeekerApp.csproj", "{99D0DDA2-67EF-4872-A768-F1E7D5A2A2C4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MFASeekerApp", "MFASeekerApp\MFASeekerApp.csproj", "{99D0DDA2-67EF-4872-A768-F1E7D5A2A2C4}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MFASeekerServer", "MFASeekerServer\MFASeekerServer.csproj", "{8E05DF48-C972-44E7-B29B-1D72E235334E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Entities", "Entities\Entities.csproj", "{B82A6A8C-4BD2-46E1-892B-C6DF39B1F359}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Entities", "Entities\Entities.csproj", "{B82A6A8C-4BD2-46E1-892B-C6DF39B1F359}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
