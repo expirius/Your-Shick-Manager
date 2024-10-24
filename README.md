@@ -11,7 +11,7 @@
 * Рейтинг туалетов по пятибальной шкале
 * Все данные хранятся локально и доступны всегда
 
-![preview](Images/preview.png)
+![preview](MFASeekerApp/Images/preview.png)
 
-![rating](Images/ratings.jpg)
+![rating](MFASeekerApp/Images/ratings.jpg)
 
