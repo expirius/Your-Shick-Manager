@@ -1,7 +1,8 @@
-﻿using MFASeeker.Services;
+using MFASeeker.Services;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using Entities;
+
 
 namespace MFASeeker.Converters
 {

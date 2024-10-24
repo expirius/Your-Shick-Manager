@@ -15,8 +15,7 @@ namespace MFASeeker.Model
         public required string ContentType { get; set; }
         public required string FileName { get; set; }
         private string? CachePath {  get; set; }
-
-
+        
         //public ImageSource FirstImage => GetImageSource();
         //// Возвращаем изображение из файла, хранящегося в памяти
         //private string GetImageCachePath()
