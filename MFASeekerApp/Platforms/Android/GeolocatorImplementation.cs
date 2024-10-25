@@ -2,8 +2,8 @@
 using Android.Locations;
 using Android.OS;
 using Android.Runtime;
-using MFASeeker;
 using MFASeeker.Model;
+using MFASeekerApp.Model.Interfaces;
 using Location = Android.Locations.Location;
 using Permissions = Microsoft.Maui.ApplicationModel.Permissions;
 

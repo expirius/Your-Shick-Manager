@@ -17,7 +17,7 @@ namespace MFASeeker.Services
                 Location = toilet.Location,
                 Rating = toilet.Rating,
                 CreatedDate = toilet.CreatedDate,
-                UserName = toilet.UserName,
+                UserName = toilet.User.UserName,
                 Guid = toilet.Guid,
                 Id = toilet.Id,
             };

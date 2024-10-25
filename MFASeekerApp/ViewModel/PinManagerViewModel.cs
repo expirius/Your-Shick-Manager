@@ -1,10 +1,9 @@
-﻿using CommunityToolkit.Maui.Core.Extensions;
-using CommunityToolkit.Maui.Views;
+﻿using CommunityToolkit.Maui.Views;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using MFASeeker.Model;
 using MFASeeker.Services;
 using MFASeeker.View;
+using MFASeekerApp.Services;
 using System.Collections.ObjectModel;
 
 namespace MFASeeker.ViewModel
@@ -17,7 +16,7 @@ namespace MFASeeker.ViewModel
         // БЕЗ СВЯЗАННОСТИ КОДА
         public event Action<ObservableCollection<ToiletViewModel>>? ToiletsUpdated;
 
-        private readonly JsonPinStorage jsonPinStorage = new();
+        private readonly LocalToiletService jsonPinStorage = new();
         [ObservableProperty]
         private ObservableCollection<ToiletViewModel>? activePinList;
         [ObservableProperty]
@@ -36,7 +35,7 @@ namespace MFASeeker.ViewModel
         {
             await Task.Run(async () =>
             {
-                var temp = (await jsonPinStorage.GetMarkersAsync());
+                var temp = (await jsonPinStorage.GetAllToilets());
                 ActivePinList = new ObservableCollection<ToiletViewModel>(temp.Select(t => new ToiletViewModel(t)));
                 ToiletsUpdated?.Invoke(ActivePinList);
             });
@@ -46,7 +45,7 @@ namespace MFASeeker.ViewModel
         {
             if (toiletVM.Toilet == null) return;
             ActivePinList?.Add(toiletVM);
-            await jsonPinStorage.SaveMarkerAsync(toiletVM.Toilet);
+            await jsonPinStorage.AddToilet(toiletVM.Toilet);
 
             ToiletsUpdated?.Invoke(ActivePinList);
             PinAdded?.Invoke(toiletVM);
@@ -59,7 +58,7 @@ namespace MFASeeker.ViewModel
                 // В принципе можно и весь объект передать, а смысл? 
                 //await jsonPinStorage.DeleteMarkerAsync(marker: toilet);
                 ActivePinList?.Remove(toiletVM);  // Удаляем из локальной коллекции
-                await jsonPinStorage.DeleteMarkerAsync(guid: toiletVM.Toilet.Guid); // Асинхронно удаляем из хранилища
+                await jsonPinStorage.DeleteToilet(guid: toiletVM.Toilet.Guid); // Асинхронно удаляем из хранилища
                 PinDeleted?.Invoke(toiletVM); // Уведомляем об удалении
             }
         }
@@ -70,6 +69,8 @@ namespace MFASeeker.ViewModel
             {
                 ToiletViewModel cloneToilet = (ToiletViewModel)toiletVM.Clone();
                 SelectedToiletVM = cloneToilet; //(ToiletViewModel) [...] .Toilet.Clone 
+                // проверка на пустого клона
+                if (SelectedToiletVM.Toilet == null) return;
                 var popup = new NewPinPopup
                 {
                     BindingContext = toiletVM
@@ -91,7 +92,7 @@ namespace MFASeeker.ViewModel
                         ToiletsUpdated?.Invoke(ActivePinList);
                     }
                     // обновление в памяти
-                    await jsonPinStorage.UpdateMarker(SelectedToiletVM.Toilet);
+                    await jsonPinStorage.UpdateToilet(SelectedToiletVM.Toilet);
                 }
             }
         }

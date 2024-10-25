@@ -11,7 +11,6 @@ namespace MFASeeker.ViewModel
         private readonly LocalImageService _localImageService = new();
         [ObservableProperty]
         public Toilet? toilet;
-
         [ObservableProperty]
         private ObservableCollection<ImageSource> imageSources;
         [ObservableProperty]

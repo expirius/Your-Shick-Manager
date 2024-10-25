@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using Mapsui.Extensions;
+using MFASeekerApp.Model.Interfaces;
 using System.ComponentModel;
 using System.Threading.Tasks;
 
