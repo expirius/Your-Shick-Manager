@@ -1,6 +1,6 @@
-using MFASeeker.ViewModel;
+using MFASeekerApp.ViewModel;
 
-namespace MFASeeker.View;
+namespace MFASeekerApp.View;
 public partial class PinManagerPage : ContentPage
 {
 	//private PinManagerViewModel _pinManagerVM;

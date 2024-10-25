@@ -1,4 +1,4 @@
-using Entities;
+using MFASeekerApp.Model;
 using MFASeekerApp.Model.Interfaces;
 using System.Text.Json;
 
@@ -49,7 +49,7 @@ namespace MFASeekerApp.Services
             var json = JsonSerializer.Serialize(toiletsJson);
             await File.WriteAllTextAsync(filePath, json);
         }
-        public async Task DeleteToilet(Guid guid)
+        public async Task DeleteToilet(string guid)
         {
             var toiletsJson = await GetAllToilets();
             var markerToDelete = toiletsJson.FirstOrDefault(t => t.Guid == guid);
@@ -77,7 +77,7 @@ namespace MFASeekerApp.Services
                 await File.WriteAllTextAsync(filePath, json);
             }
         }
-        public Task<Toilet> GetToiletByGuid(Guid id)
+        public Task<Toilet> GetToiletByGuid(string id)
         {
             throw new NotImplementedException();
         }

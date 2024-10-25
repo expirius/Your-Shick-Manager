@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Entities;
 
 namespace MFASeekerApp.Model.Interfaces
 {
@@ -13,8 +12,8 @@ namespace MFASeekerApp.Model.Interfaces
         Task<List<Toilet>> GetAllToilets();
         Task AddToilet(Toilet toilet);
         Task UpdateToilet(Toilet toilet);
-        Task DeleteToilet(Guid guid);
-        Task<Toilet> GetToiletByGuid(Guid guid);
+        Task DeleteToilet(string guid);
+        Task<Toilet> GetToiletByGuid(string guid);
 
     }
 }

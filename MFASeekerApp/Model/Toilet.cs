@@ -1,6 +1,7 @@
-﻿using System.Collections.ObjectModel;
+﻿using Entities;
+using System.Collections.ObjectModel;
 
-namespace Entities
+namespace MFASeekerApp.Model
 {
     public class Toilet : BaseEntity
     {
@@ -15,7 +16,7 @@ namespace Entities
 
         public Toilet()
         {
-            this.Guid = CreateGuid();
+            Guid = CreateGuid();
             CreatedDate = DateTime.Now;
         }
 
@@ -27,7 +28,7 @@ namespace Entities
         {
             return !string.IsNullOrWhiteSpace(Name);
         }
-        private Guid CreateGuid() => new(System.Guid.NewGuid().ToString().GetHashCode().ToString("x"));
+        private string CreateGuid() => System.Guid.NewGuid().ToString().GetHashCode().ToString("x");
 
     }
 }

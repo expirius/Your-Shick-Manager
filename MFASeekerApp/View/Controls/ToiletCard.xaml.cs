@@ -1,8 +1,8 @@
-using MFASeeker.Model;
-using MFASeeker.ViewModel;
+using MFASeekerApp.Model;
+using MFASeekerApp.ViewModel;
 using System.Runtime.CompilerServices;
 
-namespace MFASeeker.View.Controls;
+namespace MFASeekerApp.View.Controls;
 
 public partial class ToiletCard : ContentView
 {

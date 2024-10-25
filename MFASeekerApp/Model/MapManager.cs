@@ -6,7 +6,7 @@ using Mapsui.Widgets.Zoom;
 using Map = Mapsui.Map;
 using MyLocationLayer = Mapsui.Layers.MyLocationLayer;
 
-namespace MFASeeker.Model
+namespace MFASeekerApp.Model
 {
     public static class MapManager
     {

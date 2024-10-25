@@ -5,13 +5,13 @@ using Mapsui.Extensions;
 using Mapsui.UI.Maui;
 using Microsoft.Maui.ApplicationModel;
 using Mapsui.Widgets.Zoom;
-using MFASeeker.Services;
-using MFASeeker.ViewModel;
+using MFASeekerApp.Services;
+using MFASeekerApp.ViewModel;
  using CommunityToolkit.Mvvm.Input;
-using MFASeeker.View.Controls;
+using MFASeekerApp.View.Controls;
 using CommunityToolkit.Maui.Views;
 
-namespace MFASeeker.View;
+namespace MFASeekerApp.View;
 
 public partial class SearchPage : ContentPage
 {

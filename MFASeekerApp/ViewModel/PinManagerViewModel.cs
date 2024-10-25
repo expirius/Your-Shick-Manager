@@ -1,12 +1,11 @@
 ﻿using CommunityToolkit.Maui.Views;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using MFASeeker.Services;
-using MFASeeker.View;
+using MFASeekerApp.View;
 using MFASeekerApp.Services;
 using System.Collections.ObjectModel;
 
-namespace MFASeeker.ViewModel
+namespace MFASeekerApp.ViewModel
 {
     public partial class PinManagerViewModel : ObservableObject
     {

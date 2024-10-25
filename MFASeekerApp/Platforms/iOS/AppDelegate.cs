@@ -1,6 +1,6 @@
 ﻿using Foundation;
 
-namespace MFASeeker
+namespace MFASeekerApp
 {
     [Register("AppDelegate")]
     public class AppDelegate : MauiUIApplicationDelegate

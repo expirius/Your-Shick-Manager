@@ -11,7 +11,7 @@ using Android.Runtime;
 // Запрос разрешения
 [assembly: UsesPermission(Manifest.Permission.AccessBackgroundLocation)]
 
-namespace MFASeeker
+namespace MFASeekerApp
 {
     [Application]
     public class MainApplication : MauiApplication

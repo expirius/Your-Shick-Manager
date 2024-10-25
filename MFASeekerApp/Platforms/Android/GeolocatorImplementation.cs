@@ -2,12 +2,12 @@
 using Android.Locations;
 using Android.OS;
 using Android.Runtime;
-using MFASeeker.Model;
+using MFASeekerApp.Model;
 using MFASeekerApp.Model.Interfaces;
 using Location = Android.Locations.Location;
 using Permissions = Microsoft.Maui.ApplicationModel.Permissions;
 
-namespace MFASeeker;
+namespace MFASeekerApp;
 
 public class GeolocatorImplementation : IGeolocator
 {

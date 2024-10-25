@@ -3,19 +3,19 @@ using Mapsui.Layers;
 using Mapsui.Projections;
 using Mapsui.Styles;
 using Mapsui.Utilities;
-using MFASeeker.Services;
-using Entities;
+using MFASeekerApp.Services;
 using System.Text;
 using Color = Mapsui.Styles.Color;
 using Exception = System.Exception;
+using MFASeekerApp.Model;
 
-namespace MFASeeker.Model
+namespace MFASeekerApp.Model
 {
     public static class MapPinManager
     {
         public static WritableLayer CreatePointLayer(string name, bool isInfoLayer)
         {
-            return new WritableLayer( )
+            return new WritableLayer()
             {
                 Name = name,
                 IsMapInfoLayer = isInfoLayer,
@@ -23,19 +23,19 @@ namespace MFASeeker.Model
         }
         public static PointFeature GetFeature(Toilet toilet)
         {
-                // описание точки
-                var feature = new PointFeature(SphericalMercator.FromLonLat(toilet.Location.Longitude, toilet.Location.Latitude).ToMPoint());
-                feature[nameof(toilet.Name)] = toilet.Name;
-                feature[nameof(toilet.Id)] = toilet.Id;
-                feature[nameof(toilet.Location.Longitude)] = toilet.Location.Longitude;
-                feature[nameof(toilet.Location.Latitude)] = toilet.Location.Latitude;
-                feature[nameof(toilet.Description)] = toilet.Description;
-                feature[nameof(toilet.Rating)] = toilet.Rating;
-                // styles
-                feature.Styles.Add(CreateSvgStyle(ToiletIconProvider.GetIconPath(toilet), 0.08));
-                feature.Styles.Add(CreateCalloutStyleByToilet(toilet));
-                
-                return feature;
+            // описание точки
+            var feature = new PointFeature(SphericalMercator.FromLonLat(toilet.Location.Longitude, toilet.Location.Latitude).ToMPoint());
+            feature[nameof(toilet.Name)] = toilet.Name;
+            feature[nameof(toilet.Id)] = toilet.Id;
+            feature[nameof(toilet.Location.Longitude)] = toilet.Location.Longitude;
+            feature[nameof(toilet.Location.Latitude)] = toilet.Location.Latitude;
+            feature[nameof(toilet.Description)] = toilet.Description;
+            feature[nameof(toilet.Rating)] = toilet.Rating;
+            // styles
+            feature.Styles.Add(CreateSvgStyle(ToiletIconProvider.GetIconPath(toilet), 0.08));
+            feature.Styles.Add(CreateCalloutStyleByToilet(toilet));
+
+            return feature;
         }
         public static IEnumerable<PointFeature> GetFeatures(IEnumerable<Toilet> toilets)
         {
@@ -101,13 +101,13 @@ namespace MFASeeker.Model
             keyValuePairs.AppendLine($"Адрес: {address}");
             return new CalloutStyle
             {
-                    Title = keyValuePairs.ToString(),
-                    TitleFont = { FontFamily = null, Size = 12, Italic = false, Bold = true },
-                    TitleFontColor = Color.Gray,
-                    MaxWidth = 120,
-                    RectRadius = 10,
-                    ShadowWidth = 4,
-                    Enabled = false,
+                Title = keyValuePairs.ToString(),
+                TitleFont = { FontFamily = null, Size = 12, Italic = false, Bold = true },
+                TitleFontColor = Color.Gray,
+                MaxWidth = 120,
+                RectRadius = 10,
+                ShadowWidth = 4,
+                Enabled = false,
             };
         }
         // Создание svg для пина
@@ -122,7 +122,7 @@ namespace MFASeeker.Model
                     SymbolScale = scale
                 };
             }
-            catch (Exception) { throw;}
+            catch (Exception) { throw; }
         }
     }
 }

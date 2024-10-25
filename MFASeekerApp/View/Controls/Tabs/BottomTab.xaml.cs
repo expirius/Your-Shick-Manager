@@ -1,4 +1,4 @@
-namespace MFASeeker.View.Controls.Tabs;
+namespace MFASeekerApp.View.Controls.Tabs;
 
 public partial class BottomTab : ContentView
 {

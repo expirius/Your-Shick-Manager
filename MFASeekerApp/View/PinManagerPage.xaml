@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="MFASeeker.View.PinManagerPage"
-             xmlns:controls="clr-namespace:MFASeeker.View.Controls"
-             xmlns:buttons="clr-namespace:MFASeeker.View.Controls.Buttons"
-             xmlns:vm="clr-namespace:MFASeeker.ViewModel"
+             x:Class="MFASeekerApp.View.PinManagerPage"
+             xmlns:controls="clr-namespace:MFASeekerApp.View.Controls"
+             xmlns:buttons="clr-namespace:MFASeekerApp.View.Controls.Buttons"
+             xmlns:vm="clr-namespace:MFASeekerApp.ViewModel"
              xmlns:gcarousel="clr-namespace:GalleryCarousel;assembly=GalleryCarousel"
-             xmlns:model="clr-namespace:MFASeeker.Model"
-             xmlns:converters="clr-namespace:MFASeeker.Converters"
+             xmlns:model="clr-namespace:MFASeekerApp.Model"
+             xmlns:converters="clr-namespace:MFASeekerApp.Converters"
              x:DataType="vm:PinManagerViewModel"
              Title="PinManagerPage">
     <Grid>

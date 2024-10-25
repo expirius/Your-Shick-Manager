@@ -1,4 +1,4 @@
-﻿using MFASeeker.Model;
+﻿using MFASeekerApp.Model;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MFASeeker.Converters
+namespace MFASeekerApp.Converters
 {
     public class RaitingPNGConverter : IValueConverter
     {

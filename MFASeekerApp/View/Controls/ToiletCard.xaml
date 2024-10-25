@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:converters="clr-namespace:MFASeeker.Converters"
-             xmlns:effects ="clr-namespace:MFASeeker.View.Effects"
+             xmlns:converters="clr-namespace:MFASeekerApp.Converters"
+             xmlns:effects ="clr-namespace:MFASeekerApp.View.Effects"
              xmlns:fftransformations="clr-namespace:FFImageLoading.Transformations;assembly=FFImageLoading.Maui"
              xmlns:ffimageloading="clr-namespace:FFImageLoading.Maui;assembly=FFImageLoading.Maui"
-             xmlns:controls="clr-namespace:MFASeeker.View.Controls"
-             xmlns:buttons="clr-namespace:MFASeeker.View.Controls.Buttons"
-             xmlns:vm="clr-namespace:MFASeeker.ViewModel"
+             xmlns:controls="clr-namespace:MFASeekerApp.View.Controls"
+             xmlns:buttons="clr-namespace:MFASeekerApp.View.Controls.Buttons"
+             xmlns:vm="clr-namespace:MFASeekerApp.ViewModel"
              x:DataType="vm:ToiletViewModel"
-             x:Class="MFASeeker.View.Controls.ToiletCard">
+             x:Class="MFASeekerApp.View.Controls.ToiletCard">
     <Grid>
         <Grid ZIndex="1" Background="#99000000">
             <StackLayout VerticalOptions="End" Margin="20">

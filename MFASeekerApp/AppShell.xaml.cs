@@ -1,4 +1,4 @@
-﻿namespace MFASeeker
+﻿namespace MFASeekerApp
 {
     public partial class AppShell : Shell
     {

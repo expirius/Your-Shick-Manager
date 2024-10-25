@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MFASeeker.View.Controls
+namespace MFASeekerApp.View.Controls
 {
     public class ImageBase64 : Image
     {

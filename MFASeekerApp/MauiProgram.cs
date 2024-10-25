@@ -1,14 +1,14 @@
 ﻿using CommunityToolkit.Maui;
 using FFImageLoading.Maui;
-using MFASeeker.View;
-using MFASeeker.ViewModel;
+using MFASeekerApp.View;
+using MFASeekerApp.ViewModel;
 using Microsoft.Extensions.Logging;
 using Microsoft.Maui.Handlers;
 using Microsoft.Maui.Platform;
 using SkiaSharp.Views.Maui.Controls.Hosting;
 //using Material.Components.Maui.Extensions;
 
-namespace MFASeeker
+namespace MFASeekerApp
 {
     public static class MauiProgram
     {
