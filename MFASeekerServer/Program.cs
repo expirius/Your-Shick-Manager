@@ -14,6 +14,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<SeekerDbContext>(options =>
 {
     options.UseSqlite(builder.Configuration.GetConnectionString("SQLiteConnection")); // SQLite
+
 });
 
 
