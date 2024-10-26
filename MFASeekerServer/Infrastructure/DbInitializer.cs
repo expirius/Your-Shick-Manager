@@ -2,7 +2,7 @@
 {
     public class DbInitializer
     {
-        public static void Initialize(ToiletDbContext context)
+        public static void Initialize(SeekerDbContext context)
         {
             context.Database.EnsureCreated();
         }

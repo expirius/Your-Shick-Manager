@@ -5,14 +5,12 @@ using System.Text;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using MFASeekerServer.Core.Entities;
+using Entities;
 
-namespace Entities
+namespace MFASeekerServer.Core.Entities
 {
     public class User : BaseEntity
     {
-        [Key]
-        public override int Id { get; set; }
         public string UserName { get; set; }
         public string? DeviceInfo { get; set; }
         //public virtual string Password {  get; set; } = string.Empty;

@@ -1,5 +1,4 @@
-﻿using Entities;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace MFASeekerServer.Core.Entities
 {
@@ -13,7 +12,6 @@ namespace MFASeekerServer.Core.Entities
         // 3  // Vlados // Кировская 2к3 // 5         // Картинка 122
         // 4  // System // Думская 2     // 6         // Картинка 6122
         // 5  // System // Думская 1     // 1         // Картинка 3
-        [Key]
         public int Id { get; set; }
         public int UserID { get; set; }
         public int ImageID { get; set; }

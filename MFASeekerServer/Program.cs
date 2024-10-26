@@ -10,16 +10,21 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddDbContext<ToiletDbContext>(options =>
-    options.UseSqlite(builder.Configuration.GetConnectionString("SQLiteConnection")));
+// DB configuring // ¡≈« »—œŒÀ‹«Œ¬¿Õ»ﬂ DEPENDENCY INJECTION. TRY FLUENT API
+builder.Services.AddDbContext<SeekerDbContext>(options =>
+{
+    options.UseSqlite(builder.Configuration.GetConnectionString("SQLiteConnection")); // SQLite
+});
+
 
 var app = builder.Build();
 
-using (var scope = app.Services.CreateScope())
-{
-    var dbContext = scope.ServiceProvider.GetRequiredService<ToiletDbContext>();
-    dbContext.Database.Migrate();
-}
+//using (var scope = app.Services.CreateScope())
+//{
+//    var dbContext = scope.ServiceProvider.GetRequiredService<SeekerDbContext>();
+//    DbInitializer.Initialize(dbContext);
+//    dbContext.Database.Migrate();
+//}
 
     // Configure the HTTP request pipeline.
     if (app.Environment.IsDevelopment())
