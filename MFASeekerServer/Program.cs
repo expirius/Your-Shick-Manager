@@ -1,5 +1,6 @@
 using MFASeekerServer.Infrastructure;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,18 +15,17 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<SeekerDbContext>(options =>
 {
     options.UseSqlite(builder.Configuration.GetConnectionString("SQLiteConnection")); // SQLite
-
 });
 
 
 var app = builder.Build();
 
-//using (var scope = app.Services.CreateScope())
-//{
-//    var dbContext = scope.ServiceProvider.GetRequiredService<SeekerDbContext>();
-//    DbInitializer.Initialize(dbContext);
-//    dbContext.Database.Migrate();
-//}
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<SeekerDbContext>();
+    dbContext.Database.Migrate();
+    //DbInitializer.Initialize(dbContext);
+}
 
     // Configure the HTTP request pipeline.
     if (app.Environment.IsDevelopment())
