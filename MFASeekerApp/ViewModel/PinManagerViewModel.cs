@@ -23,12 +23,25 @@ namespace MFASeekerApp.ViewModel
         [ObservableProperty]
         private int editToiletIndex;
 
-        public PinManagerViewModel()
+        private readonly UserSession _userSession;
+
+        public PinManagerViewModel(UserSession userSession)
         {
+            _userSession = userSession;
+
             ActivePinList = [];
             _ = RefreshToilets();
         }
-
+        [RelayCommand]
+        private async Task SetAuthUserSession()
+        {
+            UserService service = new();
+            var temp = await service.GetUsers();
+            if (temp.Count > 0)
+            {
+                _userSession.AuthUser = temp.FirstOrDefault();
+            }
+        }
         [RelayCommand]
         private async Task RefreshToilets()
         {

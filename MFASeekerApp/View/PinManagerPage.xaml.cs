@@ -1,3 +1,4 @@
+using MFASeekerApp.Services;
 using MFASeekerApp.ViewModel;
 
 namespace MFASeekerApp.View;
@@ -31,8 +32,9 @@ public partial class PinManagerPage : ContentPage
         }
     }
 
-    private void ImageButton_Clicked(object sender, EventArgs e)
+    private async void ImageButton_Clicked(object sender, EventArgs e)
     {
+
         //if (CarouselCards.IsVisible)
         //{
         //    CarouselCards.IsVisible = false;

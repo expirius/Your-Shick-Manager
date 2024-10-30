@@ -22,7 +22,7 @@
                              WidthRequest="40" HeightRequest="40" 
                              VerticalOptions="Center"
                              HorizontalOptions="End"
-                             Clicked="ImageButton_Clicked"/>
+                             Command="{Binding SetAuthUserSessionCommand}"/>
                 </Grid>
                 <!--
                 <Grid>

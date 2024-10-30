@@ -8,10 +8,10 @@ namespace MFASeekerServer.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class UserContoller : ControllerBase
+    public class UserController : ControllerBase
     {
         private readonly SeekerDbContext _context;
-        public UserContoller(SeekerDbContext context)
+        public UserController(SeekerDbContext context)
         {
             _context = context;
         }
@@ -23,7 +23,7 @@ namespace MFASeekerServer.Controllers
         }
         // POST: UserContoller/Create
         [HttpPost("AddUser")]
-        public ActionResult Create(User newUser)
+        public ActionResult CreateUser(User newUser)
         {
             try
             {
@@ -35,6 +35,14 @@ namespace MFASeekerServer.Controllers
             {
                 return BadRequest("Bad try :(");
             }
+        }
+        // GET: GetUser
+        [HttpGet("User")]
+        public ActionResult<User> GetUser(string guid)
+        {
+            User? dbuser = _context.Users.Where(user => user.Guid == guid).FirstOrDefault();
+            if (dbuser == null) return BadRequest("Такого пользователя не существует");
+            else return Ok(dbuser);
         }
     }
 }

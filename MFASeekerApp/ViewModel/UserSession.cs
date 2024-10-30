@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Entities;
 using Mapsui.UI.Maui;
 using MFASeekerApp.Services;
 using System;
@@ -10,11 +11,11 @@ using System.Threading.Tasks;
 
 namespace MFASeekerApp.ViewModel
 {
-    public partial class MainViewModel : ObservableObject
+    public partial class UserSession : ObservableObject
     {
-        public MainViewModel() 
-        {
-
-        }
+        //private static UserSession _instance;
+        //public static UserSession Instance => _instance ??= new UserSession();
+        [ObservableProperty]
+        private User? authUser = null;
     }
 }

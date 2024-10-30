@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Maui;
 using FFImageLoading.Maui;
+using MFASeekerApp.Services;
 using MFASeekerApp.View;
 using MFASeekerApp.ViewModel;
 using Microsoft.Extensions.Logging;
@@ -31,7 +32,7 @@ namespace MFASeekerApp
                 .UseMauiCommunityToolkit();
             //
             builder.Services.AddSingleton<MainPage>();
-            builder.Services.AddSingleton<MainViewModel>();
+            builder.Services.AddSingleton<UserSession>();
 
             builder.Services.AddSingleton<SearchViewModel>();
             builder.Services.AddSingleton<SearchPage>();
@@ -39,6 +40,13 @@ namespace MFASeekerApp
             builder.Services.AddSingleton<PinManagerPage>();
             builder.Services.AddSingleton<PinManagerViewModel>();
 
+            // Сессия пользователя
+            builder.Services.AddSingleton<UserSession>();
+            builder.Services.AddHttpClient(); //"maui-to-api-http-localhost", httpClient =>
+            //{
+            //    var baseAdress = "http://localhost:5252";
+            //    httpClient.BaseAddress = new Uri(baseAdress);
+            //});
 
 #if DEBUG
             builder.Logging.AddDebug();
