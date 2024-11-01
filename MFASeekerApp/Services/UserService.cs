@@ -18,17 +18,24 @@ namespace MFASeekerApp.Services
         }
         public async Task<List<User>> GetUsers()
         {
-            //if (userList.Count == 0)
-            //    return userList;
-            var url = "http://localhost:5000/api/Toilet/AllToilets";
-
-            var response = await httpClient.GetAsync(url);
-
-            if (response.IsSuccessStatusCode)
+            try
             {
-                userList = await response.Content.ReadFromJsonAsync<List<User>>();
+                //if (userList.Count == 0)
+                //    return userList;
+                var url = "http://192.168.0.2:7226/api/User/AllUsers";
+
+                var response = await httpClient.GetAsync(url);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    userList = await response.Content.ReadFromJsonAsync<List<User>>();
+                }
+                return userList;
             }
-            return userList;
+            catch (Exception ex)
+            {
+                return userList;
+            }
         }
     }
 }
