@@ -11,7 +11,7 @@ namespace MFASeekerServer.Controllers
     {
         //private readonly IToiletService _toiletService;
         private readonly SeekerDbContext _context;
-        ToiletController(SeekerDbContext dbContext)
+        public ToiletController(SeekerDbContext dbContext)
         {
             _context = dbContext;
         }

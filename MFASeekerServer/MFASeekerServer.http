@@ -1,6 +1,6 @@
-//@MFASeekerServer_HostAddress = http://localhost:5252
+@MFASeekerServer_HostAddress = http://localhost:5252
 
-//GET {{MFASeekerServer_HostAddress}}/weatherforecast/
+GET {{MFASeekerServer_HostAddress}}/weatherforecast/
 //GET {{MFASeekerServer_HostAdress}}/
 Accept: application/json
 
