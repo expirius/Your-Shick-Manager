@@ -1,10 +1,10 @@
-using MFASeeker.Services;
+using MFASeekerApp.Services;
 using System.Collections.ObjectModel;
 using System.Globalization;
-using Entities;
+using MFASeekerApp.Model;
 
 
-namespace MFASeeker.Converters
+namespace MFASeekerApp.Converters
 {
     public class ImageConverter : IValueConverter
     {

@@ -8,11 +8,12 @@ using Mapsui.Projections;
 using Mapsui.Styles;
 using Mapsui.UI;
 using Mapsui.UI.Maui;
-using MFASeeker.Model;
-using MFASeeker.Services;
-using MFASeeker.View;
+using MFASeekerApp.Model;
+using MFASeekerApp.Services;
+using MFASeekerApp.View;
+using MFASeekerApp.Model;
 using System.Collections.ObjectModel;
-namespace MFASeeker.ViewModel;
+namespace MFASeekerApp.ViewModel;
 
 public partial class SearchViewModel : ObservableObject
 {

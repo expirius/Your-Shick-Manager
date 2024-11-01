@@ -1,4 +1,4 @@
-namespace MFASeeker.View.Controls.Buttons;
+namespace MFASeekerApp.View.Controls.Buttons;
 
 /*
  * Необходимо в будущем сделать стили звездочек для разных целей

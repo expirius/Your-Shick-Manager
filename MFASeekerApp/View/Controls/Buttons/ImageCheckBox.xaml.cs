@@ -1,6 +1,6 @@
 using System.Windows.Input;
 
-namespace MFASeeker.View.Controls.Buttons;
+namespace MFASeekerApp.View.Controls.Buttons;
 
 public partial class ImageCheckBox : ContentView
 {

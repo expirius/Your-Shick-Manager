@@ -1,17 +1,16 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Entities;
-using MFASeeker.Services;
+using MFASeekerApp.Services;
+using MFASeekerApp.Model;
 using System.Collections.ObjectModel;
 
-namespace MFASeeker.ViewModel
+namespace MFASeekerApp.ViewModel
 {
     public partial class ToiletViewModel : ObservableObject, ICloneable
     {
         private readonly LocalImageService _localImageService = new();
         [ObservableProperty]
         public Toilet? toilet;
-
         [ObservableProperty]
         private ObservableCollection<ImageSource> imageSources;
         [ObservableProperty]

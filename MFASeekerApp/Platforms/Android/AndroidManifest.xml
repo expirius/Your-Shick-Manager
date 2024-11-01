@@ -1,6 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
-	<application android:allowBackup="true" android:icon="@mipmap/green_icon" android:supportsRtl="true"></application>
+	<application 
+		android:allowBackup="true" android:icon="@mipmap/green_icon"
+
+		android:usesCleartextTraffic="true"
+
+		android:supportsRtl="true" 
+		android:label="Ёршик - Туалеты рядом">
+	</application>
 	<!-- Разрешени на доступ к интернету  -->
 	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 	<uses-permission android:name="android.permission.INTERNET" />

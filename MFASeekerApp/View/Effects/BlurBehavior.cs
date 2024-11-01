@@ -2,7 +2,7 @@
 using Android.Graphics;
 using Android.Widget;
 
-namespace MFASeeker.View.Effects;
+namespace MFASeekerApp.View.Effects;
 
 public partial class BlurBehavior : PlatformBehavior<Image, ImageView>
 {

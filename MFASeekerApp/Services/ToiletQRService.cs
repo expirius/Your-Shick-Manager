@@ -1,10 +1,10 @@
-﻿using Entities;
-using MFASeeker.Model;
+﻿using MFASeekerApp.Model;
+using MFASeekerApp.Model;
 using QRCoder;
 using System.Text.Json;
 
 
-namespace MFASeeker.Services
+namespace MFASeekerApp.Services
 {
     public static class ToiletQRService
     {
@@ -12,14 +12,14 @@ namespace MFASeeker.Services
         {
             var tempToilet = new
             {
-                Name = toilet.Name,
-                Description = toilet.Description,
-                Location = toilet.Location,
-                Rating = toilet.Rating,
-                CreatedDate = toilet.CreatedDate,
-                UserName = toilet.UserName,
-                Guid = toilet.Guid,
-                Id = toilet.Id,
+                toilet.Name,
+                toilet.Description,
+                toilet.Location,
+                toilet.Rating,
+                toilet.CreatedDate,
+                toilet.User?.UserName,
+                toilet.Guid,
+                toilet.Id,
             };
             string toiletData = JsonSerializer.Serialize(tempToilet);
             var qrCodeGenerator = new QRCodeGenerator();

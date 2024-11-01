@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="MFASeeker.View.SearchPage"
-             xmlns:vm ="clr-namespace:MFASeeker.ViewModel"
+             x:Class="MFASeekerApp.View.SearchPage"
+             xmlns:vm ="clr-namespace:MFASeekerApp.ViewModel"
              x:DataType="vm:SearchViewModel"
-             xmlns:cbuttons="clr-namespace:MFASeeker.View.Controls.Buttons;assembly=MFASeeker"
-             xmlns:controls="clr-namespace:MFASeeker.View"
+             xmlns:cbuttons="clr-namespace:MFASeekerApp.View.Controls.Buttons;assembly=MFASeekerApp"
+             xmlns:controls="clr-namespace:MFASeekerApp.View"
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              Title="Карта">
     <Grid HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">

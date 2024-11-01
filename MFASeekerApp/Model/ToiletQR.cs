@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Entities;
+using MFASeekerApp.Model;
 
-namespace MFASeeker.Model
+namespace MFASeekerApp.Model
 {
     public class ToiletQR : Toilet
     {

@@ -1,9 +1,10 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using Mapsui.Extensions;
+using MFASeekerApp.Model.Interfaces;
 using System.ComponentModel;
 using System.Threading.Tasks;
 
-namespace MFASeeker;
+namespace MFASeekerApp.Model;
 
 public static class Geolocator
 {

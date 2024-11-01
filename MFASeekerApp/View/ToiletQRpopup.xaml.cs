@@ -1,6 +1,6 @@
 using CommunityToolkit.Maui.Views;
 
-namespace MFASeeker.View;
+namespace MFASeekerApp.View;
 
 public partial class ToiletQRpopup : Popup
 {

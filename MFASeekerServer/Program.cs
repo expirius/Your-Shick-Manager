@@ -1,3 +1,7 @@
+using MFASeekerServer.Infrastructure;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -7,10 +11,24 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// DB configuring // ¡≈« »—œŒÀ‹«Œ¬¿Õ»ﬂ DEPENDENCY INJECTION. TRY FLUENT API
+builder.Services.AddDbContext<SeekerDbContext>(options =>
+{
+    options.UseSqlite(builder.Configuration.GetConnectionString("SQLiteConnection")); // SQLite
+});
+
+
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<SeekerDbContext>();
+    //DbInitializer.Initialize(dbContext);
+    dbContext.Database.Migrate();
+}
+
+    // Configure the HTTP request pipeline.
+    if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();

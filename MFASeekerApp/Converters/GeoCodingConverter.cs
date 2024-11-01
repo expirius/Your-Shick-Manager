@@ -1,7 +1,7 @@
-﻿using MFASeeker.Services;
+﻿using MFASeekerApp.Services;
 using System.Globalization;
 
-namespace MFASeeker.Converters
+namespace MFASeekerApp.Converters
 {
     public class GeoCodingConverter : IValueConverter
     {

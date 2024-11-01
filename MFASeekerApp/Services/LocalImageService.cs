@@ -1,12 +1,12 @@
-﻿using MFASeeker.Model;
+﻿using MFASeekerApp.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Entities;
+using MFASeekerApp.Model;
 
-namespace MFASeeker.Services
+namespace MFASeekerApp.Services
 {
     public class LocalImageService
     {

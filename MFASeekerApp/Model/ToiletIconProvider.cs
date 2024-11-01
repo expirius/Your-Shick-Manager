@@ -1,6 +1,6 @@
-using Entities;
+using MFASeekerApp.Model;
 
-namespace MFASeeker.Model
+namespace MFASeekerApp.Model
 {
     public static class ToiletIconProvider
     {

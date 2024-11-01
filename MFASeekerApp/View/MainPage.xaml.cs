@@ -1,10 +1,10 @@
-﻿using MFASeeker.ViewModel;
+﻿using MFASeekerApp.ViewModel;
 
-namespace MFASeeker.View
+namespace MFASeekerApp.View
 {
     public partial class MainPage : ContentPage
     {
-        public MainPage(MainViewModel vm)
+        public MainPage(UserSession vm)
         {
             InitializeComponent();
 
