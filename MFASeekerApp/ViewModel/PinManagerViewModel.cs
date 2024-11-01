@@ -24,19 +24,19 @@ namespace MFASeekerApp.ViewModel
         private int editToiletIndex;
 
         private readonly UserSession _userSession;
+        private readonly UserService _userService;
 
-        public PinManagerViewModel(UserSession userSession)
+        public PinManagerViewModel(UserSession userSession, UserService userService)
         {
             _userSession = userSession;
-
+            _userService = userService;
             ActivePinList = [];
             _ = RefreshToilets();
         }
         [RelayCommand]
         private async Task SetAuthUserSession()
         {
-            UserService service = new();
-            var temp = await service.GetUsers();
+            var temp = await _userService.GetUsers();
             if (temp.Count > 0)
             {
                 _userSession.AuthUser = temp.FirstOrDefault();
@@ -50,7 +50,7 @@ namespace MFASeekerApp.ViewModel
                 var temp = (await jsonPinStorage.GetAllToilets());
                 ActivePinList = new ObservableCollection<ToiletViewModel>(temp.Select(t => new ToiletViewModel(t)));
                 ToiletsUpdated?.Invoke(ActivePinList);
-            });
+             });
         }
         [RelayCommand]
         private async Task AddToilet(ToiletViewModel toiletVM)

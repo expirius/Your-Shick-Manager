@@ -8,23 +8,20 @@ using System.Threading.Tasks;
 
 namespace MFASeekerApp.Services
 {
-    public class UserService
+    public class UserService(HttpClient _httpClient)
     {
-        HttpClient httpClient;
-        List<User> userList = [];
-        public UserService()
-        {
-            httpClient = new HttpClient();
-        }
+        private readonly HttpClient httpClient = _httpClient;
+        private List<User> userList = [];
+
         public async Task<List<User>> GetUsers()
         {
             try
             {
                 //if (userList.Count == 0)
                 //    return userList;
-                var url = "http://192.168.0.2:7226/api/User/AllUsers";
+                //var url = "http://192.168.0.2:7226/api/User/AllUsers";
 
-                var response = await httpClient.GetAsync(url);
+                var response = await httpClient.GetAsync("api/User/AllUsers");
 
                 if (response.IsSuccessStatusCode)
                 {

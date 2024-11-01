@@ -11,7 +11,6 @@ using Mapsui.UI.Maui;
 using MFASeekerApp.Model;
 using MFASeekerApp.Services;
 using MFASeekerApp.View;
-using MFASeekerApp.Model;
 using System.Collections.ObjectModel;
 namespace MFASeekerApp.ViewModel;
 
@@ -36,8 +35,11 @@ public partial class SearchViewModel : ObservableObject
     [ObservableProperty]
     private string? currentLocationLabel;
 
-    public SearchViewModel(PinManagerViewModel pinMngrVM)
+    private readonly UserSession _userSession;
+    public SearchViewModel(PinManagerViewModel pinMngrVM, UserSession userSession)
     {
+        _userSession = userSession;
+
         SearchMapControl = new() { Map = MapManager.CreateMap() };
 
         SearchMapControl.SingleTap += OnMapTaped; // Тап по карте
@@ -108,6 +110,7 @@ public partial class SearchViewModel : ObservableObject
                     Latitude = SphericalMercator.ToLonLat(worldPosition).Y
                 };
 
+                NewToiletVM.Toilet.User = _userSession.AuthUser;
                 // Отдаем в pinManager
                 pinManagerVM?.AddToiletCommand.Execute(NewToiletVM);
                 // сбрасываю данные туалета VM (но лучше сделать метод .Clear();
