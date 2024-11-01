@@ -17,7 +17,7 @@ namespace MFASeekerApp.Services
                 toilet.Location,
                 toilet.Rating,
                 toilet.CreatedDate,
-                toilet.User.UserName,
+                toilet.User?.UserName,
                 toilet.Guid,
                 toilet.Id,
             };
