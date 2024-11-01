@@ -6,15 +6,16 @@
              xmlns:ffimageloading="clr-namespace:FFImageLoading.Maui;assembly=FFImageLoading.Maui"
              x:Class="MFASeekerApp.View.ToiletQRpopup"
              xmlns:converters="clr-namespace:MFASeekerApp.Converters">
-    <VerticalStackLayout>
+    <VerticalStackLayout Background="#131f1f">
         <ffimageloading:CachedImage 
             Aspect="AspectFill"
             Source="{Binding ., Converter={converters:ImageConverter}}"/>
 
         <HorizontalStackLayout HorizontalOptions="Center">
             <Button Text="OK" 
-                        Clicked="OnYesButtonClicked" 
-                        Margin="0,0,10,0"/>
+                    BackgroundColor="DarkCyan"
+                    Clicked="OnYesButtonClicked" 
+                    Margin="0,0,10,0"/>
         </HorizontalStackLayout>
     </VerticalStackLayout>
 </toolkit:Popup>
