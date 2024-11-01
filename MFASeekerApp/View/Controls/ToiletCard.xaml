@@ -2,7 +2,7 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:converters="clr-namespace:MFASeekerApp.Converters"
-             xmlns:effects ="clr-namespace:MFASeekerApp.View.Effects"
+             
              xmlns:fftransformations="clr-namespace:FFImageLoading.Transformations;assembly=FFImageLoading.Maui"
              xmlns:ffimageloading="clr-namespace:FFImageLoading.Maui;assembly=FFImageLoading.Maui"
              xmlns:controls="clr-namespace:MFASeekerApp.View.Controls"
@@ -31,6 +31,11 @@
                 <HorizontalStackLayout>
                     <Label TextColor="Cyan" FontSize="Body" Text="До точки " />
                     <Label TextColor="Cyan" FontSize="Body" Text="43 мин - 232 м"/>
+                </HorizontalStackLayout>
+
+                <HorizontalStackLayout>
+                    <Label TextColor="Cyan" FontSize="Body" Text="Добавил  " />
+                    <Label TextColor="Cyan" FontSize="Body" Text="{Binding Toilet.User.DeviceInfo}"/>
                 </HorizontalStackLayout>
                 <buttons:StarSelector SelectedStar="{Binding Toilet.Rating}" IsEnabled="False" />
             </StackLayout>
