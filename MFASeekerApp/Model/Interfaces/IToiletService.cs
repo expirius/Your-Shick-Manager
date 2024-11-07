@@ -10,7 +10,7 @@ namespace MFASeekerApp.Model.Interfaces
     {
         // CRUD
         Task<List<Toilet>> GetAllToilets();
-        Task AddToilet(Toilet toilet);
+        Task<int?> AddToilet(Toilet toilet);
         Task UpdateToilet(Toilet toilet);
         Task DeleteToilet(string guid);
         Task<Toilet> GetToiletByGuid(string guid);

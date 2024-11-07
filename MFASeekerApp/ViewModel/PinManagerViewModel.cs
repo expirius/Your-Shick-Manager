@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.Input;
 using MFASeekerApp.View;
 using MFASeekerApp.Services;
 using System.Collections.ObjectModel;
+using MFASeekerApp.Model;
 
 namespace MFASeekerApp.ViewModel
 {
@@ -25,6 +26,7 @@ namespace MFASeekerApp.ViewModel
 
         private readonly UserSession _userSession;
         private readonly UserService _userService;
+        private readonly ToiletApiService _toiletApiService;
 
         public PinManagerViewModel(UserSession userSession, UserService userService)
         {
@@ -61,6 +63,22 @@ namespace MFASeekerApp.ViewModel
 
             ToiletsUpdated?.Invoke(ActivePinList);
             PinAdded?.Invoke(toiletVM);
+        }
+        [RelayCommand] 
+        private async Task AddImage(Toilet toilet, ImageFile image)
+        {
+            // добавление картинок к туалету
+            if (toilet == null) return;
+            if (_userSession.AuthUser == null) return;
+            var imageID = await _toiletApiService.AddImageFile(image);
+            if (imageID == null) return;
+            UserImageToilet toiletImages = new()
+            {
+                ImageID = (int)imageID,
+                UserID = _userSession.AuthUser.Id,
+                ToiletID = toilet.Id
+            };
+            await _toiletApiService.AddUserImageToilet(toiletImages);
         }
         [RelayCommand]
         private async Task DeleteToilet(object? value)

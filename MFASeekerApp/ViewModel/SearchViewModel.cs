@@ -109,8 +109,6 @@ public partial class SearchViewModel : ObservableObject
                     Longitude = SphericalMercator.ToLonLat(worldPosition).X,
                     Latitude = SphericalMercator.ToLonLat(worldPosition).Y
                 };
-
-                NewToiletVM.Toilet.User = _userSession.AuthUser;
                 // Отдаем в pinManager
                 pinManagerVM?.AddToiletCommand.Execute(NewToiletVM);
                 // сбрасываю данные туалета VM (но лучше сделать метод .Clear();

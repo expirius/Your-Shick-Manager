@@ -41,13 +41,14 @@ namespace MFASeekerApp.Services
                 return [];
             }
         }
-        public async Task AddToilet(Toilet marker)
+        public async Task<int?> AddToilet(Toilet marker)
         {
             var toiletsJson = await GetAllToilets();
             toiletsJson.Add(marker);
 
             var json = JsonSerializer.Serialize(toiletsJson);
             await File.WriteAllTextAsync(filePath, json);
+            return null;
         }
         public async Task DeleteToilet(string guid)
         {
