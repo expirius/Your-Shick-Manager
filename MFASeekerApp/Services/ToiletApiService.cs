@@ -66,17 +66,14 @@ namespace MFASeekerApp.Services
         {
             throw new NotImplementedException();
         }
-
         public Task<List<Toilet>> GetAllToilets()
         {
             throw new NotImplementedException();
         }
-
         public Task<Toilet> GetToiletByGuid(string guid)
         {
             throw new NotImplementedException();
         }
-
         public Task UpdateToilet(Toilet toilet)
         {
             throw new NotImplementedException();

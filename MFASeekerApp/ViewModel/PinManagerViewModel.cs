@@ -5,6 +5,7 @@ using MFASeekerApp.View;
 using MFASeekerApp.Services;
 using System.Collections.ObjectModel;
 using MFASeekerApp.Model;
+using MFASeekerApp.Model.Interfaces;
 
 namespace MFASeekerApp.ViewModel
 {
@@ -16,7 +17,6 @@ namespace MFASeekerApp.ViewModel
         // БЕЗ СВЯЗАННОСТИ КОДА
         public event Action<ObservableCollection<ToiletViewModel>>? ToiletsUpdated;
 
-        private readonly LocalToiletService jsonPinStorage = new();
         [ObservableProperty]
         private ObservableCollection<ToiletViewModel>? activePinList;
         [ObservableProperty]
@@ -27,11 +27,13 @@ namespace MFASeekerApp.ViewModel
         private readonly UserSession _userSession;
         private readonly UserService _userService;
         private readonly ToiletApiService _toiletApiService;
+        private readonly LocalToiletService _localToiletService = new();
 
-        public PinManagerViewModel(UserSession userSession, UserService userService)
+        public PinManagerViewModel(UserSession userSession, UserService userService, ToiletApiService toiletApiService)
         {
             _userSession = userSession;
             _userService = userService;
+            _toiletApiService = toiletApiService;
             ActivePinList = [];
             _ = RefreshToilets();
         }
@@ -54,22 +56,37 @@ namespace MFASeekerApp.ViewModel
                 ToiletsUpdated?.Invoke(ActivePinList);
              });
         }
+        /// <summary>
+        /// Добавление туалета из VM в локальную память
+        /// </summary>
+        /// <param name="toiletVM"></param>
+        /// <returns></returns>
         [RelayCommand]
         private async Task AddToilet(ToiletViewModel toiletVM)
         {
             if (toiletVM.Toilet == null) return;
             ActivePinList?.Add(toiletVM);
-            await jsonPinStorage.AddToilet(toiletVM.Toilet);
-
+            await _localToiletService.AddToilet(toiletVM.Toilet);
+            await _toiletApiService.AddToilet(toiletVM.Toilet);
             ToiletsUpdated?.Invoke(ActivePinList);
             PinAdded?.Invoke(toiletVM);
         }
+        //[RelayCommand]
+        //private async Task AddToilet(ToiletViewModel toiletVM)
+        //{
+        //    if (toiletVM.Toilet == null) return;
+        //    ActivePinList?.Add(toiletVM);
+        //    await _toiletApiService.AddToilet(toiletVM.Toilet);
+        //}
+        /// <summary>
+        /// Добавление картинки для туалета (UIT)
+        /// </summary>
+        /// <param name="toiletID"></param>
+        /// <param name="image"></param>
         [RelayCommand] 
-        private async Task AddImageToToilet(Toilet toilet, ImageFile image)
+        private async Task AddImageToilet(int toiletID, ImageFile image)
         {
             // UIT - UserImageToilet, привазка картинки к туалету
-            // добавление картинок к туалету
-            if (toilet == null) return;
             if (_userSession.AuthUser == null) return;
             var imageID = await _toiletApiService.AddImageFile(image); // добавляем пикчу на сервер
             if (imageID == null) return; // проверяем добавлена ли она
@@ -78,9 +95,9 @@ namespace MFASeekerApp.ViewModel
             {
                 ImageID = (int)imageID,
                 UserID = _userSession.AuthUser.Id,
-                ToiletID = toilet.Id
+                ToiletID = toiletID
             };
-            //
+            // добавить проверки в будущем
             await _toiletApiService.AddUserImageToilet(toiletImages); // добавляем в БД UIT
         }
         [RelayCommand]

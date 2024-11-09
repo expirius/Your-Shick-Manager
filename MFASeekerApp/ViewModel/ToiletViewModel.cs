@@ -77,6 +77,10 @@ namespace MFASeekerApp.ViewModel
                 }
             });
         }
+        public async void LoadDbImageSources()
+        {
+
+        }
 
         public object Clone()
         {

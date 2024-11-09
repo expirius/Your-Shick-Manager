@@ -50,6 +50,7 @@ namespace MFASeekerApp
             });
 
             builder.Services.AddSingleton<UserService>();
+            builder.Services.AddSingleton<ToiletApiService>();
 
 #if DEBUG
             builder.Logging.AddDebug();
