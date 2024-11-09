@@ -33,11 +33,41 @@ namespace MFASeekerServer.Controllers
         [HttpPost("Image")]
         public async Task<ActionResult<int>> AddImage(ImageFile image)
         {
-            await _context.ImageFiles.AddAsync(image);
+            // Папка для сохранения изображений
+            var uploadsFolder = Path.Combine("wwwroot", "images", "uploads");
+            Directory.CreateDirectory(uploadsFolder); // Создаем папку, если она не существует
 
-            if(image.Id != 0)
-            await _context.SaveChangesAsync();
-            return Ok(image.Id);
+            // Генерация уникального имени файла с расширением, соответствующим типу файла
+            var fileExtension = Path.GetExtension(image.FileName) ?? ".jpg"; // Получаем расширение файла или используем ".jpg" по умолчанию
+            var uniqueFileName = $"{Guid.NewGuid()}{fileExtension}";
+            var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+            try
+            {
+                // Декодирование строки Base64 в массив байтов
+                var fileBytes = Convert.FromBase64String(image.ByteBase64);
+
+                // Сохранение массива байтов как файла на сервере
+                await System.IO.File.WriteAllBytesAsync(filePath, fileBytes);
+
+                // Обновление пути в объекте ImageFile для сохранения в базе данных
+                image.Path = $"/images/uploads/{uniqueFileName}";
+
+                // Сохранение объекта ImageFile в базе данных
+                await _context.ImageFiles.AddAsync(image);
+                await _context.SaveChangesAsync();
+
+                return Ok(image.Id);
+            }
+            catch (FormatException)
+            {
+                return BadRequest("Invalid Base64 string.");
+            }
+            catch (Exception ex)
+            {
+                // Логгирование ошибки, если это необходимо
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
         [HttpPost("UserImageToilet")]
         public async Task<ActionResult<int>> AddUserImageToilet(UserImageToilet userImageToiletDto)
@@ -68,6 +98,31 @@ namespace MFASeekerServer.Controllers
             await _context.SaveChangesAsync();
 
             return Ok(userImageToilet.Id);
+        }
+        /// <summary>
+        /// Получение всех фото туалета
+        /// </summary>
+        /// <param name="toiletId"></param>
+        /// <returns></returns>
+        [HttpGet("ToiletPhotos/{toiletGuid}")]
+        public async Task<ActionResult<List<UserImageToilet>>> GetPhotos(string toiletGuid)
+        {
+            // Проверка существования туалета по его guid
+            var toilet = await _context.Toilets
+                .FirstOrDefaultAsync(t => t.Guid == toiletGuid);
+
+            if (toilet == null)
+            {
+                return NotFound("Toilet not found.");
+            }
+
+            // Извлечение объектов UserImageToilet, связанных с указанным туалетом, включая ImageFile
+            var userImageToilets = await _context.ToiletImages
+                .Where(ti => ti.ToiletID == toilet.Id)
+                .Include(ti => ti.ImageFile) // Подключение связанных данных ImageFile
+                .ToListAsync();
+
+            return Ok(userImageToilets);
         }
     }
 }

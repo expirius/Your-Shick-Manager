@@ -6,6 +6,7 @@ using MFASeekerApp.Services;
 using System.Collections.ObjectModel;
 using MFASeekerApp.Model;
 using MFASeekerApp.Model.Interfaces;
+using CommunityToolkit.Maui.Core.Extensions;
 
 namespace MFASeekerApp.ViewModel
 {
@@ -36,6 +37,22 @@ namespace MFASeekerApp.ViewModel
             _toiletApiService = toiletApiService;
             ActivePinList = [];
             _ = RefreshToilets();
+
+            ToiletsUpdated += OnToiletsUpdated;
+        }
+        [RelayCommand]
+        private async Task LoadPhotosDb(ToiletViewModel toiletVM)
+        {
+            // Получаем список фотографий для туалета с сервера
+            if (toiletVM.Toilet == null) return;
+            var userImageToilets = await _toiletApiService.GetPhotos(toiletVM.Toilet.Guid);
+            if (userImageToilets == null) return;
+
+            // Извлекаем пути изображений и добавляем их в ImagePaths
+            foreach (var image in userImageToilets)
+            {
+                toiletVM.ImagePaths.Add(image.ImageFile.Path);
+            }
         }
         [RelayCommand]
         private async Task SetAuthUserSession()
@@ -49,12 +66,15 @@ namespace MFASeekerApp.ViewModel
         [RelayCommand]
         private async Task RefreshToilets()
         {
-            await Task.Run(async () =>
-            {
-                var temp = (await jsonPinStorage.GetAllToilets());
-                ActivePinList = new ObservableCollection<ToiletViewModel>(temp.Select(t => new ToiletViewModel(t)));
-                ToiletsUpdated?.Invoke(ActivePinList);
-             });
+            var temp = await _toiletApiService.GetAllToilets();
+            ActivePinList = new ObservableCollection<ToiletViewModel>(temp.Select(t => new ToiletViewModel(t)));
+            ToiletsUpdated?.Invoke(ActivePinList);
+            //await Task.Run(async () =>
+            //{
+            //    var temp = (await _localToiletService.GetAllToilets());
+            //    ActivePinList = new ObservableCollection<ToiletViewModel>(temp.Select(t => new ToiletViewModel(t)));
+            //    ToiletsUpdated?.Invoke(ActivePinList);
+            // });
         }
         /// <summary>
         /// Добавление туалета из VM в локальную память
@@ -66,40 +86,26 @@ namespace MFASeekerApp.ViewModel
         {
             if (toiletVM.Toilet == null) return;
             ActivePinList?.Add(toiletVM);
-            await _localToiletService.AddToilet(toiletVM.Toilet);
-            await _toiletApiService.AddToilet(toiletVM.Toilet);
+            //await _localToiletService.AddToilet(toiletVM.Toilet); // local
+            var toiletId = await _toiletApiService.AddToilet(toiletVM.Toilet); // db
+            foreach(var item in toiletVM.Toilet.Images)
+            {
+                if (item != null)
+                {
+                    var imageId = await _toiletApiService.AddImageFile(item);
+                    UserImageToilet imageToilet = new()
+                    {
+                        ImageID = (int)imageId,
+                        UserID = _userSession.AuthUser.Id,
+                        ToiletID = (int)toiletId
+                    };
+                    await _toiletApiService.AddUserImageToilet(imageToilet);
+                }
+            }
             ToiletsUpdated?.Invoke(ActivePinList);
             PinAdded?.Invoke(toiletVM);
         }
-        //[RelayCommand]
-        //private async Task AddToilet(ToiletViewModel toiletVM)
-        //{
-        //    if (toiletVM.Toilet == null) return;
-        //    ActivePinList?.Add(toiletVM);
-        //    await _toiletApiService.AddToilet(toiletVM.Toilet);
-        //}
-        /// <summary>
-        /// Добавление картинки для туалета (UIT)
-        /// </summary>
-        /// <param name="toiletID"></param>
-        /// <param name="image"></param>
-        [RelayCommand] 
-        private async Task AddImageToilet(int toiletID, ImageFile image)
-        {
-            // UIT - UserImageToilet, привазка картинки к туалету
-            if (_userSession.AuthUser == null) return;
-            var imageID = await _toiletApiService.AddImageFile(image); // добавляем пикчу на сервер
-            if (imageID == null) return; // проверяем добавлена ли она
-            //
-            UserImageToilet toiletImages = new() // создаем UIT
-            {
-                ImageID = (int)imageID,
-                UserID = _userSession.AuthUser.Id,
-                ToiletID = toiletID
-            };
-            // добавить проверки в будущем
-            await _toiletApiService.AddUserImageToilet(toiletImages); // добавляем в БД UIT
-        }
+
         [RelayCommand]
         private async Task DeleteToilet(object? value)
         {
@@ -108,7 +114,7 @@ namespace MFASeekerApp.ViewModel
                 // В принципе можно и весь объект передать, а смысл? 
                 //await jsonPinStorage.DeleteMarkerAsync(marker: toilet);
                 ActivePinList?.Remove(toiletVM);  // Удаляем из локальной коллекции
-                await jsonPinStorage.DeleteToilet(guid: toiletVM.Toilet.Guid); // Асинхронно удаляем из хранилища
+                await _localToiletService.DeleteToilet(guid: toiletVM.Toilet.Guid); // Асинхронно удаляем из хранилища
                 PinDeleted?.Invoke(toiletVM); // Уведомляем об удалении
             }
         }
@@ -142,7 +148,9 @@ namespace MFASeekerApp.ViewModel
                         ToiletsUpdated?.Invoke(ActivePinList);
                     }
                     // обновление в памяти
-                    await jsonPinStorage.UpdateToilet(SelectedToiletVM.Toilet);
+                    await _localToiletService.UpdateToilet(SelectedToiletVM.Toilet);
+                    // Обновление в БД
+                    _toiletApiService.UpdateToilet(SelectedToiletVM.Toilet);
                 }
             }
         }
@@ -156,6 +164,16 @@ namespace MFASeekerApp.ViewModel
                     BindingContext = ToiletQRService.GenerateQRCode(toilet.Toilet)
                 };
                 object? result = await Application.Current.MainPage.ShowPopupAsync(popup);
+            }
+        }
+
+        private async void OnToiletsUpdated(ObservableCollection<ToiletViewModel> updatedToilets)
+        {
+            // Здесь можно обновить данные в зависимости от обновленных туалетов
+            // Например, обновить коллекцию туалетов или UI
+            foreach (var updatedToilet in updatedToilets)
+            {
+                await LoadPhotosDb(updatedToilet);
             }
         }
     }

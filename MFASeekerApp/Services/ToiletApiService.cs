@@ -66,9 +66,68 @@ namespace MFASeekerApp.Services
         {
             throw new NotImplementedException();
         }
-        public Task<List<Toilet>> GetAllToilets()
+        public async Task<IEnumerable<UserImageToilet>> GetPhotos(string toiletGuid)
         {
-            throw new NotImplementedException();
+            try
+            {
+                // Запрос к серверу для получения изображений, связанных с заданным toiletGuid
+                var response = await _httpClient.GetAsync($"api/Toilet/GetPhotos?toiletGuid={toiletGuid}");
+
+                // Проверка успешности запроса
+                if (response.IsSuccessStatusCode)
+                {
+                    // Десериализация полученного списка изображений
+                    var images = await response.Content.ReadFromJsonAsync<IEnumerable<UserImageToilet>>();
+
+                    if (images != null)
+                    {
+                        // Логирование информации для отладки (можно удалить или адаптировать)
+                        Console.WriteLine($"Получено {images.Count()} изображений для туалета с ID {toiletGuid}");
+
+                        return images;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Список изображений пуст.");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine($"Ошибка при получении изображений: {response.ReasonPhrase}");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Ошибка: {ex.Message}");
+            }
+
+            // Возвращаем пустой список, если запрос не удался
+            return [];
+
+        }
+        public async Task<List<Toilet>> GetAllToilets()
+        {
+            try
+            {
+                var response = await _httpClient.GetAsync("api/Toilet/AllToilets");
+                if (response.IsSuccessStatusCode)
+                {
+                    // Десериализация данных в список объектов Toilet
+                    var toilets = await response.Content.ReadFromJsonAsync<List<Toilet>>();
+                    return toilets;
+                }
+                else
+                {
+                    // Обработка ошибки
+                    Console.WriteLine($"Ошибка: {response.StatusCode}");
+                    return []; // Возвращаем пустой список в случае ошибки
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Ошибка при запросе: {ex.Message}");
+                return new List<Toilet>(); // Возвращаем пустой список в случае исключения
+            }
         }
         public Task<Toilet> GetToiletByGuid(string guid)
         {

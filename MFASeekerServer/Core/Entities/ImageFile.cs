@@ -11,7 +11,7 @@ namespace MFASeekerServer.Core.Entities
         public required string ByteBase64 { get; set; }
         public required string ContentType { get; set; }
         public required string FileName { get; set; }
-        private string? CachePath { get; set; }
+        public string? Path { get; set; }
 
     }
 }

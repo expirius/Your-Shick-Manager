@@ -14,22 +14,25 @@ namespace MFASeekerApp.ViewModel
         [ObservableProperty]
         private ObservableCollection<ImageSource> imageSources;
         [ObservableProperty]
+        private List<string> imagePaths;
+        [ObservableProperty]
         private ImageSource? imagePreviewSource = null;
 
         public ToiletViewModel(Toilet toilet)
         {
-            ImageSources = new();
+            ImageSources = [];
             Toilet = toilet;
-            SetPreviewImageSource();
-            LoadLocalImageSources();
+            ImagePaths = [];
+            //SetPreviewImageSource();
+            //LoadLocalImageSources();
         }
-
         [RelayCommand]
         private async Task AddLocalImageAsync()
         {
             var fileResult = await _localImageService.TakePhoto();
             if (fileResult != null)
             {
+                
                 ImageFile? imageFile = await _localImageService.Upload(fileResult);
                 if (imageFile != null)
                 {
@@ -76,10 +79,6 @@ namespace MFASeekerApp.ViewModel
                     this.ImageSources.Add(imageSource);
                 }
             });
-        }
-        public async void LoadDbImageSources()
-        {
-
         }
 
         public object Clone()
