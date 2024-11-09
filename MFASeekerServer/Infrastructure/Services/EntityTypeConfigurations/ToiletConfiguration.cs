@@ -17,7 +17,8 @@ namespace MFASeekerServer.Infrastructure.Services.EntityTypeConfigurations
             builder.HasOne(toilet => toilet.User) // (1) один создатель (user)
                .WithMany(user => user.Toilets) // (2) юзер с коллекцией туалетов
                .HasForeignKey(toilet => toilet.UserID) // (3) foreign на создателя
-               .OnDelete(DeleteBehavior.Restrict); // (4) каскадное удаление не нужно
+               .OnDelete(DeleteBehavior.SetNull); // (4) каскадное удаление не нужно
+
         }
     }
 }

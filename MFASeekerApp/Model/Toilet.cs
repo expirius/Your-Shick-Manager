@@ -19,7 +19,6 @@ namespace MFASeekerApp.Model
             Guid = CreateGuid();
             CreatedDate = DateTime.Now;
         }
-
         public string GetInfo()
         {
             return $"Name: {Name}, Location: {Location}, Description: {Description}, Rating: {Rating}, Created By: {User?.UserName}, On: {CreatedDate}";

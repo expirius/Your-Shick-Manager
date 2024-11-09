@@ -3,6 +3,7 @@ using System;
 using MFASeekerServer.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MFASeekerServer.Migrations
 {
     [DbContext(typeof(SeekerDbContext))]
-    partial class SeekerDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241109112256_MakeUserAndUserImageToiletsOptional")]
+    partial class MakeUserAndUserImageToiletsOptional
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.10");

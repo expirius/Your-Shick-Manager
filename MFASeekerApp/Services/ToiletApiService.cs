@@ -6,8 +6,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http.Json;
 using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
-
 namespace MFASeekerApp.Services
 {
     public class ToiletApiService(UserSession userSession, HttpClient httpClient) : IToiletService
@@ -21,13 +22,30 @@ namespace MFASeekerApp.Services
 
             try
             {
-                var response = await _httpClient.PostAsJsonAsync("api/Toilet/", toilet);
+                var toiletDto = new
+                {
+                    Guid = toilet.Guid,
+                    Location = toilet.Location != null
+                        ? $"{toilet.Location.Latitude}, {toilet.Location.Longitude}"
+                        : null, // Преобразование Location в строку
+                    Name = toilet.Name,
+                    Description = toilet.Description,
+                    Rating = toilet.Rating,
+                    IsPrivate = toilet.IsPrivate,
+                    CreatedDate = toilet.CreatedDate,
+                    UpdatedDateTime = toilet.UpdatedDateTime,
+                    UserID = toilet.User.Id,
+
+                };
+                
+                Console.WriteLine(JsonSerializer.Serialize(toiletDto));
+                var response = await _httpClient.PostAsJsonAsync("api/Toilet", toiletDto);
                 if (response.IsSuccessStatusCode)
                 {
-                    var createdToilet = await response.Content.ReadFromJsonAsync<Toilet>();
-                    Console.WriteLine($"Туалет добавлен как \nId: {createdToilet?.Id}, \nGuid: {createdToilet?.Guid}") ;
+                    var createdToilet = await response.Content.ReadFromJsonAsync<int>();
+                    Console.WriteLine($"Туалет добавлен как \nId: {createdToilet}");
 
-                    return createdToilet?.Id; // Возвращаем новый Id, если он существует
+                    return createdToilet; // Возвращаем новый Id, если он существует
                 }
                 return null;
             }
@@ -41,7 +59,7 @@ namespace MFASeekerApp.Services
         {
             try
             {
-                var response = await _httpClient.PostAsJsonAsync("api/ImageFile", image);
+                var response = await _httpClient.PostAsJsonAsync("api/Image", image);
                 return image.Id;
             }
             catch (Exception ex)
@@ -54,8 +72,7 @@ namespace MFASeekerApp.Services
         {
             try
             {
-                var response = await _httpClient.PostAsJsonAsync("api/UserImageToilet/", userImageToilet);
-
+                var response = await _httpClient.PostAsJsonAsync("api/Toilet/UserImageToilet/", userImageToilet);
             }
             catch (Exception ex)
             {
@@ -71,7 +88,7 @@ namespace MFASeekerApp.Services
             try
             {
                 // Запрос к серверу для получения изображений, связанных с заданным toiletGuid
-                var response = await _httpClient.GetAsync($"api/Toilet/GetPhotos?toiletGuid={toiletGuid}");
+                var response = await _httpClient.GetAsync($"api/Toilet/ToiletPhotos/{toiletGuid}");
 
                 // Проверка успешности запроса
                 if (response.IsSuccessStatusCode)

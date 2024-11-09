@@ -88,6 +88,7 @@ namespace MFASeekerApp.ViewModel
             ActivePinList?.Add(toiletVM);
             //await _localToiletService.AddToilet(toiletVM.Toilet); // local
             var toiletId = await _toiletApiService.AddToilet(toiletVM.Toilet); // db
+            if (toiletId == null) return;
             foreach(var item in toiletVM.Toilet.Images)
             {
                 if (item != null)
@@ -171,10 +172,13 @@ namespace MFASeekerApp.ViewModel
         {
             // Здесь можно обновить данные в зависимости от обновленных туалетов
             // Например, обновить коллекцию туалетов или UI
-            foreach (var updatedToilet in updatedToilets)
-            {
-                await LoadPhotosDb(updatedToilet);
-            }
+
+            if (updatedToilets != null)
+                foreach (var updatedToilet in updatedToilets)
+                {
+                    if (updatedToilet.Toilet.Images != null)
+                        await LoadPhotosDb(updatedToilet);
+                }
         }
     }
 } 

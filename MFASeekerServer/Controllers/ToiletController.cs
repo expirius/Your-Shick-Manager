@@ -22,8 +22,8 @@ namespace MFASeekerServer.Controllers
         //var createdToilet = await _toiletService.AddToiletAsync(toiletDto);
 
         // Временное решение
-        [HttpPost("Toilet")]
-        public async Task<ActionResult<int>> AddToilet(Toilet createdToilet)
+        [HttpPost]
+        public async Task<ActionResult<int>> AddToilet([FromBody] Toilet createdToilet)
         {
             _context.Toilets.Add(createdToilet);
             await _context.SaveChangesAsync();
