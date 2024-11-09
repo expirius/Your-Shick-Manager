@@ -65,20 +65,23 @@ namespace MFASeekerApp.ViewModel
             PinAdded?.Invoke(toiletVM);
         }
         [RelayCommand] 
-        private async Task AddImage(Toilet toilet, ImageFile image)
+        private async Task AddImageToToilet(Toilet toilet, ImageFile image)
         {
+            // UIT - UserImageToilet, привазка картинки к туалету
             // добавление картинок к туалету
             if (toilet == null) return;
             if (_userSession.AuthUser == null) return;
-            var imageID = await _toiletApiService.AddImageFile(image);
-            if (imageID == null) return;
-            UserImageToilet toiletImages = new()
+            var imageID = await _toiletApiService.AddImageFile(image); // добавляем пикчу на сервер
+            if (imageID == null) return; // проверяем добавлена ли она
+            //
+            UserImageToilet toiletImages = new() // создаем UIT
             {
                 ImageID = (int)imageID,
                 UserID = _userSession.AuthUser.Id,
                 ToiletID = toilet.Id
             };
-            await _toiletApiService.AddUserImageToilet(toiletImages);
+            //
+            await _toiletApiService.AddUserImageToilet(toiletImages); // добавляем в БД UIT
         }
         [RelayCommand]
         private async Task DeleteToilet(object? value)
