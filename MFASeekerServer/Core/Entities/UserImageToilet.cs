@@ -17,8 +17,8 @@ namespace MFASeekerServer.Core.Entities
         public int ImageID { get; set; }
         public int ToiletID { get; set; }
         //
-        public User User { get; set; }
-        public ImageFile ImageFile { get; set; }
-        public Toilet Toilet { get; set; }
+        public User? User { get; set; }
+        public ImageFile? ImageFile { get; set; }
+        public Toilet? Toilet { get; set; }
     }
 }

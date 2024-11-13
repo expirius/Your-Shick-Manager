@@ -32,6 +32,7 @@ namespace MFASeekerApp
                 .UseMauiCommunityToolkit();
             //
             builder.Services.AddSingleton<MainPage>();
+            // Сессия пользователя
             builder.Services.AddSingleton<UserSession>();
 
             builder.Services.AddSingleton<SearchViewModel>();
@@ -41,8 +42,6 @@ namespace MFASeekerApp
             builder.Services.AddSingleton<PinManagerViewModel>();
             // Построение строки подключения
             //builder.Services.AddSingleton<ServerHttpFactory>();
-            // Сессия пользователя
-            builder.Services.AddSingleton<UserSession>();
             // Подключение к серверу
             builder.Services.AddScoped(sp => new HttpClient
             {

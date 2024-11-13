@@ -3,6 +3,8 @@ using CommunityToolkit.Mvvm.Input;
 using MFASeekerApp.Services;
 using MFASeekerApp.Model;
 using System.Collections.ObjectModel;
+using System.Net;
+using System.Runtime.CompilerServices;
 
 namespace MFASeekerApp.ViewModel
 {
@@ -10,16 +12,19 @@ namespace MFASeekerApp.ViewModel
     {
         private readonly LocalImageService _localImageService = new();
         [ObservableProperty]
-        public Toilet? toilet;
+        private string adress;
+        [ObservableProperty]
+        private Toilet? toilet;
         [ObservableProperty]
         private ObservableCollection<ImageSource> imageSources;
         [ObservableProperty]
-        private List<string> imagePaths;
+        private ObservableCollection<string> imagePaths;
         [ObservableProperty]
         private ImageSource? imagePreviewSource = null;
 
         public ToiletViewModel(Toilet toilet)
         {
+            Adress = string.Empty;
             ImageSources = [];
             Toilet = toilet;
             ImagePaths = [];
@@ -80,7 +85,6 @@ namespace MFASeekerApp.ViewModel
                 }
             });
         }
-
         public object Clone()
         {
             return this.MemberwiseClone();

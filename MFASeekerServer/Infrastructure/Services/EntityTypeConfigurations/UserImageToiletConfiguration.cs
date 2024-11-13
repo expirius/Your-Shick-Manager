@@ -25,7 +25,7 @@ namespace MFASeekerServer.Infrastructure.Services.EntityTypeConfigurations
             builder.HasOne(ust => ust.ImageFile)
                 .WithOne() // Т.к. одна фотка ТОЛЬКО к одному туалету.
                 .HasForeignKey<UserImageToilet>(ust => ust.ImageID)
-                .OnDelete(DeleteBehavior.Cascade); // что тут происходит 
+                .OnDelete(DeleteBehavior.SetNull); // что тут происходит 
         }
     }
 }

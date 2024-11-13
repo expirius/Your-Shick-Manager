@@ -1,4 +1,5 @@
-﻿using MFASeekerApp.Services;
+﻿using MFASeekerApp.Model;
+using MFASeekerApp.Services;
 using System.Globalization;
 
 namespace MFASeekerApp.Converters
@@ -7,11 +8,18 @@ namespace MFASeekerApp.Converters
     {
         public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
         {
-            return Task.Run(async () =>
+            return Task.Run(async() =>
             {
-                if (value is (Location location))
+                if (value is string location)
                 {
-                    return await StandartGeoCodingService.GetAddressFromCoordinates(location.Latitude, location.Longitude);
+                    Location loc = Toilet.ParseLocationFromString(location);
+
+                    string adress = await StandartGeoCodingService.GetAddressFromCoordinates(loc.Latitude, loc.Longitude);
+                    return adress;
+                }
+                if (value is Location locationT)
+                {
+                    return await StandartGeoCodingService.GetAddressFromCoordinates(locationT.Latitude, locationT.Longitude);
                 }
                 return "N/A";
             }).GetAwaiter().GetResult(); // 

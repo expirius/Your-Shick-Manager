@@ -24,11 +24,12 @@ namespace MFASeekerApp.Model
         public static PointFeature GetFeature(Toilet toilet)
         {
             // описание точки
-            var feature = new PointFeature(SphericalMercator.FromLonLat(toilet.Location.Longitude, toilet.Location.Latitude).ToMPoint());
+            Location location = Toilet.ParseLocationFromString(toilet.Location);
+            var feature = new PointFeature(SphericalMercator.FromLonLat(location.Longitude, location.Latitude).ToMPoint());
             feature[nameof(toilet.Name)] = toilet.Name;
             feature[nameof(toilet.Id)] = toilet.Id;
-            feature[nameof(toilet.Location.Longitude)] = toilet.Location.Longitude;
-            feature[nameof(toilet.Location.Latitude)] = toilet.Location.Latitude;
+            feature[nameof(location.Longitude)] = location.Longitude;
+            feature[nameof(location.Latitude)] = location.Latitude;
             feature[nameof(toilet.Description)] = toilet.Description;
             feature[nameof(toilet.Rating)] = toilet.Rating;
             // styles
@@ -43,11 +44,12 @@ namespace MFASeekerApp.Model
             if (toilets != null)
                 return toilets.Select(t =>
                 {
-                    var feature = new PointFeature(SphericalMercator.FromLonLat(t.Location.Longitude, t.Location.Latitude).ToMPoint());
+                    Location? location = Toilet.ParseLocationFromString(t.Location);
+                    var feature = new PointFeature(SphericalMercator.FromLonLat(location.Longitude, location.Latitude).ToMPoint());
                     feature[nameof(t.Name)] = t.Name;
                     feature[nameof(t.Id)] = t.Id;
-                    feature[nameof(t.Location.Longitude)] = t.Location.Longitude;
-                    feature[nameof(t.Location.Latitude)] = t.Location.Latitude;
+                    feature[nameof(location.Longitude)] = location.Longitude;
+                    feature[nameof(location.Latitude)] = location.Latitude;
                     feature[nameof(t.Description)] = t.Description;
                     feature[nameof(t.Rating)] = t.Rating;
                     // styles
@@ -56,7 +58,7 @@ namespace MFASeekerApp.Model
 
                     return feature;
                 });
-            else { return []; }
+                else { return []; }
         }
         // Локальные пины для теста
         //public async static Task<IEnumerable<PointFeature>> GetFeaturesLocalAsync()
@@ -96,8 +98,8 @@ namespace MFASeekerApp.Model
             * Обязательно в будущем каждому туалету давать адрес при сохранении точки.
             * Так меньше нагрузки
             */
-            var address = Task.Run(() => StandartGeoCodingService.GetAddressFromCoordinates(t.Location.Latitude, t.Location.Longitude))
-                .GetAwaiter().GetResult();
+            Location? location = Toilet.ParseLocationFromString(t.Location);
+            var address = Task.Run(async () => await StandartGeoCodingService.GetAddressFromCoordinates(location.Latitude, location.Longitude)).GetAwaiter().GetResult();
             keyValuePairs.AppendLine($"Адрес: {address}");
             return new CalloutStyle
             {

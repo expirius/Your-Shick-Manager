@@ -34,7 +34,7 @@ namespace MFASeekerServer.Controllers
         public async Task<ActionResult<int>> AddImage(ImageFile image)
         {
             // Папка для сохранения изображений
-            var uploadsFolder = Path.Combine("wwwroot", "images", "uploads");
+            var uploadsFolder = Path.Combine("images", "uploads");
             Directory.CreateDirectory(uploadsFolder); // Создаем папку, если она не существует
 
             // Генерация уникального имени файла с расширением, соответствующим типу файла
@@ -88,9 +88,9 @@ namespace MFASeekerServer.Controllers
                 UserID = userImageToiletDto.UserID,
                 ImageID = userImageToiletDto.ImageID,
                 ToiletID = userImageToiletDto.ToiletID,
-                User = user,
-                ImageFile = image,
-                Toilet = toilet
+                //User = user,
+                //ImageFile = image,
+                //Toilet = toilet
             };
 
             // Сохранение записи в базе данных

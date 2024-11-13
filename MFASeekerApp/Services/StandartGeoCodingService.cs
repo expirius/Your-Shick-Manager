@@ -13,15 +13,15 @@ namespace MFASeekerApp.Services
         {
             try
             {
-                var placemarks = await Geocoding.GetPlacemarksAsync(latitude, longitude);
+                var placemarks = (await Geocoding.GetPlacemarksAsync(latitude, longitude))?.ToList();
 
-                if (placemarks != null && placemarks.Any())
+                if (placemarks != null && placemarks.Count!=0)
                 {
                     var placemark = placemarks.FirstOrDefault();
                     if (placemark != null)
                     {
                         return
-                            $"{placemark.Locality}, " +  // Город
+                            $"{placemark.Locality} " +  // Город
                             $"{placemark.Thoroughfare} " +  // Адрес
                             $"{placemark.SubThoroughfare}"; // Дом
                     }

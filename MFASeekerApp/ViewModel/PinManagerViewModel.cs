@@ -36,7 +36,7 @@ namespace MFASeekerApp.ViewModel
             _userService = userService;
             _toiletApiService = toiletApiService;
             ActivePinList = [];
-            _ = RefreshToilets();
+            RefreshToiletsCommand.Execute(null);
 
             ToiletsUpdated += OnToiletsUpdated;
         }
@@ -46,12 +46,12 @@ namespace MFASeekerApp.ViewModel
             // Получаем список фотографий для туалета с сервера
             if (toiletVM.Toilet == null) return;
             var userImageToilets = await _toiletApiService.GetPhotos(toiletVM.Toilet.Guid);
-            if (userImageToilets == null) return;
+            if (!userImageToilets.Any()) return;
 
             // Извлекаем пути изображений и добавляем их в ImagePaths
-            foreach (var image in userImageToilets)
+            foreach (var item in userImageToilets)
             {
-                toiletVM.ImagePaths.Add(image.ImageFile.Path);
+                //toiletVM.ImagePaths.Add(item.ImageFile.Path);
             }
         }
         [RelayCommand]
@@ -69,12 +69,8 @@ namespace MFASeekerApp.ViewModel
             var temp = await _toiletApiService.GetAllToilets();
             ActivePinList = new ObservableCollection<ToiletViewModel>(temp.Select(t => new ToiletViewModel(t)));
             ToiletsUpdated?.Invoke(ActivePinList);
-            //await Task.Run(async () =>
-            //{
-            //    var temp = (await _localToiletService.GetAllToilets());
-            //    ActivePinList = new ObservableCollection<ToiletViewModel>(temp.Select(t => new ToiletViewModel(t)));
-            //    ToiletsUpdated?.Invoke(ActivePinList);
-            // });
+
+            await LoadToiletAddressAsync();
         }
         /// <summary>
         /// Добавление туалета из VM в локальную память
@@ -84,27 +80,32 @@ namespace MFASeekerApp.ViewModel
         [RelayCommand]
         private async Task AddToilet(ToiletViewModel toiletVM)
         {
-            if (toiletVM.Toilet == null) return;
-            ActivePinList?.Add(toiletVM);
-            //await _localToiletService.AddToilet(toiletVM.Toilet); // local
-            var toiletId = await _toiletApiService.AddToilet(toiletVM.Toilet); // db
-            if (toiletId == null) return;
-            foreach(var item in toiletVM.Toilet.Images)
+            try
             {
-                if (item != null)
-                {
-                    var imageId = await _toiletApiService.AddImageFile(item);
-                    UserImageToilet imageToilet = new()
+                if (toiletVM.Toilet == null) return;
+                ActivePinList?.Add(toiletVM);
+                //await _localToiletService.AddToilet(toiletVM.Toilet); // local
+                var toiletId = await _toiletApiService.AddToilet(toiletVM.Toilet); // db
+                if (toiletVM.Toilet.Images.Count > 0)
+                    foreach (var item in toiletVM.Toilet.Images)
                     {
-                        ImageID = (int)imageId,
-                        UserID = _userSession.AuthUser.Id,
-                        ToiletID = (int)toiletId
-                    };
-                    await _toiletApiService.AddUserImageToilet(imageToilet);
-                }
+                        if (item != null)
+                        {
+                            //var imageId = await _toiletApiService.AddImageFile(item);
+                            item.UpdatedDateTime = DateTime.Now;
+                            UserImageToilet imageToilet = new()
+                            {
+                                UserID = _userSession.AuthUser.Id,
+                                ToiletID = (int)toiletId,
+                                ImageFile = item
+                            };
+                            await _toiletApiService.AddUserImageToilet(imageToilet);
+                        }
+                    }
+                ToiletsUpdated?.Invoke(ActivePinList);
+                PinAdded?.Invoke(toiletVM);
             }
-            ToiletsUpdated?.Invoke(ActivePinList);
-            PinAdded?.Invoke(toiletVM);
+            catch (Exception ex) { Console.WriteLine("Проблема при добавлении картинок или туалета"); };
         }
 
         [RelayCommand]
@@ -167,7 +168,17 @@ namespace MFASeekerApp.ViewModel
                 object? result = await Application.Current.MainPage.ShowPopupAsync(popup);
             }
         }
+        public async Task LoadToiletAddressAsync()
+        {
+            if (ActivePinList.Count == 0) return;
+            foreach (var toiletVM in ActivePinList)
+            {
+                if (toiletVM == null || toiletVM.Toilet == null) continue;
 
+                var loc = Toilet.ParseLocationFromString(toiletVM.Toilet.Location);
+                toiletVM.Adress = await StandartGeoCodingService.GetAddressFromCoordinates(loc.Latitude, loc.Longitude);
+            }
+        }
         private async void OnToiletsUpdated(ObservableCollection<ToiletViewModel> updatedToilets)
         {
             // Здесь можно обновить данные в зависимости от обновленных туалетов
@@ -176,8 +187,8 @@ namespace MFASeekerApp.ViewModel
             if (updatedToilets != null)
                 foreach (var updatedToilet in updatedToilets)
                 {
-                    if (updatedToilet.Toilet.Images != null)
-                        await LoadPhotosDb(updatedToilet);
+                    if (updatedToilet.Toilet.Images != null) ;
+                        //await LoadPhotosDb(updatedToilet);
                 }
         }
     }

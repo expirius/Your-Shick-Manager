@@ -71,7 +71,7 @@ namespace MFASeekerApp.Services
                 markerToUpdate.Name = toilet.Name;
                 // markerToUpdate.Location = toilet.Location; в будущем и локацию
                 markerToUpdate.Rating = toilet.Rating;
-                markerToUpdate.Images = toilet.Images;
+                //markerToUpdate.Images = toilet.Images;
                 markerToUpdate.Description = toilet.Description;
 
                 var json = JsonSerializer.Serialize(toiletsJson);

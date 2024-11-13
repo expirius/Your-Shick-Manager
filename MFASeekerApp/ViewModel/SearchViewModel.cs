@@ -76,14 +76,14 @@ public partial class SearchViewModel : ObservableObject
             MapManager.CenterToUserLocation();
         }
     }
-    private async void InitializeAsync()
+    private void InitializeAsync()
     {
         //var features = await MapPinManager.GetFeaturesLocalAsync();
         // pointFeatures.AddRange(features);
         pointFeatures = MapPinManager.CreatePointLayer("AllToiletsLayer", true);
         SearchMapControl.Map.Layers.Add(pointFeatures);
 
-        pinManagerVM?.RefreshToiletsCommand.Execute(null);
+        //pinManagerVM?.RefreshToiletsCommand.Execute(null);
     }
     private async void OnMapLongTaped(object? sender, Mapsui.UI.TappedEventArgs e)
     {
@@ -101,14 +101,11 @@ public partial class SearchViewModel : ObservableObject
             object? result = await Application.Current.MainPage.ShowPopupAsync(popup);
             if (result is bool isConfirmed && isConfirmed)
             {
-                if (NewToiletVM == null) return;
-
+                if (NewToiletVM == null || NewToiletVM.Toilet == null) return;
                 var worldPosition = mapControl.Map.Navigator.Viewport.ScreenToWorld(e.ScreenPosition);
-                NewToiletVM.Toilet.Location = new()
-                {
-                    Longitude = SphericalMercator.ToLonLat(worldPosition).X,
-                    Latitude = SphericalMercator.ToLonLat(worldPosition).Y
-                };
+                NewToiletVM.Toilet.Location = // lat lon
+                    $"{SphericalMercator.ToLonLat(worldPosition).Y}," +
+                    $"{SphericalMercator.ToLonLat(worldPosition).X}";
                 // Отдаем в pinManager
                 pinManagerVM?.AddToiletCommand.Execute(NewToiletVM);
                 // сбрасываю данные туалета VM (но лучше сделать метод .Clear();
@@ -160,11 +157,14 @@ public partial class SearchViewModel : ObservableObject
     // А ИЗ PINMANAGER'A. Например: RefreshToiletsCommand()
     public void OnToiletsUpdated(ObservableCollection<ToiletViewModel> toiletsVM)
     {
-        var toiletsTemp = toiletsVM.Select(toilet => toilet.Toilet); // преобразую в enum обычного toilet
-        pointFeatures?.Clear(); // очищаю точки на карте
-        var tmp = MapPinManager.GetFeatures(toiletsTemp); // получаю отрисовки точек по всей карте
-        pointFeatures?.AddRange(tmp); // добавляю их на карту
-        pointFeatures?.DataHasChanged(); // уведомляю об изменении
+        Task.Run(() =>
+        {
+            var toiletsTemp = toiletsVM.Select(toilet => toilet.Toilet); // преобразую в enum обычного toilet
+            pointFeatures?.Clear(); // очищаю точки на карте
+            var tmp = MapPinManager.GetFeatures(toiletsTemp); // получаю отрисовки точек по всей карте
+            pointFeatures?.AddRange(tmp); // добавляю их на карту
+            pointFeatures?.DataHasChanged(); // уведомляю об изменении
+        });
     }
     private async void OnLocationUpdate(Location location)
     {

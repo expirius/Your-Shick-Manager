@@ -1,6 +1,7 @@
 ﻿using MFASeekerApp.Model;
 using MFASeekerApp.Model.Interfaces;
 using MFASeekerApp.ViewModel;
+using Microsoft.Maui.Graphics.Text;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,26 +23,11 @@ namespace MFASeekerApp.Services
 
             try
             {
-                var toiletDto = new
-                {
-                    Guid = toilet.Guid,
-                    Location = toilet.Location != null
-                        ? $"{toilet.Location.Latitude}, {toilet.Location.Longitude}"
-                        : null, // Преобразование Location в строку
-                    Name = toilet.Name,
-                    Description = toilet.Description,
-                    Rating = toilet.Rating,
-                    IsPrivate = toilet.IsPrivate,
-                    CreatedDate = toilet.CreatedDate,
-                    UpdatedDateTime = toilet.UpdatedDateTime,
-                    UserID = toilet.User.Id,
-
-                };
-                
-                Console.WriteLine(JsonSerializer.Serialize(toiletDto));
-                var response = await _httpClient.PostAsJsonAsync("api/Toilet", toiletDto);
+                toilet.User = null;
+                var response = await _httpClient.PostAsJsonAsync("api/Toilet", toilet);
                 if (response.IsSuccessStatusCode)
                 {
+                    Console.WriteLine(JsonSerializer.Serialize(toilet));
                     var createdToilet = await response.Content.ReadFromJsonAsync<int>();
                     Console.WriteLine($"Туалет добавлен как \nId: {createdToilet}");
 
@@ -51,39 +37,68 @@ namespace MFASeekerApp.Services
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message + "Ошибка при добавлении пользователя");
+                Console.WriteLine(ex.Message + "Ошибка при добавлении туалета");
                 return null;
             }
         }
-        public async Task<int?> AddImageFile(ImageFile image)
+        //public async Task<int?> AddImageFile(ImageFile image)
+        //{
+        //    try
+        //    {
+        //        var response = await _httpClient.PostAsJsonAsync("api/Image", image);
+        //        return image.Id;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Console.WriteLine(ex.Message);
+        //        return null;
+        //    }
+        //}
+        public async Task<int?> AddUserImageToilet(UserImageToilet userImageToilet)
         {
             try
             {
-                var response = await _httpClient.PostAsJsonAsync("api/Image", image);
-                return image.Id;
+                var response = await _httpClient.PostAsJsonAsync("api/Toilet/Image", userImageToilet.ImageFile);
+                Console.WriteLine("ImageFile: " + JsonSerializer.Serialize(userImageToilet.ImageFile));
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var responseData = await response.Content.ReadFromJsonAsync<int>();
+                    userImageToilet.ImageID = responseData;
+                    userImageToilet.ImageFile.Path = "";
+                    //userImageToilet.ImageFile = null;
+
+                    Console.WriteLine(JsonSerializer.Serialize(userImageToilet));
+                    response = await _httpClient.PostAsJsonAsync("api/Toilet/UserImageToilet", userImageToilet);
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var resultUIT = await response.Content.ReadFromJsonAsync<int>(); // возвращать строку мб потом
+                        return resultUIT;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Ошибка при отправке данных о UserImageToilet: " + response.ReasonPhrase);
+                        return null;
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Ошибка при отправке изображения: " + response.ReasonPhrase);
+                    return null;
+                }
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
                 return null;
-            }
-        }
-        public async Task AddUserImageToilet(UserImageToilet userImageToilet)
-        {
-            try
-            {
-                var response = await _httpClient.PostAsJsonAsync("api/Toilet/UserImageToilet/", userImageToilet);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
             }
         }
         public Task DeleteToilet(string guid)
         {
             throw new NotImplementedException();
         }
-        public async Task<IEnumerable<UserImageToilet>> GetPhotos(string toiletGuid)
+        public async Task<List<UserImageToilet>> GetPhotos(string toiletGuid)
         {
             try
             {
@@ -94,12 +109,12 @@ namespace MFASeekerApp.Services
                 if (response.IsSuccessStatusCode)
                 {
                     // Десериализация полученного списка изображений
-                    var images = await response.Content.ReadFromJsonAsync<IEnumerable<UserImageToilet>>();
+                    var images = await response.Content.ReadFromJsonAsync<List<UserImageToilet>>();
 
-                    if (images != null)
+                    if (images?.Count > 0)
                     {
                         // Логирование информации для отладки (можно удалить или адаптировать)
-                        Console.WriteLine($"Получено {images.Count()} изображений для туалета с ID {toiletGuid}");
+                        Console.WriteLine($"Получено {images.Count} изображений для туалета с ID {toiletGuid}");
 
                         return images;
                     }
@@ -129,9 +144,8 @@ namespace MFASeekerApp.Services
                 var response = await _httpClient.GetAsync("api/Toilet/AllToilets");
                 if (response.IsSuccessStatusCode)
                 {
-                    // Десериализация данных в список объектов Toilet
                     var toilets = await response.Content.ReadFromJsonAsync<List<Toilet>>();
-                    return toilets;
+                    return toilets ?? [];
                 }
                 else
                 {
@@ -143,7 +157,7 @@ namespace MFASeekerApp.Services
             catch (Exception ex)
             {
                 Console.WriteLine($"Ошибка при запросе: {ex.Message}");
-                return new List<Toilet>(); // Возвращаем пустой список в случае исключения
+                return []; // Возвращаем пустой список в случае исключения
             }
         }
         public Task<Toilet> GetToiletByGuid(string guid)

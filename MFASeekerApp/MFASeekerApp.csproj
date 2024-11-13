@@ -172,6 +172,7 @@
 
 	<ItemGroup>
 	  <Folder Include="Model\ApiModels\" />
+	  <Folder Include="Model\DTO\" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -180,6 +181,6 @@
 	  </None>
 	</ItemGroup>
 
-	<ProjectExtensions><VisualStudio><UserProperties XamarinHotReloadDebuggerTimeoutExceptionMFASeekerHideInfoBar="True" /></VisualStudio></ProjectExtensions>
+	<ProjectExtensions><VisualStudio><UserProperties XamarinHotReloadDebuggerTimeoutExceptionMFASeekerHideInfoBar="True" XamarinHotReloadGenericExceptionInfoBarMFASeekerAppHideInfoBar="True" /></VisualStudio></ProjectExtensions>
 
 </Project>
