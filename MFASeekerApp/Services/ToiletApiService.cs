@@ -166,9 +166,23 @@ namespace MFASeekerApp.Services
         {
             throw new NotImplementedException();
         }
-        public Task UpdateToilet(Toilet toilet)
+        public async Task UpdateToilet(Toilet toilet)
         {
-            throw new NotImplementedException();
+            try
+            {
+                toilet.UpdatedDateTime = DateTime.Now;
+
+                var response = _httpClient.PutAsJsonAsync($"api/Toilet", toilet);
+                // для отладки
+                //Console.WriteLine($"Обновленный туалет: {JsonSerializer.Serialize(toilet)}");
+                if (response.IsCompleted)
+                {
+                    var responseData = await response.Result.Content.ReadFromJsonAsync<List<string>>();
+                    Console.WriteLine("Обновленные свойства туалета: "); //
+                    Console.Write(responseData.ToString()); // 
+                }
+            }
+            catch (Exception ex) { Console.WriteLine(ex.Message); }
         }
     }
 }
