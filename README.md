@@ -1,7 +1,7 @@
 
 # It is Your Shick
 
-<img src="MFASeekerApp/Images/logo.png" alt="preview" width="200">
+<img src="MFASeekerApp/Images/logo.png" alt="preview" width="400">
 
 ### Приложение, созданное для отслеживания и категоризации ближайших толчков
 ---
