@@ -11,10 +11,17 @@
 * Рейтинг туалетов по пятибальной шкале
 * Все данные хранятся локально и доступны всегда
 
-Интерфейс приложения:<br>
-![preview](MFASeekerApp/Images/preview.png)<br>
-Рейтинг туалетов:<br>
-![rating](MFASeekerApp/Images/rating.png)<br>
+<table>
+  <tr>
+    <td><img src="MFASeekerApp/Images/preview.png" alt="preview" width="200"></td>
+    <td><img src="MFASeekerApp/Images/rating.png" alt="rating" width="200"></td>
+  </tr>
+  <tr>
+    <td>Интерфейс приложения</td>
+    <td>Рейтинг туалетов</td>
+  </tr>
+</table>
+
 Просмотр созданных туалетов с разных устройств:<br>
 ![withimg](MFASeekerApp/Images/withimg.png)<br>
 Синхронизация с сервером (заглушки)<br>
