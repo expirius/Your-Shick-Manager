@@ -1,7 +1,7 @@
 
 # It is Your Shick
 
-![logo](https://github.com/user-attachments/assets/3b8c23d3-a54b-47a1-9a8d-22b31e3df186)
+![logo](MFASeekerApp/Images/logo.png)
 
 ### Приложение, созданное для отслеживания и категоризации ближайших толчков
 ---
@@ -11,7 +11,15 @@
 * Рейтинг туалетов по пятибальной шкале
 * Все данные хранятся локально и доступны всегда
 
+Интерфейс приложения:
 ![preview](MFASeekerApp/Images/preview.png)
+Рейтинг туалетов:
+![rating](MFASeekerApp/Images/rating.png)
+Просмотр созданных туалетов с разных устройств:
+![withimg](MFASeekerApp/Images/withimg.png)
+Синхронизация с сервером (заглушки)
+![withoutimg](MFASeekerApp/Images/withoutimage.png)
 
-![rating](MFASeekerApp/Images/ratings.jpg)
+Stack: C#, .NET MAUI, SQLite, ASP.NET Core
+
 
