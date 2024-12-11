@@ -25,12 +25,15 @@ namespace MFASeekerApp.ViewModel
         [ObservableProperty]
         private int editToiletIndex;
 
+        private readonly HttpClient _httpClient;
         private readonly UserSession _userSession;
         private readonly UserService _userService;
         private readonly ToiletApiService _toiletApiService;
         private readonly LocalToiletService _localToiletService = new();
 
-        public PinManagerViewModel(UserSession userSession, UserService userService, ToiletApiService toiletApiService)
+        public PinManagerViewModel(UserSession userSession, 
+                                   UserService userService, 
+                                   ToiletApiService toiletApiService)
         {
             _userSession = userSession;
             _userService = userService;
@@ -40,18 +43,18 @@ namespace MFASeekerApp.ViewModel
 
             ToiletsUpdated += OnToiletsUpdated;
         }
-        [RelayCommand]
-        private async Task LoadPhotosDb(ToiletViewModel toiletVM)
+        public async Task LoadToiletImagePathsDb(ToiletViewModel toiletVM)
         {
+            if (string.IsNullOrEmpty(toiletVM?.Toilet?.Guid) ) return;
             // Получаем список фотографий для туалета с сервера
-            if (toiletVM.Toilet == null) return;
-            var userImageToilets = await _toiletApiService.GetPhotos(toiletVM.Toilet.Guid);
-            if (!userImageToilets.Any()) return;
+            var linkList = await _toiletApiService.GetPhotoLinks(toiletVM.Toilet.Guid);
 
             // Извлекаем пути изображений и добавляем их в ImagePaths
-            foreach (var item in userImageToilets)
+            foreach (string link in linkList)
             {
-                //toiletVM.ImagePaths.Add(item.ImageFile.Path);
+                string fullAdress = _toiletApiService._httpClient.BaseAddress.OriginalString + link;
+                Console.WriteLine($"Полный адрес картинки: {fullAdress}");
+                toiletVM.ImagePaths.Add(fullAdress);
             }
         }
         [RelayCommand]
@@ -66,11 +69,17 @@ namespace MFASeekerApp.ViewModel
         [RelayCommand]
         private async Task RefreshToilets()
         {
+            // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
             var temp = await _toiletApiService.GetAllToilets();
             ActivePinList = new ObservableCollection<ToiletViewModel>(temp.Select(t => new ToiletViewModel(t)));
-            ToiletsUpdated?.Invoke(ActivePinList);
+            // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            //ToiletsUpdated?.Invoke(ActivePinList); // ВЕРНУТЬ!
 
             await LoadToiletAddressAsync();
+            foreach(ToiletViewModel toiletVM in ActivePinList)
+            {
+                    await LoadToiletImagePathsDb(toiletVM);
+            }
         }
         /// <summary>
         /// Добавление туалета из VM в локальную память
@@ -187,8 +196,7 @@ namespace MFASeekerApp.ViewModel
             if (updatedToilets != null)
                 foreach (var updatedToilet in updatedToilets)
                 {
-                    if (updatedToilet.Toilet.Images != null) ;
-                        //await LoadPhotosDb(updatedToilet);
+
                 }
         }
     }
