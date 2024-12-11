@@ -15,7 +15,7 @@ namespace MFASeekerApp.Services
     public class ToiletApiService(UserSession userSession, HttpClient httpClient) : IToiletService
     {
         private readonly UserSession _userSession = userSession;
-        private readonly HttpClient _httpClient = httpClient;
+        public readonly HttpClient _httpClient = httpClient;
 
         public async Task<int?> AddToilet(Toilet toilet)
         {
@@ -98,18 +98,20 @@ namespace MFASeekerApp.Services
         {
             throw new NotImplementedException();
         }
-        public async Task<List<UserImageToilet>> GetPhotos(string toiletGuid)
+        public async Task<List<string>> GetPhotoLinks(string toiletGuid)
         {
             try
             {
                 // Запрос к серверу для получения изображений, связанных с заданным toiletGuid
                 var response = await _httpClient.GetAsync($"api/Toilet/ToiletPhotos/{toiletGuid}");
-
+                
                 // Проверка успешности запроса
                 if (response.IsSuccessStatusCode)
                 {
                     // Десериализация полученного списка изображений
-                    var images = await response.Content.ReadFromJsonAsync<List<UserImageToilet>>();
+                    var imagestring = await response.Content.ReadAsStringAsync();
+                    Console.WriteLine(imagestring);
+                    var images = await response.Content.ReadFromJsonAsync<List<string>>();
 
                     if (images?.Count > 0)
                     {
