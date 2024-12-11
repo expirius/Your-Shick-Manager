@@ -42,6 +42,8 @@ namespace MFASeekerApp.ViewModel
             RefreshToiletsCommand.Execute(null);
 
             ToiletsUpdated += OnToiletsUpdated;
+            // Устанавливаю пользователя на админа (тест)
+            SetAuthUserSessionCommand.Execute(null);
         }
         public async Task LoadToiletImagePathsDb(ToiletViewModel toiletVM)
         {
@@ -73,7 +75,7 @@ namespace MFASeekerApp.ViewModel
             var temp = await _toiletApiService.GetAllToilets();
             ActivePinList = new ObservableCollection<ToiletViewModel>(temp.Select(t => new ToiletViewModel(t)));
             // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-            //ToiletsUpdated?.Invoke(ActivePinList); // ВЕРНУТЬ!
+            ToiletsUpdated?.Invoke(ActivePinList);
 
             await LoadToiletAddressAsync();
             foreach(ToiletViewModel toiletVM in ActivePinList)
@@ -159,9 +161,9 @@ namespace MFASeekerApp.ViewModel
                         ToiletsUpdated?.Invoke(ActivePinList);
                     }
                     // обновление в памяти
-                    await _localToiletService.UpdateToilet(SelectedToiletVM.Toilet);
+                    //await _localToiletService.UpdateToilet(SelectedToiletVM.Toilet);
                     // Обновление в БД
-                    _toiletApiService.UpdateToilet(SelectedToiletVM.Toilet);
+                    await _toiletApiService.UpdateToilet(SelectedToiletVM.Toilet);
                 }
             }
         }
