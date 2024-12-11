@@ -21,11 +21,16 @@
     <td>Рейтинг туалетов</td>
   </tr>
 </table>
-
-Просмотр созданных туалетов с разных устройств:<br>
-![withimg](MFASeekerApp/Images/withimg.png)<br>
-Синхронизация с сервером (заглушки)<br>
-![withoutimg](MFASeekerApp/Images/withoutimage.png)<br>
+<table>
+    <tr>
+        <td><img src="MFASeekerApp/Images/withimg.png" alt="withimg" width="200"></td>
+        <td><img src="MFASeekerApp/Images/withoutimage.png" alt="withoutimg" width="200"></td>
+    </tr>
+    <tr>
+        <td>Просмотр созданных туалетов с разных устройств</td>
+        <td>Синхронизация с сервером (заглушки)</td>
+    </tr>
+</table>
 
 Stack: C#, .NET MAUI, SQLite, ASP.NET Core
 
