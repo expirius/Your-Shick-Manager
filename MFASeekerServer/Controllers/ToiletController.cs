@@ -30,6 +30,27 @@ namespace MFASeekerServer.Controllers
 
             return Ok(createdToilet.Id);
         }
+        [HttpPut] // Возвращаются измененные свойства (в списке)
+        public async Task<ActionResult<List<string>>> UpdateToilet([FromBody] Toilet updatedToilet)
+        {
+            var toiletDb = await _context.Toilets
+                .Where(x => x.Guid == updatedToilet.Guid)
+                .FirstOrDefaultAsync();
+
+            if (toiletDb == null) return NotFound("Такой туалет не найден.");
+
+            _context.Entry(toiletDb).CurrentValues.SetValues(updatedToilet);
+            
+            // Ищу обновленные свойства
+            var modifiedProperties = _context.Entry(toiletDb)
+               .Properties
+               .Where(p => p.IsModified)
+               .Select(p => p.Metadata.Name)
+               .ToList();
+
+            await _context.SaveChangesAsync();
+            return Ok(modifiedProperties);
+        }
         [HttpPost("Image")]
         public async Task<ActionResult<int>> AddImage(ImageFile image)
         {
