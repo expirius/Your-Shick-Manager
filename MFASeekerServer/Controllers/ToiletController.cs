@@ -105,7 +105,7 @@ namespace MFASeekerServer.Controllers
         /// <param name="toiletId"></param>
         /// <returns></returns>
         [HttpGet("ToiletPhotos/{toiletGuid}")]
-        public async Task<ActionResult<List<UserImageToilet>>> GetPhotos(string toiletGuid)
+        public async Task<ActionResult<List<string>>> GetPhotos(string toiletGuid)
         {
             // Проверка существования туалета по его guid
             var toilet = await _context.Toilets
@@ -117,12 +117,16 @@ namespace MFASeekerServer.Controllers
             }
 
             // Извлечение объектов UserImageToilet, связанных с указанным туалетом, включая ImageFile
-            var userImageToilets = await _context.ToiletImages
+            /*var userImageToilets = await _context.ToiletImages
                 .Where(ti => ti.ToiletID == toilet.Id)
                 .Include(ti => ti.ImageFile) // Подключение связанных данных ImageFile
-                .ToListAsync();
+                .ToListAsync();*/
 
-            return Ok(userImageToilets);
+            var photoLinks = await _context.ToiletImages
+                .Where(ti => ti.ToiletID == toilet.Id)
+                .Select(ti => ti.ImageFile.Path)
+                .ToListAsync();
+            return Ok(photoLinks);
         }
     }
 }
