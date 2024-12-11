@@ -20,9 +20,7 @@
     <td>Интерфейс приложения</td>
     <td>Рейтинг туалетов</td>
   </tr>
-</table>
-<table>
-    <tr>
+   <tr>
         <td><img src="MFASeekerApp/Images/withimg.png" alt="withimg" width="200"></td>
         <td><img src="MFASeekerApp/Images/withoutimage.png" alt="withoutimg" width="200"></td>
     </tr>
