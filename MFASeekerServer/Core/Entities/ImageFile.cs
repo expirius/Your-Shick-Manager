@@ -8,7 +8,7 @@ namespace MFASeekerServer.Core.Entities
 {
     public class ImageFile : BaseEntity
     {
-        public required string ByteBase64 { get; set; }
+        public string? ByteBase64 { get; set; }
         public required string ContentType { get; set; }
         public required string FileName { get; set; }
         public string? Path { get; set; }
