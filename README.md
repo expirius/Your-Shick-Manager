@@ -1,7 +1,8 @@
 
 # It is Your Shick
-
-<img src="MFASeekerApp/Images/logo.png" alt="preview" width="400">
+<div align="center">
+<img src="MFASeekerApp/Images/logo.png" alt="logo" width="400">
+</div>
 
 ### Приложение, созданное для отслеживания и категоризации ближайших толчков
 ---
@@ -30,6 +31,9 @@
     </tr>
 </table>
 
-Stack: C#, .NET MAUI, SQLite, ASP.NET Core
-
+### Stack
+- C#
+- .NET MAUI
+- SQLite
+- ASP.NET Core
 
