@@ -22,14 +22,12 @@ namespace MFASeekerApp.ViewModel
         [ObservableProperty]
         private ImageSource? imagePreviewSource = null;
 
-        public ToiletViewModel(Toilet toilet)
+        public ToiletViewModel(Toilet _toilet)
         {
+            Toilet = _toilet;
             Adress = string.Empty;
             ImageSources = [];
-            Toilet = toilet;
             ImagePaths = [];
-            //SetPreviewImageSource();
-            //LoadLocalImageSources();
         }
         [RelayCommand]
         private async Task AddLocalImageAsync()
@@ -56,23 +54,7 @@ namespace MFASeekerApp.ViewModel
                 ImageSources.Add(temp);
             });
         }
-        public async void SetPreviewImageSource()
-        {
-            await Task.Run(() =>
-            {
-                if (this.Toilet?.Images.Count == 0)
-                {
-
-                    this.ImagePreviewSource = ImageSource.FromFile("Images/toilet_undefined.png");
-                }
-                else
-                {
-                    LocalImageService imageService = new();
-                    var previewIS = ImageSource.FromStream(() => imageService.ByteArrayToStream(Convert.FromBase64String(this.Toilet.Images[0].ByteBase64)));
-                    this.ImagePreviewSource = previewIS;
-                }
-            });
-        }
+        /* LOADLOCALIMAGESOURCES
         public async void LoadLocalImageSources()
         {
             await Task.Run(() =>
@@ -84,7 +66,7 @@ namespace MFASeekerApp.ViewModel
                     this.ImageSources.Add(imageSource);
                 }
             });
-        }
+        } */
         public object Clone()
         {
             return this.MemberwiseClone();
