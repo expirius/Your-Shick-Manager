@@ -11,14 +11,14 @@
 * Рейтинг туалетов по пятибальной шкале
 * Все данные хранятся локально и доступны всегда
 
-Интерфейс приложения:
-![preview](MFASeekerApp/Images/preview.png)
-Рейтинг туалетов:
-![rating](MFASeekerApp/Images/rating.png)
-Просмотр созданных туалетов с разных устройств:
-![withimg](MFASeekerApp/Images/withimg.png)
-Синхронизация с сервером (заглушки)
-![withoutimg](MFASeekerApp/Images/withoutimage.png)
+Интерфейс приложения:<br/>
+![preview](MFASeekerApp/Images/preview.png)<br/>
+Рейтинг туалетов:<br/>
+![rating](MFASeekerApp/Images/rating.png)<br/>
+Просмотр созданных туалетов с разных устройств:<br/>
+![withimg](MFASeekerApp/Images/withimg.png)<br/>
+Синхронизация с сервером (заглушки)<br/>
+![withoutimg](MFASeekerApp/Images/withoutimage.png)<br/>
 
 Stack: C#, .NET MAUI, SQLite, ASP.NET Core
 
