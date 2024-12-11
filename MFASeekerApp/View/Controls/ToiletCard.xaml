@@ -74,7 +74,7 @@
         <ffimageloading:CachedImage LoadingPlaceholder="toilet_undefined.png" 
                                     ErrorPlaceholder="toilet_undefined.png" 
                                     Aspect="AspectFill"
-                                    Source="http://192.168.0.2:7226/images/uploads/2fafd0ec-ffcd-4bf1-b384-6f6aa81b105a.jpg">
+                                    Source="{Binding ImagePaths[0]}">
             <ffimageloading:CachedImage.Transformations>
                 <fftransformations:BlurredTransformation Radius="4" />
             </ffimageloading:CachedImage.Transformations>
