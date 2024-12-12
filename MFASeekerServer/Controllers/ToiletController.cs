@@ -86,7 +86,6 @@ namespace MFASeekerServer.Controllers
             }
             catch (Exception ex)
             {
-                // Логгирование ошибки, если это необходимо
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
@@ -147,6 +146,17 @@ namespace MFASeekerServer.Controllers
                 .Where(ti => ti.ToiletID == toilet.Id)
                 .Select(ti => ti.ImageFile.Path)
                 .ToListAsync();
+
+            // Проверка существования файлов по указанным путям
+            var existingPhotoLinks = photoLinks
+                .Where(path => Directory.Exists(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", path)))
+                .ToList();
+
+            if (existingPhotoLinks.Count==0)
+            {
+                return NotFound("No photos found.");
+            }
+
             return Ok(photoLinks);
         }
     }
