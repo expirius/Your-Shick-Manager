@@ -42,10 +42,11 @@ namespace MFASeekerApp
             builder.Services.AddSingleton<PinManagerViewModel>();
             // Построение строки подключения
             //builder.Services.AddSingleton<ServerHttpFactory>();
-            // Подключение к серверу
+            // Подключение к серверу // 
+            // !!! ИЗБАВИТЬСЯ ОТ ПРЯМОГО ПОДКЛЮЧЕНИЯ ПО IP и использовать appsettings.json
             builder.Services.AddScoped(sp => new HttpClient
             {
-                BaseAddress = new Uri("http://192.168.0.2:7226")
+                BaseAddress = new Uri("http://95.106.241.117:7226")
             });
 
             builder.Services.AddSingleton<UserService>();
