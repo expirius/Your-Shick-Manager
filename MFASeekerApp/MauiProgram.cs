@@ -1,4 +1,6 @@
 ﻿using CommunityToolkit.Maui;
+using CommunityToolkit.Maui.Alerts;
+using CommunityToolkit.Maui.Core;
 using FFImageLoading.Maui;
 using MFASeekerApp.Services;
 using MFASeekerApp.View;

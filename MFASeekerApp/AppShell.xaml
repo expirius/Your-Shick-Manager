@@ -6,8 +6,7 @@
     xmlns:local="clr-namespace:MFASeekerApp.View"
     FlyoutBehavior="Disabled"
     Title="Your Shick">
-    <!--FlyoutBehavior="Flyout"-->
-    <!-- -->
+
     <FlyoutItem CurrentItem="{x:Reference MainFlyout}">
         <ShellContent
             Title="Поиск"
@@ -15,14 +14,14 @@
             Route="Карта"
             ContentTemplate="{DataTemplate local:SearchPage}"/>
 
-        <ShellContent
+            <ShellContent
             x:Name="MainFlyout"
             Icon="toilet_bot.png"
             Title="Главная"
             Route="Главная"
             ContentTemplate="{DataTemplate local:MainPage}"/>
 
-        <ShellContent
+            <ShellContent
             Title="Метки"
             Icon="menu_icon.png"
             Route="Метки"

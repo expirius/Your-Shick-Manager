@@ -33,15 +33,23 @@ namespace MFASeekerApp.ViewModel
                                    UserService userService, 
                                    ToiletApiService toiletApiService)
         {
+            /* 
+             * Старый код без очистки от блокировки потока 
+             _userSession = userSession;
+             _userService = userService;
+             _toiletApiService = toiletApiService;
+             ActivePinList = [];
+             RefreshToiletsCommand.Execute(null);
+
+             ToiletsUpdated += OnToiletsUpdated;
+             // Устанавливаю пользователя на админа (тест)
+             SetAuthUserSessionCommand.Execute(null); */
+
             _userSession = userSession;
             _userService = userService;
             _toiletApiService = toiletApiService;
             ActivePinList = [];
-            RefreshToiletsCommand.Execute(null);
-
-            ToiletsUpdated += OnToiletsUpdated;
-            // Устанавливаю пользователя на админа (тест)
-            SetAuthUserSessionCommand.Execute(null);
+            //_ = RefreshToilets();
         }
         public async Task LoadToiletImagePathsDb(ToiletViewModel toiletVM)
         {

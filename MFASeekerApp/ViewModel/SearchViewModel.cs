@@ -12,6 +12,7 @@ using MFASeekerApp.Model;
 using MFASeekerApp.Services;
 using MFASeekerApp.View;
 using System.Collections.ObjectModel;
+using System.Threading;
 namespace MFASeekerApp.ViewModel;
 
 public partial class SearchViewModel : ObservableObject
@@ -39,24 +40,25 @@ public partial class SearchViewModel : ObservableObject
     public SearchViewModel(PinManagerViewModel pinMngrVM, BaseViewModel userSession)
     {
         _userSession = userSession;
+        pinManagerVM = pinMngrVM;
 
         SearchMapControl = new() { Map = MapManager.CreateMap() };
+        pointFeatures = MapPinManager.CreatePointLayer("AllToiletsLayer", true); // создаем layer с туалетами
+        SearchMapControl.Map.Layers.Add(pointFeatures); // добавляем layer с точками туалетов
 
         SearchMapControl.SingleTap += OnMapTaped; // Тап по карте
         SearchMapControl.LongTap += OnMapLongTaped;
         SearchMapControl.Map.Info += MapOnInfo; // Тап по пину
         SearchMapControl.TouchMove += OnTouchMove; // при перетаскивании карты
         MapManager.LocationUpdated += OnLocationUpdate;
-
-        pinManagerVM = pinMngrVM;
         pinManagerVM.ToiletsUpdated += OnToiletsUpdated;
 
-        pinManagerVM.RefreshToiletsCommand.Execute(null);
-
+        // это тоже кусок говнокода (как и всё тут). Control есть, а логика из VM? Прикол.
         LocationCheckBoxIsChecked = true;
-        ChangeSpectateModeCommand.Execute(null);
+        ChangeSpectateMode();
 
-        InitializeAsync();
+        //_ = pinManagerVM.RefreshToiletsCommand.ExecuteAsync(null);  // по сути это связанность кода,
+        //избавляемся, решаем через уведомления
     }
     // Метод для обновления состояния CheckBox
     [RelayCommand]
@@ -75,15 +77,6 @@ public partial class SearchViewModel : ObservableObject
             MapManager.EnableCentredUser();
             MapManager.CenterToUserLocation();
         }
-    }
-    private void InitializeAsync()
-    {
-        //var features = await MapPinManager.GetFeaturesLocalAsync();
-        // pointFeatures.AddRange(features);
-        pointFeatures = MapPinManager.CreatePointLayer("AllToiletsLayer", true);
-        SearchMapControl.Map.Layers.Add(pointFeatures);
-
-        //pinManagerVM?.RefreshToiletsCommand.Execute(null);
     }
     private async void OnMapLongTaped(object? sender, Mapsui.UI.TappedEventArgs e)
     {
@@ -106,6 +99,15 @@ public partial class SearchViewModel : ObservableObject
                 NewToiletVM.Toilet.Location = // lat lon
                     $"{SphericalMercator.ToLonLat(worldPosition).Y}," +
                     $"{SphericalMercator.ToLonLat(worldPosition).X}";
+
+                //    ____    _    __  _  ___   _  ___  
+                //   | __ )  / \   \ \| |/ / | | |/ _ \ 
+                //   |  _ \ / _ \   \ \ / /| |_| | | | |
+                //   | |_) / ___ \  / / \ \|  _  | |_| |
+                //   |____/_/   \_\/_/| |\_\_| |_|\___/           
+                // А ПО ХОРОШЕМУ СДЕЛАТЬ ЧЕРЕЗ EVENTS в pinManager,
+                // дабы избежать связанности кода ( сейчас мне лень )
+
                 // Отдаем в pinManager
                 pinManagerVM?.AddToiletCommand.Execute(NewToiletVM);
                 // сбрасываю данные туалета VM (но лучше сделать метод .Clear();
