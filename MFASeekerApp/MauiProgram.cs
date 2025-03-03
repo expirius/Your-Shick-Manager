@@ -51,6 +51,7 @@ namespace MFASeekerApp
 
             builder.Services.AddSingleton<UserService>();
             builder.Services.AddSingleton<ToiletApiService>();
+            builder.Services.AddSingleton<ConnectivityService>();
 
 #if DEBUG
             builder.Logging.AddDebug();
