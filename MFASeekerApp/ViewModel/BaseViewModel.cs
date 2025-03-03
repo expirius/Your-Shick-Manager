@@ -11,10 +11,10 @@ using System.Threading.Tasks;
 
 namespace MFASeekerApp.ViewModel
 {
-    public partial class UserSession : ObservableObject
+    public partial class BaseViewModel : ObservableObject
     {
-        //private static UserSession _instance;
-        //public static UserSession Instance => _instance ??= new UserSession();
+        //private static BaseViewModel _instance;
+        //public static BaseViewModel Instance => _instance ??= new BaseViewModel();
         [ObservableProperty]
         private User? authUser = null;
     }

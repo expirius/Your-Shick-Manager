@@ -4,7 +4,7 @@ namespace MFASeekerApp.View
 {
     public partial class MainPage : ContentPage
     {
-        public MainPage(UserSession vm)
+        public MainPage(BaseViewModel vm)
         {
             InitializeComponent();
 

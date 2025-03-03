@@ -12,9 +12,9 @@ using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 namespace MFASeekerApp.Services
 {
-    public class ToiletApiService(UserSession userSession, HttpClient httpClient) : IToiletService
+    public class ToiletApiService(BaseViewModel userSession, HttpClient httpClient) : IToiletService
     {
-        private readonly UserSession _userSession = userSession;
+        private readonly BaseViewModel _userSession = userSession;
         public readonly HttpClient _httpClient = httpClient;
 
         public async Task<int?> AddToilet(Toilet toilet)

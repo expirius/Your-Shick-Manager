@@ -33,7 +33,7 @@ namespace MFASeekerApp
             //
             builder.Services.AddSingleton<MainPage>();
             // Сессия пользователя
-            builder.Services.AddSingleton<UserSession>();
+            builder.Services.AddSingleton<BaseViewModel>();
 
             builder.Services.AddSingleton<SearchViewModel>();
             builder.Services.AddSingleton<SearchPage>();

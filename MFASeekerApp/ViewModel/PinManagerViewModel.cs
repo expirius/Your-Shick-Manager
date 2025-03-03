@@ -24,12 +24,12 @@ namespace MFASeekerApp.ViewModel
         private int editToiletIndex;
 
         private readonly HttpClient _httpClient;
-        private readonly UserSession _userSession;
+        private readonly BaseViewModel _userSession;
         private readonly UserService _userService;
         private readonly ToiletApiService _toiletApiService;
         private readonly LocalToiletService _localToiletService = new();
 
-        public PinManagerViewModel(UserSession userSession, 
+        public PinManagerViewModel(BaseViewModel userSession, 
                                    UserService userService, 
                                    ToiletApiService toiletApiService)
         {

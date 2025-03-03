@@ -35,8 +35,8 @@ public partial class SearchViewModel : ObservableObject
     [ObservableProperty]
     private string? currentLocationLabel;
 
-    private readonly UserSession _userSession;
-    public SearchViewModel(PinManagerViewModel pinMngrVM, UserSession userSession)
+    private readonly BaseViewModel _userSession;
+    public SearchViewModel(PinManagerViewModel pinMngrVM, BaseViewModel userSession)
     {
         _userSession = userSession;
 
