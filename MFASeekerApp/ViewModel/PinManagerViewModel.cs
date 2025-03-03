@@ -5,8 +5,6 @@ using MFASeekerApp.View;
 using MFASeekerApp.Services;
 using System.Collections.ObjectModel;
 using MFASeekerApp.Model;
-using MFASeekerApp.Model.Interfaces;
-using CommunityToolkit.Maui.Core.Extensions;
 
 namespace MFASeekerApp.ViewModel
 {
