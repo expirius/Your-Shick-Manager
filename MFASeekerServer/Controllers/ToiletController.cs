@@ -148,14 +148,15 @@ namespace MFASeekerServer.Controllers
                 .ToListAsync();
 
             // Проверка существования файлов по указанным путям
-            var existingPhotoLinks = photoLinks
-                .Where(path => Directory.Exists(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", path)))
-                .ToList();
+            //var existingPhotoLinks = photoLinks
+            //    .Where(path => System.IO.File.Exists(
+            //        Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/toiletserver/", path)))
+            //    .ToList();
 
-            if (existingPhotoLinks.Count==0)
-            {
-                return NotFound("No photos found.");
-            }
+            //if (existingPhotoLinks.Count==0)
+            //{
+            //    return NotFound($"No photos found. {Directory.GetCurrentDirectory()}");
+            //}
 
             return Ok(photoLinks);
         }
